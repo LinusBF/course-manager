@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Course Manager\n"
+"POT-Creation-Date: 2016-08-22 18:43+0200\n"
+"PO-Revision-Date: 2016-08-22 18:51+0200\n"
+"Last-Translator: \n"
+"Language-Team: Linus Bein Fahlander\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.8\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: includes/language.define.php:19
+msgid "Course Manager"
+msgstr "Kurshanterare"
+
+#: includes/language.define.php:20
+msgid "Yes"
+msgstr "Ja"
+
+#: includes/language.define.php:21
+msgid "No"
+msgstr "Nej"
+
+#: includes/language.define.php:22
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: includes/language.define.php:23
+msgid "Save"
+msgstr "Spara"
+
+#: includes/language.define.php:24
+msgid "Settings"
+msgstr "Inställningar"
+
+#: includes/language.define.php:25
+msgid "Add New"
+msgstr "Skapa ny"
+
+#: includes/language.define.php:26
+msgid "Delete"
+msgstr "Radera"
+
+#: includes/language.define.php:27
+msgid "Active"
+msgstr "Aktiv"
+
+#: includes/language.define.php:28
+msgid "Not active"
+msgstr "Inaktiv"
+
+#: includes/language.define.php:29
+msgid "Activate"
+msgstr "Aktivera"
+
+#: includes/language.define.php:30
+msgid "Deactivate"
+msgstr "Avaktivera"
+
+#: includes/language.define.php:33
+msgid ""
+"Your PHP version is too low, please update it before using Course Manager"
+msgstr ""
+"Din PHP version är för gammal, var snäll och uppdatera den innan du använder "
+"Kurshanteraren"
+
+#: includes/language.define.php:34
+msgid ""
+"Your Wordpress version is too low, please it update before using Course "
+"Manager"
+msgstr ""
+"Din Wordpress version är för gammal, var snäll och uppdatera den innan du "
+"använder Kurshanteraren"
+
+#: includes/language.define.php:35
+msgid ""
+"The name for the course is already in use, please edit that one instead."
+msgstr "Namnet för kursen används redan, vänligen redigera den istället."
+
+#: includes/language.define.php:36
+msgid ""
+"The database query failed, please try again. If the problem persists please "
+"contact the site administrator."
+msgstr ""
+"Databasfrågan misslyckades, vänligen försök igen. Kontakta administratören "
+"om problemet kvarstår."
+
+#: includes/language.define.php:39 includes/language.define.php:45
+msgid "Courses"
+msgstr "Kurser"
+
+#: includes/language.define.php:40 includes/language.define.php:52
+msgid "Tags"
+msgstr "Taggar"
+
+#: includes/language.define.php:41
+msgid "About"
+msgstr "Om"
+
+#: includes/language.define.php:44
+msgid "Course"
+msgstr "Kurs"
+
+#: includes/language.define.php:46
+msgid "You have no courses yet"
+msgstr "Du har inga kurser ännu"
+
+#: includes/language.define.php:47
+msgid "days"
+msgstr "dagar"
+
+#: includes/language.define.php:48
+msgid "Course Name"
+msgstr "Kursnamn"
+
+#: includes/language.define.php:49
+msgid "Span"
+msgstr "Tid"
+
+#: includes/language.define.php:50 includes/language.define.php:63
+msgid "Parts"
+msgstr "Del"
+
+#: includes/language.define.php:51
+msgid "Status"
+msgstr "Status"
+
+#: includes/language.define.php:58
+msgid "You're editing "
+msgstr "Du redigerar "
+
+#: includes/language.define.php:59
+msgid "You're creating a new course"
+msgstr "Du skapar en ny kurs"
+
+#: includes/language.define.php:60
+msgid "Course name"
+msgstr "Kursnamn"
+
+#: includes/language.define.php:61
+msgid "Course span (days)"
+msgstr "Kurstid (dagar)"
+
+#: includes/language.define.php:62
+msgid "Save Course"
+msgstr "Spara Kurs"
+
+#: includes/language.define.php:64
+msgid "Type: "
+msgstr "Typ: "
+
+#: includes/language.define.php:65
+msgid "Name"
+msgstr "Namn"
+
+#: includes/language.define.php:66
+msgid "The Course have successfully been saved"
+msgstr "Din kurs har sparats"
+
+#: includes/language.define.php:67
+msgid "Something went wrong. Your Course updates/creation have not been saved"
+msgstr "Någonting gick fel. Dina kursuppdateringar/skapande har inte sparats"
