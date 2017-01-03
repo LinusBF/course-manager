@@ -364,7 +364,9 @@ class CmPart
 			return true;
 
 		} else{
+			//Debug
 			var_dump($this);
+
 			return false;
 		}
 	}
@@ -442,8 +444,7 @@ class CmPart
 	{
 		$blVarSet = false;
 
-		if ((isset($this->_sPartTitle) && strlen($this->_sPartTitle) > 0)
-			&& (isset($this->_iCoursePartID) && $this->_iCoursePartID > 0)
+		if ((isset($this->_iCoursePartID) && $this->_iCoursePartID > 0)
 			&& (isset($this->_sContent) && strlen($this->_sContent) >= 0)
 			&& (isset($this->_sType) && strlen($this->_sType) >= 0)
 			&& (isset($this->_iPartIndex) && $this->_iPartIndex >= 0))
@@ -498,12 +499,15 @@ class CmPart
 	 */
     public function print_content($sNamePrefix){
 		if($this->getType() == "text"){
+			$sEditorId = "cm".substr(str_shuffle(str_repeat("abcdefghijklmnopqrstuvwxyz", 5)), 0, 8);
+
 			$aEditorSettings = array(
 				'drag_drop_upload' => false,
 				'media_buttons' => false,
-				'default_editor' => 'quicktags'
+				'default_editor' => 'quicktags',
+				'textarea_name' => $sNamePrefix."_content_simple"
 			);
-			wp_editor($this->getContent(), $sNamePrefix."_content_simple", $aEditorSettings);
+			wp_editor($this->getContent(), $sEditorId, $aEditorSettings);
 		} elseif ($this->getType() == "video"){
 			?>
 				<label class="cm_part_content_label"
