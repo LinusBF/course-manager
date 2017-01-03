@@ -21,18 +21,59 @@
  * Date: 2017-01-03
  * Time: 12:47
  */
+
+
 class PageBuilder
 {
-	protected $_iCourseID = null;
-	protected $_aPageIDs = array();
 
 
 	/**
 	 * Constructor
 	 */
-	protected function __construct()
+	public function __construct()
 	{
 		do_action('cm_page_builder_init', $this);
+	}
+
+
+	/**
+	 * @param string $sCoursePartTitle - The title of the page
+	 * @param string $sCoursePartContent - The content that should be on the page
+	 * @param int $iPostID - If not 0 it will update an already created page
+	 * @return array containing all params to use with wp_insert_post()
+	 */
+	protected function _getPostDataArray($sCoursePartTitle, $sCoursePartContent, $iPostID = 0)
+	{
+		$aPostData = array(
+			'ID' => $iPostID,
+			'post_excerpt' => 'cm_course',
+			'post_type' => 'page',
+			'comment_status' => 'closed',
+			'post_title' => $sCoursePartTitle,
+			'post_content' => $sCoursePartContent,
+		);
+
+		return $aPostData;
+	}
+
+
+	/**
+	 * @param CmCourse $oCmCourse
+	 */
+	public function createCoursePages($oCmCourse)
+	{
+		//Check for already created pages for the course, and call @updateCoursePages if so
+
+		//Go through all CmCourseParts and generate wp_posts with its CmParts
+	}
+
+
+	/**
+	 * @param CmCourse $oCmCourse
+	 */
+	public function updateCoursePages($oCmCourse)
+	{
+		//Go through all pages created for the CmCourse, update them and add new pages for new CmCourseParts in the CmCourse
 	}
 
 }
