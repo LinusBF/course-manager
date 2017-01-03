@@ -6,13 +6,13 @@
  * 
  * PHP versions 7
  * 
- * @category  UserAccessManager
- * @package   UserAccessManager
- * @author    Alexander Schneider <alexanderschneider85@googlemail.com>
- * @copyright 2008-2013 Alexander Schneider
+ * @category  CourseManager
+ * @package   CourseManager
+ * @author    Linus Bein Fahlander <linus.webdevelopment@gmail.com>
+ * @copyright 2016-2016 Linus Bein Fahlander
  * @license   http://www.gnu.org/licenses/gpl-2.0.html  GNU General Public License, version 2
  * @version   SVN: $Id$
- * @link      http://wordpress.org/extend/plugins/user-access-manager/
+ * @link      Coming soon
  */
 
 // --- General Use --- \\
