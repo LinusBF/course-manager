@@ -4,7 +4,7 @@
  * 
  * The CmCourse class file.
  * 
- * PHP versions 5
+ * PHP versions 7
  * 
  * @category  CourseManager
  * @package   CourseManager

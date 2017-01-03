@@ -4,7 +4,7 @@
  * 
  * Defines needed for the language
  * 
- * PHP versions 5
+ * PHP versions 7
  * 
  * @category  UserAccessManager
  * @package   UserAccessManager

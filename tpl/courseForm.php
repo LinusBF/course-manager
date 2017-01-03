@@ -4,7 +4,7 @@
  * 
  * The html form for editing and creating courses
  * 
- * PHP versions 5
+ * PHP versions 7
  * 
  * @category  CourseManager
  * @package   CourseManager

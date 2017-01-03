@@ -4,7 +4,7 @@
  * 
  * Edit a existing course or make a new one
  * 
- * PHP versions 5
+ * PHP versions 7
  * 
  * @category  CourseManager
  * @package   CourseManager
