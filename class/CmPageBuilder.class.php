@@ -37,6 +37,56 @@ class PageBuilder
 
 
 	/**
+	 * @param CmCourse $oCourse
+	 */
+	public function createCoursePages($oCourse)
+	{
+		//Check for already created pages for the course, and call @updateCoursePages if so
+
+		//Go through all CmCourseParts and generate wp_posts with its CmParts
+	}
+
+
+	/**
+	 * @param CmCourse $oCourse
+	 */
+	public function updateCoursePages($oCourse)
+	{
+		//Go through all pages created for the CmCourse, update them and add new pages for new CmCourseParts in the CmCourse
+	}
+
+
+	/**
+	 * @param CmPart $oPart
+	 * @return string The html string representing the parts content that is to be added to the page
+	 */
+	protected function _handlePartContent($oPart)
+	{
+		$sType = $oPart->getType();
+		$sContent = $oPart->getContent();
+
+		if ($sType == "text"){
+			return "";
+
+		} elseif ($sType == "image"){
+			return "<img class='cm_page_image' src='".$sContent."' />";
+
+		} elseif ($sType == "video"){
+			return "";
+
+		} elseif ($sType == "question"){
+			return "";
+
+		} elseif ($sType == "download"){
+			return "";
+
+		}
+
+		return TXT_CM_PAGE_TYPE_NOT_SUPPORTED;
+	}
+
+
+	/**
 	 * @param string $sCoursePartTitle - The title of the page
 	 * @param string $sCoursePartContent - The content that should be on the page
 	 * @param int $iPostID - If not 0 it will update an already created page
@@ -54,26 +104,6 @@ class PageBuilder
 		);
 
 		return $aPostData;
-	}
-
-
-	/**
-	 * @param CmCourse $oCmCourse
-	 */
-	public function createCoursePages($oCmCourse)
-	{
-		//Check for already created pages for the course, and call @updateCoursePages if so
-
-		//Go through all CmCourseParts and generate wp_posts with its CmParts
-	}
-
-
-	/**
-	 * @param CmCourse $oCmCourse
-	 */
-	public function updateCoursePages($oCmCourse)
-	{
-		//Go through all pages created for the CmCourse, update them and add new pages for new CmCourseParts in the CmCourse
 	}
 
 }
