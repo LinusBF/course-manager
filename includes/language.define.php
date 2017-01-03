@@ -83,5 +83,8 @@ define('TXT_CM_EDIT_ADD_NEW_QUESTION', __('Add New Question','course-manager'));
 define('TXT_CM_EDIT_SAVE_BEFORE_NEW_PARTS', __('You need to save the course first to add new course parts','course-manager'));
 
 
+// --- Course Pages --- \\
+define('TXT_CM_PAGE_TYPE_NOT_SUPPORTED', __('Content type not supported yet','course-manager'));
+
 
 ?>
