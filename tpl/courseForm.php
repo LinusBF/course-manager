@@ -239,7 +239,11 @@ function saveCourseChanges(){
 function handle_part_content($sType, $sPartPrefix){
 
 	//Handle simple cases (text, image link, video link and download link)
-	if ($sType == "text" || $sType == "image" || $sType == "video" || $sType == "download"){
+	if($sType == "text"){
+		$sContent = stripslashes($_POST[$sPartPrefix."_content_simple"]);
+		return $sContent;
+	}
+	elseif ($sType == "image" || $sType == "video" || $sType == "download"){
 		$sContent = $_POST[$sPartPrefix."_content_simple"];
 		return $sContent;
 	}
