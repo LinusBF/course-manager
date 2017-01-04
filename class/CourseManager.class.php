@@ -423,6 +423,14 @@ class CourseManager
             '1.0',
             'screen'
         );
+
+		wp_enqueue_style(
+			'CourseManagerCoursePage',
+			CM_URLPATH . "css/cmCoursePage.css",
+			array() ,
+			'1.0',
+			'screen'
+		);
         
         wp_enqueue_style(
             'CourseManagerGeneral', 
