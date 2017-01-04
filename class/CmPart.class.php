@@ -278,7 +278,7 @@ class CmPart
 	/**
 	 * Returns an array with the available types a CmPart can have
 	 *
-	 * @return array
+	 * @return string[]
 	 */
     public function getTypes(){
     	$types = [

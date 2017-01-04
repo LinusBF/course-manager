@@ -68,7 +68,7 @@ class CmCourse
 	/**
      * Constructor with CourseParts.
      *
-     * @param array - $aCourseParts - array of CmCoursePart
+     * @param CmCoursePart[] $aCourseParts
      *
      * @return CmCourse instance
      */
@@ -83,7 +83,7 @@ class CmCourse
     /**
      * Constructor with all parameters to make a new Course in the db.
      *
-     * @param array - $aCourseParts - array of CmCoursePart
+     * @param CmCoursePart[] $aCourseParts
      *
      * @return CmCourse instance
      */
@@ -170,7 +170,7 @@ class CmCourse
     /**
      * Returns the CourseParts that this Course have.
      *
-     * @return array
+     * @return CmCoursePart[]
      */
     public function getCourseParts()
     {
@@ -189,7 +189,7 @@ class CmCourse
     /**
      * Set the CourseParts that this Course have.
      *
-     * @param array $aCParts | The Course parts that the course will have
+     * @param CmCoursePart[] $aCParts | The Course parts that the course will have
      *
      * @return null
      */
@@ -672,7 +672,7 @@ class CmCourse
     /**
      * Orders the CourseParts after their CourseIndex vaule.
      *
-     * @param array $aCourseParts
+     * @param CmCoursePart[] $aCourseParts
      *
      * @return null
      */
@@ -697,7 +697,7 @@ class CmCourse
      *
      * @param int $iPage, int $iPerPage, boolean $blGetCourseParts
      *
-     * @return array with CmCourse objects
+     * @return CmCourse[]
      */
     public static function getCourses($iPage = 1, $iPerPage = 10)
     {
@@ -730,7 +730,7 @@ class CmCourse
     /**
      * Returns all the courses in the DB.
      *
-     * @return array with CmCourse objects
+     * @return CmCourse[]
      */
     public static function getAllCourses($blGetCourseParts = false)
     {

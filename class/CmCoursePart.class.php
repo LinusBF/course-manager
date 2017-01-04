@@ -111,7 +111,7 @@ class CmCoursePart
     /**
      * Returns the Parts that this CoursePart have, ordered by index.
      *
-     * @return array
+     * @return CmPart[]
      */
     public function getParts()
     {
