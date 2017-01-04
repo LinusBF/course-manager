@@ -38,29 +38,25 @@ class CmPageBuilder
 
 	/**
 	 * @param CmCourse $oCourse
+	 *
+	 * @return int[] IDs of the pages created
 	 */
 	public function createCoursePages($oCourse)
 	{
 		//Check for already created pages for the course, and call @updateCoursePages if so
 
 		//Go through all CmCourseParts and generate wp_posts with its CmParts
-
-		//TEST
 		$aCourseParts = $oCourse->getCourseParts();
+		$iCourseId = $oCourse->getCourseID();
 		$sCourseName = $oCourse->getCourseName();
 
-		echo "<h2>$sCourseName</h2><br>";
+		$aPageIds = array();
 
 		foreach ($aCourseParts as $oCoursePart){
-			$sCpTitle = $oCoursePart->getCoursePartName();
-			echo "<div><h5>$sCpTitle</h5><br>";
-
-			foreach ($oCoursePart->getParts() as $oPart){
-				echo $this->_handlePartContent($oPart);
-			}
-
-			echo "</div>";
+			array_push($aPageIds, $this->_genCoursePage($iCourseId, $sCourseName, $oCoursePart));
 		}
+
+		return $aPageIds;
 	}
 
 
@@ -70,6 +66,42 @@ class CmPageBuilder
 	public function updateCoursePages($oCourse)
 	{
 		//Go through all pages created for the CmCourse, update them and add new pages for new CmCourseParts in the CmCourse
+	}
+
+
+	/**
+	 * @param int $iCourseId
+	 * @param string $sCourseName
+	 * @param CmCoursePart $oCoursePart
+	 * @param int $iPageId Function will update page instead of creating if not 0
+	 *
+	 * @return int|WP_Error
+	 */
+	protected function _genCoursePage($iCourseId, $sCourseName, $oCoursePart, $iPageId = 0){
+		$iCpIndex = $oCoursePart->getCourseIndex();
+		$iCpId = $oCoursePart->getCoursePartID();
+		$sCpTitle = $oCoursePart->getCoursePartName();
+		$sPageTitle = $sCourseName." - ".$sCpTitle;
+		$sPageElementId = "cm_course_".$iCourseId."_".$iCpIndex;
+		$sPageName = $sCourseName."-".$iCpIndex."-".$sCpTitle;
+
+		$sPageContent = "<div id='$sPageElementId' class='cm_page_wrap'>";
+
+		foreach ($oCoursePart->getParts() as $oPart){
+			$sDivId = "cm_part_divider_".$oPart->getIndex();
+
+			$sPageContent .= "<div id='$sDivId' class='cm_part_divider'>";
+			$sPageContent .= $this->_handlePartContent($oPart);
+			$sPageContent .= "</div>";
+		}
+
+		$sPageContent .= "</div>";
+
+		$aPostData = $this->_getPostDataArray($sPageTitle, $sPageContent, $iCourseId, $iCpId, $sPageName, $iPageId);
+
+		$iGeneratedPageId = wp_insert_post($aPostData);
+
+		return $iGeneratedPageId;
 	}
 
 
@@ -133,18 +165,26 @@ class CmPageBuilder
 	/**
 	 * @param string $sCoursePartTitle - The title of the page
 	 * @param string $sCoursePartContent - The content that should be on the page
+	 * @param int $iCourseId
+	 * @param int $iCoursePartId
 	 * @param int $iPostID - If not 0 it will update an already created page
 	 * @return array containing all params to use with wp_insert_post()
 	 */
-	protected function _getPostDataArray($sCoursePartTitle, $sCoursePartContent, $iPostID = 0)
+	protected function _getPostDataArray($sCoursePartTitle, $sCoursePartContent, $iCourseId, $iCoursePartId, $sPageName, $iPostID = 0)
 	{
 		$aPostData = array(
 			'ID' => $iPostID,
 			'post_excerpt' => 'cm_course',
 			'post_type' => 'page',
+			'post_status' => 'publish',
 			'comment_status' => 'closed',
-			'post_title' => $sCoursePartTitle,
+			'post_title' => wp_strip_all_tags($sCoursePartTitle),
+			'post_name' => $sPageName,
 			'post_content' => $sCoursePartContent,
+			'meta_input'   => array(
+				'course_id' => $iCourseId,
+				'course_part_id' => $iCoursePartId
+			)
 		);
 
 		return $aPostData;
