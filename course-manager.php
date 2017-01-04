@@ -64,6 +64,7 @@ require_once 'class/CourseManager.class.php';
 require_once 'class/CmCourse.class.php';
 require_once 'class/CmCoursePart.class.php';
 require_once 'class/CmPart.class.php';
+require_once 'class/CmPageBuilder.class.php';
 require_once 'class/CmUamLink.class.php';
 require_once 'widget/cmLinks.class.php';
 

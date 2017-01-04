@@ -23,7 +23,7 @@
  */
 
 
-class PageBuilder
+class CmPageBuilder
 {
 
 
@@ -44,6 +44,23 @@ class PageBuilder
 		//Check for already created pages for the course, and call @updateCoursePages if so
 
 		//Go through all CmCourseParts and generate wp_posts with its CmParts
+
+		//TEST
+		$aCourseParts = $oCourse->getCourseParts();
+		$sCourseName = $oCourse->getCourseName();
+
+		echo "<h2>$sCourseName</h2><br>";
+
+		foreach ($aCourseParts as $oCoursePart){
+			$sCpTitle = $oCoursePart->getCoursePartName();
+			echo "<div><h5>$sCpTitle</h5><br>";
+
+			foreach ($oCoursePart->getParts() as $oPart){
+				echo $this->_handlePartContent($oPart);
+			}
+
+			echo "</div>";
+		}
 	}
 
 
@@ -64,21 +81,48 @@ class PageBuilder
 	{
 		$sType = $oPart->getType();
 		$sContent = $oPart->getContent();
+		$sTitle = $oPart->getTitle();
+		$iIndex = $oPart->getIndex();
+		$iCPIndex = $oPart->getCoursePartIndex();
+
+		$sPartAttrId = "cm_CP_".$iCPIndex."_P_".$iIndex;
+
+		//TODO - Add titles
 
 		if ($sType == "text"){
-			return "";
+			return "<p id='$sPartAttrId' class='cm_page_text'>$sContent</p>";
 
 		} elseif ($sType == "image"){
-			return "<img class='cm_page_image' src='".$sContent."' />";
+			return "<img id='$sPartAttrId' class='cm_page_image' src='$sContent' />";
 
 		} elseif ($sType == "video"){
 			return "";
 
 		} elseif ($sType == "question"){
-			return "";
+			if (!is_array($sContent)){
+				$aContent = CmPart::parse_quest($sContent);
+			} else{
+				$aContent = $sContent;
+			}
+
+			$sHtmlString = "<ul id='$sPartAttrId' class='cm_page_quest'>";
+
+			foreach ($aContent as $iIndex => $sQuestion){
+				$sHtmlString .= "<li class='cm_page_quest_item'>
+									<label class='cm_page_quest_lbl' for='".$sPartAttrId."_q_".$iIndex."'>$sQuestion</label>
+									<input class='cm_page_quest_input' type='text' name='".$sPartAttrId."_q_".$iIndex."' />
+								</li>";
+			}
+
+			//TODO - Add save button
+			$sHtmlString .= "</ul>";
+
+			return $sHtmlString;
 
 		} elseif ($sType == "download"){
-			return "";
+			$sFileTypeClass = "cm_dl_".substr($sContent, strrpos($sContent, ".") + 1);
+
+			return "<a id='$sPartAttrId' class='cm_page_dl $sFileTypeClass' href='$sContent' download>$sTitle</a>";
 
 		}
 
