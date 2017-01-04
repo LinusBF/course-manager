@@ -35,7 +35,6 @@ class CmCoursePart
 	protected $_iCoursePartID = null;
 	protected $_aCmParts = array();
 	protected $_iCourseID = null;
-	protected $_iPostID = null;
 	protected $_sCoursePartName = null;
 	protected $_iNrOfParts = null;
 
@@ -237,17 +236,6 @@ class CmCoursePart
     	$this->_sCoursePartName = htmlspecialchars($sName, ENT_QUOTES, 'UTF-8');
 
     }
-
-
-	/**
-	 * Returns the CoursePart name.
-	 *
-	 * @return int
-	 */
-	public function getPostID()
-	{
-		return (int) $this->_iPostID;
-	}
 
 
 	/**
