@@ -43,29 +43,25 @@ class CmPageBuilder
 	 */
 	public function createCoursePages($oCourse)
 	{
-		//Check for already created pages for the course, and call @updateCoursePages if so
-
 		//Go through all CmCourseParts and generate wp_posts with its CmParts
 		$aCourseParts = $oCourse->getCourseParts();
 		$iCourseId = $oCourse->getCourseID();
 		$sCourseName = $oCourse->getCourseName();
 
 		$aPageIds = array();
+		$aCoursePartIds = array();
 
 		foreach ($aCourseParts as $oCoursePart){
-			array_push($aPageIds, $this->_genCoursePage($iCourseId, $sCourseName, $oCoursePart));
+			array_push($aCoursePartIds, $oCoursePart->getCoursePartID());
+			$iPostId = $this->_checkCoursePartPost($oCoursePart->getCoursePartID());
+
+			array_push($aPageIds, $this->_genCoursePage($iCourseId, $sCourseName, $oCoursePart, $iPostId));
 		}
 
+		//Cleanup deleted CmCourseParts
+		$this->_coursePagesCleanup($iCourseId, $aCoursePartIds);
+
 		return $aPageIds;
-	}
-
-
-	/**
-	 * @param CmCourse $oCourse
-	 */
-	public function updateCoursePages($oCourse)
-	{
-		//Go through all pages created for the CmCourse, update them and add new pages for new CmCourseParts in the CmCourse
 	}
 
 
@@ -73,11 +69,11 @@ class CmPageBuilder
 	 * @param int $iCourseId
 	 * @param string $sCourseName
 	 * @param CmCoursePart $oCoursePart
-	 * @param int $iPageId Function will update page instead of creating if not 0
+	 * @param int $iPostID Function will update page instead of creating if not 0
 	 *
 	 * @return int|WP_Error
 	 */
-	protected function _genCoursePage($iCourseId, $sCourseName, $oCoursePart, $iPageId = 0){
+	protected function _genCoursePage($iCourseId, $sCourseName, $oCoursePart, $iPostID = 0){
 		$iCpIndex = $oCoursePart->getCourseIndex();
 		$iCpId = $oCoursePart->getCoursePartID();
 		$sCpTitle = $oCoursePart->getCoursePartName();
@@ -97,7 +93,7 @@ class CmPageBuilder
 
 		$sPageContent .= "</div>";
 
-		$aPostData = $this->_getPostDataArray($sPageTitle, $sPageContent, $iCourseId, $iCpId, $sPageName, $iPageId);
+		$aPostData = $this->_getPostDataArray($sPageTitle, $sPageContent, $iCourseId, $iCpId, $sPageName, $iPostID);
 
 		$iGeneratedPageId = wp_insert_post($aPostData);
 
@@ -128,6 +124,7 @@ class CmPageBuilder
 			return "<img id='$sPartAttrId' class='cm_page_image' src='$sContent' />";
 
 		} elseif ($sType == "video"){
+			//TODO
 			return "";
 
 		} elseif ($sType == "question"){
@@ -167,6 +164,7 @@ class CmPageBuilder
 	 * @param string $sCoursePartContent - The content that should be on the page
 	 * @param int $iCourseId
 	 * @param int $iCoursePartId
+	 * @param string $sPageName
 	 * @param int $iPostID - If not 0 it will update an already created page
 	 * @return array containing all params to use with wp_insert_post()
 	 */
@@ -182,12 +180,78 @@ class CmPageBuilder
 			'post_name' => $sPageName,
 			'post_content' => $sCoursePartContent,
 			'meta_input'   => array(
-				'course_id' => $iCourseId,
-				'course_part_id' => $iCoursePartId
+				'cm_course_id' => $iCourseId,
+				'cm_course_part_id' => $iCoursePartId
 			)
 		);
 
 		return $aPostData;
+	}
+
+
+	/**
+	 * @param int $iCoursePartID
+	 * @return int 0 if no post was found, ID of the post if found
+	 */
+	protected function _checkCoursePartPost($iCoursePartID)
+	{
+		global $wpdb;
+
+		$sTablePosts = $wpdb->prefix."posts";
+		$sTablePostmeta = $wpdb->prefix."postmeta";
+
+		$sSQL = "SELECT $sTablePosts.ID FROM $sTablePosts 
+				JOIN $sTablePostmeta ON $sTablePosts.ID = $sTablePostmeta.post_id 
+				WHERE $sTablePostmeta.meta_key = 'cm_course_part_id' AND $sTablePostmeta.meta_value = %d";
+
+		$sQuery = $wpdb->prepare($sSQL, $iCoursePartID);
+
+		$oResponse = $wpdb->get_row($sQuery);
+
+		if(isset($oResponse)){
+			return intval($oResponse->ID);
+		} else{
+			return 0;
+		}
+	}
+
+
+	/**
+	 * @param int $iCourseId
+	 * @param int[] $aCoursePartIds
+	 * @return bool
+	 */
+	protected function _coursePagesCleanup($iCourseId, $aCoursePartIds)
+	{
+		global $wpdb;
+
+		$sTablePostmeta = $wpdb->prefix."postmeta";
+
+		$sSQL = "SELECT DISTINCT meta1.meta_value FROM $sTablePostmeta AS meta1 
+				JOIN $sTablePostmeta AS meta2 ON meta2.meta_key = 'cm_course_id' AND meta2.meta_value = %d
+				WHERE meta1.meta_key = 'cm_course_part_id'";
+
+		$sQuery = $wpdb->prepare($sSQL, $iCourseId);
+
+		$aResponse = $wpdb->get_col($sQuery);
+
+		if(isset($aResponse)){
+			foreach ($aResponse as $iPartId){
+				if (!in_array($iPartId, $aCoursePartIds)){
+					$sDelSQL = "SELECT meta.post_id FROM $sTablePostmeta AS meta WHERE meta.meta_key = 'cm_course_part_id' AND meta.meta_value = %d";
+
+					$sQuery = $wpdb->prepare($sDelSQL, $iPartId);
+					$iPostId = $wpdb->get_row($sQuery)->post_id;
+
+					wp_delete_post($iPostId, true);
+				}
+			}
+
+			return true;
+
+		} else{
+			return false;
+		}
 	}
 
 }
