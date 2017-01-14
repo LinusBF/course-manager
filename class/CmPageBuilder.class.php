@@ -125,7 +125,10 @@ class CmPageBuilder
 
 		} elseif ($sType == "video"){
 			//TODO
-			return "";
+			//Handle youtube link
+			$sVideoId = explode("v=", $sContent)[1];
+			//Return iFrame element
+			return "<iframe width='560' height='315' src='https://www.youtube.com/embed/$sVideoId' frameborder='0' allowfullscreen></iframe>";
 
 		} elseif ($sType == "question"){
 			if (!is_array($sContent)){
