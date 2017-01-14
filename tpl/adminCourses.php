@@ -280,7 +280,7 @@ class CourseList extends WP_List_Table
 				die('Stop messing with it...');
 			} else{
 				self::deleteCourse(absint($_GET['course']));
-				//wp_redirect(esc_url(add_query_arg()));	FIX THIS
+				//wp_redirect(esc_url(add_query_arg()));	TODO - FIX THIS
 			}
 		}
 
@@ -294,7 +294,7 @@ class CourseList extends WP_List_Table
 				$oPageBuilder = new CmPageBuilder();
 				$oPageBuilder->updateCoursePagesStatus($_GET['course']);
 
-				//wp_redirect(esc_url(add_query_arg()));	FIX THIS
+				//wp_redirect(esc_url(add_query_arg()));	TODO - FIX THIS
 			}
 		}
 
@@ -307,7 +307,7 @@ class CourseList extends WP_List_Table
 				self::deleteCourse($iID);
 			}
 
-			//wp_redirect(esc_url(add_query_arg()));	FIX THIS
+			//wp_redirect(esc_url(add_query_arg()));	TODO - FIX THIS
 		}
 	}
 
