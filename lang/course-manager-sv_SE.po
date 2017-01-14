@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Course Manager\n"
-"POT-Creation-Date: 2016-08-22 18:43+0200\n"
-"PO-Revision-Date: 2016-08-22 18:51+0200\n"
+"POT-Creation-Date: 2017-01-14 16:07+0100\n"
+"PO-Revision-Date: 2017-01-14 16:12+0100\n"
 "Last-Translator: \n"
 "Language-Team: Linus Bein Fahlander\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: __;_e\n"
@@ -48,29 +48,33 @@ msgid "Delete"
 msgstr "Radera"
 
 #: includes/language.define.php:27
+msgid "Generate pages"
+msgstr "Generera Sidor"
+
+#: includes/language.define.php:28
 msgid "Active"
 msgstr "Aktiv"
 
-#: includes/language.define.php:28
+#: includes/language.define.php:29
 msgid "Not active"
 msgstr "Inaktiv"
 
-#: includes/language.define.php:29
+#: includes/language.define.php:30
 msgid "Activate"
 msgstr "Aktivera"
 
-#: includes/language.define.php:30
+#: includes/language.define.php:31
 msgid "Deactivate"
 msgstr "Avaktivera"
 
-#: includes/language.define.php:33
+#: includes/language.define.php:34
 msgid ""
 "Your PHP version is too low, please update it before using Course Manager"
 msgstr ""
 "Din PHP version är för gammal, var snäll och uppdatera den innan du använder "
 "Kurshanteraren"
 
-#: includes/language.define.php:34
+#: includes/language.define.php:35
 msgid ""
 "Your Wordpress version is too low, please it update before using Course "
 "Manager"
@@ -78,12 +82,12 @@ msgstr ""
 "Din Wordpress version är för gammal, var snäll och uppdatera den innan du "
 "använder Kurshanteraren"
 
-#: includes/language.define.php:35
+#: includes/language.define.php:36
 msgid ""
 "The name for the course is already in use, please edit that one instead."
 msgstr "Namnet för kursen används redan, vänligen redigera den istället."
 
-#: includes/language.define.php:36
+#: includes/language.define.php:37
 msgid ""
 "The database query failed, please try again. If the problem persists please "
 "contact the site administrator."
@@ -91,78 +95,157 @@ msgstr ""
 "Databasfrågan misslyckades, vänligen försök igen. Kontakta administratören "
 "om problemet kvarstår."
 
-#: includes/language.define.php:39 includes/language.define.php:45
+#: includes/language.define.php:40 includes/language.define.php:46
 msgid "Courses"
 msgstr "Kurser"
 
-#: includes/language.define.php:40 includes/language.define.php:52
+#: includes/language.define.php:41 includes/language.define.php:53
 msgid "Tags"
 msgstr "Taggar"
 
-#: includes/language.define.php:41
+#: includes/language.define.php:42
 msgid "About"
 msgstr "Om"
 
-#: includes/language.define.php:44
+#: includes/language.define.php:45
 msgid "Course"
 msgstr "Kurs"
 
-#: includes/language.define.php:46
+#: includes/language.define.php:47
 msgid "You have no courses yet"
 msgstr "Du har inga kurser ännu"
 
-#: includes/language.define.php:47
+#: includes/language.define.php:48
 msgid "days"
 msgstr "dagar"
 
-#: includes/language.define.php:48
+#: includes/language.define.php:49
 msgid "Course Name"
 msgstr "Kursnamn"
 
-#: includes/language.define.php:49
+#: includes/language.define.php:50
 msgid "Span"
 msgstr "Tid"
 
-#: includes/language.define.php:50 includes/language.define.php:63
+#: includes/language.define.php:51 includes/language.define.php:69
 msgid "Parts"
 msgstr "Del"
 
-#: includes/language.define.php:51
+#: includes/language.define.php:52
 msgid "Status"
 msgstr "Status"
 
-#: includes/language.define.php:58
+#: includes/language.define.php:59
 msgid "You're editing "
 msgstr "Du redigerar "
 
-#: includes/language.define.php:59
+#: includes/language.define.php:60
 msgid "You're creating a new course"
 msgstr "Du skapar en ny kurs"
 
-#: includes/language.define.php:60
+#: includes/language.define.php:61
 msgid "Course name"
 msgstr "Kursnamn"
 
-#: includes/language.define.php:61
+#: includes/language.define.php:62
 msgid "Course span (days)"
 msgstr "Kurstid (dagar)"
 
-#: includes/language.define.php:62
+#: includes/language.define.php:63
 msgid "Save Course"
 msgstr "Spara Kurs"
 
 #: includes/language.define.php:64
-msgid "Type: "
-msgstr "Typ: "
+msgid "Course parts"
+msgstr "Kursdelar"
 
 #: includes/language.define.php:65
+msgid "Type"
+msgstr "Typ"
+
+#: includes/language.define.php:66
 msgid "Name"
 msgstr "Namn"
 
-#: includes/language.define.php:66
+#: includes/language.define.php:67
+msgid "Index"
+msgstr "Index"
+
+#: includes/language.define.php:68
+msgid "Add New Part"
+msgstr "Lägg till ny del"
+
+#: includes/language.define.php:70
+msgid "Title"
+msgstr "Titel"
+
+#: includes/language.define.php:71
+msgid "Video Link"
+msgstr "Video-länk"
+
+#: includes/language.define.php:72
+msgid "Image Link"
+msgstr "Bildlänk"
+
+#: includes/language.define.php:73
+msgid "Download Link"
+msgstr "Nedladdningslänk"
+
+#: includes/language.define.php:74
+msgid "Questions"
+msgstr "Frågor"
+
+#: includes/language.define.php:75
+msgid "Question"
+msgstr "Fråga"
+
+#: includes/language.define.php:76
 msgid "The Course have successfully been saved"
 msgstr "Din kurs har sparats"
 
-#: includes/language.define.php:67
+#: includes/language.define.php:77
 msgid "Something went wrong. Your Course updates/creation have not been saved"
 msgstr "Någonting gick fel. Dina kursuppdateringar/skapande har inte sparats"
+
+#: includes/language.define.php:78
+msgid "The course pages have successfully been generated"
+msgstr "Kurssidorna har genererats!"
+
+#: includes/language.define.php:79
+msgid "ERROR: Some course pages were not generated correctly!"
+msgstr "FEL: Några kurssidor kunde inte genereras!"
+
+#: includes/language.define.php:80
+msgid "New course part"
+msgstr "Ny kursdel"
+
+#: includes/language.define.php:81
+msgid "New part"
+msgstr "Ny del"
+
+#: includes/language.define.php:82
+msgid "New part content"
+msgstr "Ny del innehåll"
+
+#: includes/language.define.php:83
+msgid "link_to_item"
+msgstr "link_to_item"
+
+#: includes/language.define.php:84
+msgid "{Question 1 text},"
+msgstr "{Fråga 1 text}"
+
+#: includes/language.define.php:85
+msgid "Add New Question"
+msgstr "Lägg till ny fråga"
+
+#: includes/language.define.php:86
+msgid "You need to save the course first to add new course parts"
+msgstr "Du måste först spara kursen för att kunna lägga till kursdelar"
+
+#: includes/language.define.php:90
+msgid "Content type not supported yet"
+msgstr "Innehållstyp stöds inte ännu"
+
+#~ msgid "Type: "
+#~ msgstr "Typ: "
