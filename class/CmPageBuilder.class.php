@@ -47,6 +47,7 @@ class CmPageBuilder
 		$aCourseParts = $oCourse->getCourseParts();
 		$iCourseId = $oCourse->getCourseID();
 		$sCourseName = $oCourse->getCourseName();
+		$blCourseStatus = $oCourse->getCourseStatus();
 
 		$aPageIds = array();
 		$aCoursePartIds = array();
@@ -55,7 +56,7 @@ class CmPageBuilder
 			array_push($aCoursePartIds, $oCoursePart->getCoursePartID());
 			$iPostId = $this->_checkCoursePartPost($oCoursePart->getCoursePartID());
 
-			array_push($aPageIds, $this->_genCoursePage($iCourseId, $sCourseName, $oCoursePart, $iPostId));
+			array_push($aPageIds, $this->_genCoursePage($iCourseId, $sCourseName, $oCoursePart, $blCourseStatus, $iPostId));
 		}
 
 		//Cleanup deleted CmCourseParts
@@ -69,11 +70,11 @@ class CmPageBuilder
 	 * @param int $iCourseId
 	 * @param string $sCourseName
 	 * @param CmCoursePart $oCoursePart
+	 * @param bool $blCourseStatus
 	 * @param int $iPostID Function will update page instead of creating if not 0
-	 *
 	 * @return int|WP_Error
 	 */
-	protected function _genCoursePage($iCourseId, $sCourseName, $oCoursePart, $iPostID = 0){
+	protected function _genCoursePage($iCourseId, $sCourseName, $oCoursePart, $blCourseStatus, $iPostID = 0){
 		$iCpIndex = $oCoursePart->getCourseIndex();
 		$iCpId = $oCoursePart->getCoursePartID();
 		$sCpTitle = $oCoursePart->getCoursePartName();
@@ -93,7 +94,7 @@ class CmPageBuilder
 
 		$sPageContent .= "</div>";
 
-		$aPostData = $this->_getPostDataArray($sPageTitle, $sPageContent, $iCourseId, $iCpId, $sPageName, $iPostID);
+		$aPostData = $this->_getPostDataArray($sPageTitle, $sPageContent, $iCourseId, $iCpId, $sPageName, $blCourseStatus, $iPostID);
 
 		$iGeneratedPageId = wp_insert_post($aPostData);
 
@@ -168,16 +169,17 @@ class CmPageBuilder
 	 * @param int $iCourseId
 	 * @param int $iCoursePartId
 	 * @param string $sPageName
+	 * @param bool $blCourseStatus
 	 * @param int $iPostID - If not 0 it will update an already created page
 	 * @return array containing all params to use with wp_insert_post()
 	 */
-	protected function _getPostDataArray($sCoursePartTitle, $sCoursePartContent, $iCourseId, $iCoursePartId, $sPageName, $iPostID = 0)
+	protected function _getPostDataArray($sCoursePartTitle, $sCoursePartContent, $iCourseId, $iCoursePartId, $sPageName, $blCourseStatus, $iPostID = 0)
 	{
 		$aPostData = array(
 			'ID' => $iPostID,
 			'post_excerpt' => 'cm_course',
 			'post_type' => 'page',
-			'post_status' => 'publish',
+			'post_status' => ($blCourseStatus ? 'publish' : 'draft'),
 			'comment_status' => 'closed',
 			'post_title' => wp_strip_all_tags($sCoursePartTitle),
 			'post_name' => $sPageName,
@@ -255,6 +257,50 @@ class CmPageBuilder
 		} else{
 			return false;
 		}
+	}
+
+
+	/**
+	 * @param int $iCourseId
+	 * @return array Contains the ids of all the pages for the course
+	 */
+	public function getCoursePageIds($iCourseId){
+		$oCourse = CmCourse::getCourseByID($iCourseId, true);
+		$aCourseParts = $oCourse->getCourseParts();
+
+		$aPageIds = array();
+		foreach ($aCourseParts as $oCoursePart){
+			$iPageId = $this->_checkCoursePartPost($oCoursePart->getCoursePartID());
+			array_push($aPageIds, $iPageId);
+		}
+
+		return $aPageIds;
+	}
+
+
+	/**
+	 * @param int $iCourseId
+	 * @return bool True if all pages were updated, False if not
+	 */
+	public function updateCoursePagesStatus($iCourseId){
+		$oCourse = CmCourse::getCourseByID($iCourseId, true);
+		if($oCourse->getCourseStatus()){
+			$blPostStatus = "publish";
+		} else{
+			$blPostStatus = 'draft';
+		}
+
+		$blUpdateSuccess = true;
+		foreach ($this->getCoursePageIds($iCourseId) as $iPageId){
+			if ($iPageId > 0){
+				$aPost = array('ID' => $iPageId, 'post_status' => $blPostStatus);
+				if(wp_update_post($aPost) < 1){
+					$blUpdateSuccess = false;
+				}
+			}
+		}
+
+		return $blUpdateSuccess;
 	}
 
 }
