@@ -46,19 +46,37 @@ function getCourseForm($iCourseID = null)
 			<tbody>
 				<tr>
 					<th scope='row'>
-						<label class="cm_table_label" for='cm_coursename'><?php echo TXT_CM_EDIT_COURSENAME; ?></label>
+						<label class="cm_table_label" for='cm_course_name'><?php echo TXT_CM_EDIT_COURSENAME; ?></label>
 					</th>
 					<td>
-						<input name='cm_coursename' type='text' id='cm_edit_course_name' class='regular-text'
+						<input name='cm_course_name' type='text' id='cm_edit_course_name' class='regular-text'
 						value='<?php echo (isset($oCourse) ? $oCourse->getCourseName() : ''); ?>'>
 					</td>
 				</tr>
 				<tr>
 					<th scope='row'>
-						<label class="cm_table_label" for='cm_coursespan'><?php echo TXT_CM_EDIT_COURSESPAN; ?></label>
+						<label class="cm_table_label" for='cm_course_description'><?php echo TXT_CM_EDIT_COURSEDESC; ?></label>
 					</th>
 					<td>
-						<input name='cm_coursespan' type='number' id='cm_edit_course_span'
+						<input name='cm_course_description' type='text' id='cm_edit_course_desc' class='regular-text'
+							   value='<?php echo (isset($oCourse) ? $oCourse->getCourseDescription() : 'Just another Course'); ?>'>
+					</td>
+				</tr>
+				<tr>
+					<th scope='row'>
+						<label class="cm_table_label" for='cm_course_price'><?php echo TXT_CM_EDIT_COURSEPRICE; ?></label>
+					</th>
+					<td>
+						<input name='cm_course_price' type='number' id='cm_edit_course_price' class='regular-text'
+							   value='<?php echo (isset($oCourse) ? $oCourse->getCoursePrice() : ''); ?>'>
+					</td>
+				</tr>
+				<tr>
+					<th scope='row'>
+						<label class="cm_table_label" for='cm_course_span'><?php echo TXT_CM_EDIT_COURSESPAN; ?></label>
+					</th>
+					<td>
+						<input name='cm_course_span' type='number' id='cm_edit_course_span'
 						value='<?php echo (isset($oCourse) ? $oCourse->getCourseSpan() : ''); ?>'>
 					</td>
 				</tr>
@@ -123,10 +141,12 @@ function saveCourseChanges(){
 		$oNewCourse = CmCourse::create();
 	}
 
-	if(!$oNewCourse->setCourseName($_POST['cm_coursename'])){
+	if(!$oNewCourse->setCourseName($_POST['cm_course_name'])){
 		return false;
 	}
-	$oNewCourse->setCourseSpan((int) $_POST['cm_coursespan']);
+	$oNewCourse->setCourseSpan((int) $_POST['cm_course_span']);
+	$oNewCourse->setCourseDescription($_POST['cm_course_description']);
+	$oNewCourse->setCoursePrice((int) $_POST['cm_course_price']);
 
 	if (!isset($_POST['course'])){
 		$iCId = $oNewCourse->save(false);

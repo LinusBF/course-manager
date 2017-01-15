@@ -103,7 +103,7 @@ class CourseManager
                 'edit_access_role' => 'administrator'
             );
             
-            $aCmOptions = $this->getWpOption($this->_sAdminOptionsName);
+            $aCmOptions = $this->getWPOption($this->_sAdminOptionsName);
             
             if (!empty($aCmOptions)) {
                 foreach ($aCmOptions as $sKey => $mOption) {
@@ -128,19 +128,20 @@ class CourseManager
      */
     public function getWPOption($sOption)
     {
-        if (!isset($this->_aWpOptions[$sOption])) {
-            $this->_aWpOptions[$sOption] = get_option($sOption);
+        if (!isset($this->_aWPOptions[$sOption])) {
+            $this->_aWPOptions[$sOption] = get_option($sOption);
         }
 
-        return $this->_aWpOptions[$sOption];
+        return $this->_aWPOptions[$sOption];
     }
 
 
-    /**
-     * Returns the role of the user with this ID.
-     * 
-     * @return array
-     */
+	/**
+	 * Returns the role of the user with this ID.
+	 *
+	 * @param int $iUserID
+	 * @return array
+	 */
     protected function _getUserRole($iUserID)
     {
         global $wpdb;
@@ -205,7 +206,7 @@ class CourseManager
 
         $sCharsetCollate = $this->_getCharset();
 
-        //Cecking if cm_courses table exists
+        //Checking if cm_courses table exists
         $sCmCourseTableName = $wpdb->prefix.'cm_courses';
 
         $sNameInDb = $wpdb->get_var(
@@ -218,6 +219,8 @@ class CourseManager
         		"CREATE TABLE ".$sCmCourseTableName." (
         			ID int NOT NULL auto_increment,
 					name VARCHAR(100) NOT NULL UNIQUE,
+					description TEXT,
+					price int NOT NULL,
 					active BOOLEAN NOT NULL DEFAULT FALSE,
 					span int NOT NULL COMMENT 'Days',
 					PRIMARY KEY (ID)
@@ -225,7 +228,7 @@ class CourseManager
         	);
         }
 
-        //Cecking if cm_course_parts table exists
+        //Checking if cm_course_parts table exists
         $sCmCoursePartTableName = $wpdb->prefix.'cm_course_parts';
 
         $sNameInDb = $wpdb->get_var(
@@ -255,7 +258,7 @@ class CourseManager
         	);
         }
 
-        //Cecking if cm_parts table exists
+        //Checking if cm_parts table exists
         $sCmPartTableName = $wpdb->prefix.'cm_parts';
 
         $sNameInDb = $wpdb->get_var(
@@ -278,7 +281,7 @@ class CourseManager
         	);
         }
 
-        //Cecking if cm_tags table exists
+        //Checking if cm_tags table exists
         $sCmTagTableName = $wpdb->prefix.'cm_tags';
 
         $sNameInDb = $wpdb->get_var(
@@ -296,7 +299,7 @@ class CourseManager
         	);
         }
 
-        //Cecking if cm_rel_tag_course table exists
+        //Checking if cm_rel_tag_course table exists
         $sCmTagRelTableName = $wpdb->prefix.'cm_rel_tag_course';
 
         $sNameInDb = $wpdb->get_var(
@@ -480,34 +483,6 @@ class CourseManager
             }
         }
     }
-
-
-    /**
-     * Creates a course, adds it to the database and generates all the requiered pages for the course.
-     *
-     * @param CmCourse $course
-     *
-     * @return boolean | TRUE - Successfully made course | FALSE - Failed to make course
-     */
-    public function createCourse($course)
-    {
-        # code...
-    }
-
-
-    /**
-     * Function Description.
-     *
-     * @param datatype $value
-     *
-     * @return datatype
-     */
-    public function FuncTemp($value='')
-    {
-    	# code...
-    }
 }
-
-
 
 ?>

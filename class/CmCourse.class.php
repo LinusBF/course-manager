@@ -32,6 +32,8 @@
 class CmCourse
 {
 	protected $_sCourseName = null;
+	protected $_sCourseDescription = null;
+	protected $_iCoursePrice = null;
 	protected $_iCourseSpan = null; //In days
 	protected $_blCourseActive = false;
 	protected $_iCourseID = null;
@@ -87,13 +89,15 @@ class CmCourse
      *
      * @return CmCourse instance
      */
-    public static function createCompleteCourse($sName,$blActive,$iSpan,$aCourseParts)
+    public static function createCompleteCourse($sName, $sDesc, $iPrice, $blActive,$iSpan,$aCourseParts)
     {
     	$instance = new self();
     	if (!$instance->checkCourseName($sName)) {
     		return false;
     	}
     	$instance->_sCourseName = $sName;
+		$instance->_sCourseDescription = $sDesc;
+		$instance->_iCoursePrice = $iPrice;
     	$instance->_blCourseActive = $blActive;
     	$instance->_iCourseSpan = $iSpan;
     	$instance->_aCourseParts = $aCourseParts;
@@ -105,7 +109,7 @@ class CmCourse
     /**
      * Gets all the used Course names
      *
-     * @return int
+     * @return string[]
      */
     public function getUsedNames()
     {
@@ -113,10 +117,58 @@ class CmCourse
 
     	$sSQL = "SELECT name FROM ".$this->_getDbTableName();
 
-    	$resutls = $wpdb->get_col($sSQL);
+    	$aResults = $wpdb->get_col($sSQL);
 
-    	return $resutls;
+    	return $aResults;
     }
+
+
+	/**
+	 * Returns the description of the Course
+	 *
+	 * @return int
+	 */
+	public function getCourseDescription()
+	{
+		return htmlspecialchars($this->_sCourseDescription, ENT_QUOTES, 'UTF-8');
+	}
+
+
+	/**
+	 * Sets the description of the Course
+	 *
+	 * @param string $sDesc
+	 *
+	 * @return null
+	 */
+	public function setCourseDescription($sDesc)
+	{
+		$this->_sCourseDescription = htmlspecialchars($sDesc, ENT_QUOTES, 'UTF-8');
+	}
+
+
+	/**
+	 * Returns the price of the Course
+	 *
+	 * @return int
+	 */
+	public function getCoursePrice()
+	{
+		return $this->_iCoursePrice;
+	}
+
+
+	/**
+	 * Sets the price of the Course
+	 *
+	 * @param int $iPrice
+	 *
+	 * @return null
+	 */
+	public function setCoursePrice($iPrice)
+	{
+		$this->_iCoursePrice = intval($iPrice);
+	}
 
 
     /**
@@ -427,19 +479,21 @@ class CmCourse
 		    if ($this->_blCourseActive) {
 		    	$iActive = 1;
 		    }
+		    $sDesc = $this->_sCourseDescription;
+			$iPrice = $this->_iCoursePrice;
 		    $iSpan = $this->_iCourseSpan;
 
 	    	if(!isset($this->_iCourseID)){
 
-		    	$sSQL = "INSERT INTO ".$this->_getDbTableName()."(name,active,span)
-		    	VALUES(%s,%d,%d)";
+		    	$sSQL = "INSERT INTO ".$this->_getDbTableName()."(name,description,priceactive,span)
+		    	VALUES(%s,%s,%d,%d,%d)";
 
 	    	} else{
 
 	    		if($this->checkCourseName($sName,$this->_iCourseID)){
 
 		    		$sSQL = "UPDATE ".$this->_getDbTableName()."
-		    		SET name = %s, active = %d, span = %d
+		    		SET name = %s, description = %s, price = %d, active = %d, span = %d
 			    	WHERE ID = ".$this->_iCourseID;
 
 			    } else{
@@ -447,7 +501,7 @@ class CmCourse
 			    }
 	    	}
 
-		    $sQuery = $wpdb->prepare($sSQL,$sName,$iActive,$iSpan);
+		    $sQuery = $wpdb->prepare($sSQL,$sName,$sDesc,$iPrice,$iActive,$iSpan);
 
 		    if ($wpdb->query($sQuery) !== false) {
 
@@ -535,7 +589,7 @@ class CmCourse
 
     	if ((isset($this->_sCourseName) && strlen($this->_sCourseName) > 0)
     		&& (isset($this->_iCourseSpan) && $this->_iCourseSpan != 0)
-    		&& isset($this->_blCourseActive))
+    		&& isset($this->_blCourseActive) && isset($this->_iCoursePrice))
     	{
     		$blVarSet = true;
     	}
@@ -582,19 +636,20 @@ class CmCourse
     }
 
 
-    /**
-     * Return the object representing the course in the db with the same ID.
-     *
-     * @param int $iID
-     *
-     * @return CmCourse
-     */
+	/**
+	 * Return the object representing the course in the db with the same ID.
+	 *
+	 * @param int $iID
+	 *
+	 * @param bool $blGetCourseParts
+	 * @return CmCourse
+	 */
     public static function getCourseByID($iID,$blGetCourseParts = false)
     {
     	$instance = new self();
     	global $wpdb;
 
-    	$sSQL = "SELECT name,active,span FROM ".$instance->_getDbTableName()." WHERE ID = %d";
+    	$sSQL = "SELECT name,description,price,active,span FROM ".$instance->_getDbTableName()." WHERE ID = %d";
 
     	$oCourse = $wpdb->get_row($wpdb->prepare($sSQL,$iID));
 
@@ -606,6 +661,8 @@ class CmCourse
 	    	} else{
 	    		$blActive = false;
 	    	}
+	    	$instance->setCourseDescription($oCourse->description);
+			$instance->setCoursePrice($oCourse->price);
 	    	$instance->setCourseStatus($blActive);
 	    	$instance->setCourseSpan(intval($oCourse->span));
 	    	$instance->_iCourseID = intval($iID);
@@ -642,13 +699,14 @@ class CmCourse
     }
 
 
-    /**
-     * Return the object representing the course in the db with the same name.
-     *
-     * @param string $sName
-     *
-     * @return CmCourse
-     */
+	/**
+	 * Return the object representing the course in the db with the same name.
+	 *
+	 * @param string $sName
+	 *
+	 * @param bool $blGetCourseParts
+	 * @return bool|CmCourse
+	 */
     public static function getCourseByName($sName,$blGetCourseParts = false)
     {
     	$instance = new self();

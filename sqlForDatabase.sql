@@ -2,6 +2,8 @@
 CREATE TABLE wp_cm_courses(
 	ID int NOT NULL auto_increment,
 	name VARCHAR(100) NOT NULL UNIQUE,
+	description TEXT,
+	price int NOT NULL,
 	active BOOLEAN NOT NULL DEFAULT FALSE,
 	span int NOT NULL COMMENT 'Days',
 	PRIMARY KEY (ID)
@@ -56,7 +58,7 @@ DROP TABLE IF EXISTS wp_cm_parts,
 
 
 ---!! FOR TESTING !!---
-INSERT INTO wp_cm_courses (name,active,span) VALUES("Test Course",0,35);
+INSERT INTO wp_cm_courses (name,desciption,price,active,span) VALUES("Test Course","Just another Course",0,0,35);
 
 INSERT INTO wp_cm_course_parts (courseID,name,courseIndex) VALUES(1,"Vecka 1",0);
 INSERT INTO wp_cm_course_parts (courseID,name,courseIndex) VALUES(1,"Vecka 2",1);

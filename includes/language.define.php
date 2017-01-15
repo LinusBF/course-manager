@@ -59,6 +59,8 @@ define('TXT_CM_ADMIN_COURSE_TAGS', __('Tags','course-manager'));
 define('TXT_CM_EDIT_TITLE', __('You\'re editing ','course-manager'));
 define('TXT_CM_CREATE_TITLE', __('You\'re creating a new course','course-manager'));
 define('TXT_CM_EDIT_COURSENAME', __('Course name','course-manager'));
+define('TXT_CM_EDIT_COURSEDESC', __('Course description','course-manager'));
+define('TXT_CM_EDIT_COURSEPRICE', __('Course price','course-manager'));
 define('TXT_CM_EDIT_COURSESPAN', __('Course span (days)','course-manager'));
 define('TXT_CM_EDIT_SAVE', __('Save Course','course-manager'));
 define('TXT_CM_EDIT_COURSEPARTS', __('Course parts','course-manager'));
