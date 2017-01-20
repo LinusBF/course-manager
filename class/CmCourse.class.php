@@ -428,6 +428,7 @@ class CmCourse
     		$blSaveCheck = $this->_saveToDB();
 
     		if(!$blSaveCheck['result']){
+    			echo $blSaveCheck['reason'];
     			return false;
     		}
 
@@ -485,7 +486,7 @@ class CmCourse
 
 	    	if(!isset($this->_iCourseID)){
 
-		    	$sSQL = "INSERT INTO ".$this->_getDbTableName()."(name,description,priceactive,span)
+		    	$sSQL = "INSERT INTO ".$this->_getDbTableName()."(name,description,price,active,span)
 		    	VALUES(%s,%s,%d,%d,%d)";
 
 	    	} else{
