@@ -428,7 +428,6 @@ class CmCourse
     		$blSaveCheck = $this->_saveToDB();
 
     		if(!$blSaveCheck['result']){
-    			echo $blSaveCheck['reason'];
     			return false;
     		}
 
