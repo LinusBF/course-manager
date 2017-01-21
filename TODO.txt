@@ -1,0 +1,5 @@
+Course pages have own sidebar field. Maybe through template?
+Course shop, how? Use plugin and make Courses a "product"? Code own "shop page" that comes with the plugin
+User entitlements and user registration. Existing plugin?
+Implement tag system fully
+Implement settings system fully. Functionality and choices on settings page?
