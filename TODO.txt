@@ -3,3 +3,4 @@ Course shop, how? Use plugin and make Courses a "product"? Code own "shop page" 
 User entitlements and user registration. Existing plugin?
 Implement tag system fully
 Implement settings system fully. Functionality and choices on settings page?
+UAM maybe not needed?
