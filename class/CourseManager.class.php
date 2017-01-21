@@ -237,23 +237,15 @@ class CourseManager
 
         if ($sNameInDb != $sCmCoursePartTableName) {
 
-        	$sDbPostTable = $wpdb->prefix."posts";
-
-            $aWpDbPostDataType = $wpdb->get_col("SELECT COLUMN_TYPE 
-            FROM INFORMATION_SCHEMA.COLUMNS
-            WHERE TABLE_NAME = '".$sDbPostTable."' AND COLUMN_NAME = 'ID'");
-
         	//Creating cm_course_parts table
         	dbDelta(
         		"CREATE TABLE ".$sCmCoursePartTableName." (
         			ID int NOT NULL auto_increment,
                     courseID int NOT NULL,
-                    postID ".$aWpDbPostDataType[0].",
                     name VARCHAR(100) NOT NULL,
                     courseIndex int NOT NULL,
                     PRIMARY KEY (ID),
-                    FOREIGN KEY (courseID) REFERENCES ".$sCmCourseTableName."(ID) ON DELETE CASCADE,
-                    FOREIGN KEY (postID) REFERENCES ".$sDbPostTable."(ID)
+                    FOREIGN KEY (courseID) REFERENCES ".$sCmCourseTableName."(ID) ON DELETE CASCADE
 				) $sCharsetCollate;"
         	);
         }

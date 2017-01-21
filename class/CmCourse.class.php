@@ -87,7 +87,7 @@ class CmCourse
      *
      * @param CmCoursePart[] $aCourseParts
      *
-     * @return CmCourse instance
+     * @return CmCourse|bool instance
      */
     public static function createCompleteCourse($sName, $sDesc, $iPrice, $blActive,$iSpan,$aCourseParts)
     {
@@ -227,6 +227,7 @@ class CmCourse
     public function getCourseParts()
     {
 		$aCourseParts = $this->_aCourseParts;
+
 		usort($aCourseParts, function ($a, $b){
 			if ($a->getCourseIndex() == $b->getCourseIndex()){
 				return 0;
@@ -642,7 +643,7 @@ class CmCourse
 	 * @param int $iID
 	 *
 	 * @param bool $blGetCourseParts
-	 * @return CmCourse
+	 * @return CmCourse|bool
 	 */
     public static function getCourseByID($iID,$blGetCourseParts = false)
     {
@@ -939,20 +940,6 @@ class CmCourse
 
     	return $iTagID;
     }
-
-
-	/**
-     * Function Description.
-     *
-     * @param datatype $value
-     *
-     * @return datatype
-     */
-    public function FuncTemp()
-    {
-    	
-    }
-
 }
 
 

@@ -225,7 +225,7 @@ class CmCoursePart
 
 
     /**
-     * Sets the Course name.
+     * Sets the CoursePart name.
      *
      * @param string $sName | The name of the course
 	 *
@@ -236,19 +236,6 @@ class CmCoursePart
     	$this->_sCoursePartName = htmlspecialchars($sName, ENT_QUOTES, 'UTF-8');
 
     }
-
-
-	/**
-	 * Sets the Course name.
-	 *
-	 * @param int $iPostID | The ID of the Post/Page
-	 *
-	 * @return Null
-	 */
-	public function setPostID($iPostID)
-	{
-		$this->_iPostID = (int) $iPostID;
-	}
 
 
     /**
@@ -307,7 +294,7 @@ class CmCoursePart
      */
     public function save($blCheckRecursive = false)
     {
-    	//TODO - Add check for PostID and save that separately
+    	//TODO - Add check for PostID and save that separately maybe?
 
     	$blVarSet = $this->_areVarsSetForDB();
 
@@ -400,7 +387,7 @@ class CmCoursePart
     	$instance = new self();
     	global $wpdb;
 
-    	$sSQL = "SELECT courseID,postID,name,courseIndex FROM ".$instance->_getDbTableName()." WHERE ID = %d";
+    	$sSQL = "SELECT courseID,name,courseIndex FROM ".$instance->_getDbTableName()." WHERE ID = %d";
 
     	$oCoursePart = $wpdb->get_row($wpdb->prepare($sSQL,$iID));
 
@@ -408,7 +395,6 @@ class CmCoursePart
 
 	    	$instance->setCoursePartName($oCoursePart->name);
 	    	$instance->setCourseID(intval($oCoursePart->courseID));
-	    	$instance->setPostID(intval($oCoursePart->postID));
 	    	$instance->setCourseIndex(intval($oCoursePart->courseIndex));
 	    	$instance->_iCoursePartID = intval($iID);
 
