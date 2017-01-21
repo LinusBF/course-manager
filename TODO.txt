@@ -1,3 +1,5 @@
+Course part titles need to be added
+Course description in admin panel?
 Course pages have own sidebar field. Maybe through template?
 Course shop, how? Use plugin and make Courses a "product"? Code own "shop page" that comes with the plugin
 User entitlements and user registration. Existing plugin?
