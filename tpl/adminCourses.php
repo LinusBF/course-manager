@@ -38,12 +38,13 @@ class CourseList extends WP_List_Table
 
 
 	/**
-	* Returns an array with CmCourse Objects
-	*
-	* @param int $iPage, int $iPerPage, boolean $blGetCourseParts
-	*
-	* @return array
-	*/
+	 * Returns an array with CmCourse Objects
+	 *
+	 * @param int $iPage
+	 * @param int $iPerPage
+	 *
+	 * @return array
+	 */
 	public static function getCourses($iPage = 1,$iPerPage = 10)
 	{
 		return CmCourse::getCourses($iPage,$iPerPage);

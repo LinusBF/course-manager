@@ -116,20 +116,23 @@ class CmPageBuilder
 
 		$sPartAttrId = "cm_CP_".$iCPIndex."_P_".$iIndex;
 
-		//TODO - Add titles
+		$sPostHeader = "";
+
+		if (isset($sTitle) && $sTitle != ""){
+			$sPostHeader = "<h3 class='cm_page_title'>$sTitle</h3>";
+		}
 
 		if ($sType == "text"){
-			return "<p id='$sPartAttrId' class='cm_page_text'>$sContent</p>";
+			return $sPostHeader."<p id='$sPartAttrId' class='cm_page_text'>$sContent</p>";
 
 		} elseif ($sType == "image"){
-			return "<img id='$sPartAttrId' class='cm_page_image' src='$sContent' />";
+			return $sPostHeader."<img id='$sPartAttrId' class='cm_page_image' src='$sContent' />";
 
 		} elseif ($sType == "video"){
-			//TODO
 			//Handle youtube link
 			$sVideoId = explode("v=", $sContent)[1];
 			//Return iFrame element
-			return "<iframe width='560' height='315' src='https://www.youtube.com/embed/$sVideoId' frameborder='0' allowfullscreen></iframe>";
+			return $sPostHeader."<iframe width='560' height='315' src='https://www.youtube.com/embed/$sVideoId' frameborder='0' allowfullscreen></iframe>";
 
 		} elseif ($sType == "question"){
 			if (!is_array($sContent)){
@@ -150,12 +153,12 @@ class CmPageBuilder
 			//TODO - Add save button
 			$sHtmlString .= "</ul>";
 
-			return $sHtmlString;
+			return $sPostHeader.$sHtmlString;
 
 		} elseif ($sType == "download"){
 			$sFileTypeClass = "cm_dl_".substr($sContent, strrpos($sContent, ".") + 1);
 
-			return "<a id='$sPartAttrId' class='cm_page_dl $sFileTypeClass' href='$sContent' download>$sTitle</a>";
+			return $sPostHeader."<a id='$sPartAttrId' class='cm_page_dl $sFileTypeClass' href='$sContent' download>$sTitle</a>";
 
 		}
 

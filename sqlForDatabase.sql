@@ -12,12 +12,10 @@ CREATE TABLE wp_cm_courses(
 CREATE TABLE wp_cm_course_parts(
 	ID int NOT NULL auto_increment,
 	courseID int NOT NULL,
-	postID bigint(20) UNSIGNED, --!! Must be customized for the wordpress post column !!--
 	name VARCHAR(100) NOT NULL,
 	courseIndex int NOT NULL,
 	PRIMARY KEY (ID),
-	FOREIGN KEY (courseID) REFERENCES wp_cm_courses(ID) ON DELETE CASCADE,
-	FOREIGN KEY (postID) REFERENCES wp_posts(ID)
+	FOREIGN KEY (courseID) REFERENCES wp_cm_courses(ID) ON DELETE CASCADE
 );
 
 CREATE TABLE wp_cm_parts(
