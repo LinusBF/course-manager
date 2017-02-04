@@ -27,7 +27,7 @@ if (version_compare($sPhpVersion, "5.0") === -1) {
     add_action(
         'admin_notices',
         create_function(
-            '',
+            '',-
             'echo \'<div id="message" class="error"><p><strong>'.
             sprintf(TXT_CM_PHP_VERSION_TO_LOW, $sPhpVersion).
             '</strong></p></div>\';'
@@ -65,7 +65,6 @@ require_once 'class/CmCourse.class.php';
 require_once 'class/CmCoursePart.class.php';
 require_once 'class/CmPart.class.php';
 require_once 'class/CmPageBuilder.class.php';
-require_once 'class/CmUamLink.class.php';
 require_once 'widget/cmLinks.class.php';
 
 
@@ -119,23 +118,20 @@ if(!function_exists("cmAdminPanel")){
 		global $oCourseManager;
 
 		if ($oCourseManager->checkAdminPageAccess()) {
+			//Add styles and scripts
+			add_action('admin_print_styles', array($oCourseManager, 'addStyles'));
+			add_action('wp_print_scripts', array($oCourseManager, 'addScripts'));
 
-      //Add styles and scripts
-      add_action('admin_print_styles', array($oCourseManager, 'addStyles'));
-      add_action('wp_print_scripts', array($oCourseManager, 'addScripts'));
-			
 			//Admin menu
 			add_menu_page('Course Manager', TXT_CM_PLUGIN_NAME, 'manage_options', 'cm_courses', array($oCourseManager, 'prtAdminPage'), 'div');
 
-
 			//Admin sub menus
 			add_submenu_page('cm_courses', TXT_CM_MENU_COURSES, TXT_CM_MENU_COURSES, 'read', 'cm_courses', array($oCourseManager, 'prtAdminPage'));
-      add_submenu_page('cm_courses', TXT_CM_MENU_TAGS, TXT_CM_MENU_TAGS, 'read', 'cm_tags', array($oCourseManager, 'prtAdminPage'));
+			add_submenu_page('cm_courses', TXT_CM_MENU_TAGS, TXT_CM_MENU_TAGS, 'read', 'cm_tags', array($oCourseManager, 'prtAdminPage'));
 			add_submenu_page('cm_courses', TXT_CM_SETTINGS, TXT_CM_SETTINGS, 'read', 'cm_settings', array($oCourseManager, 'prtAdminPage'));
 			add_submenu_page('cm_courses', TXT_CM_MENU_ABOUT, TXT_CM_MENU_ABOUT, 'read', 'cm_about', array($oCourseManager, 'prtAdminPage'));
 
 			do_action('cm_add_menu');
-
 		}
 		
 	}
@@ -144,27 +140,27 @@ if(!function_exists("cmAdminPanel")){
 
 if (!function_exists("cm_load_ajax")){
 	function cm_load_ajax(){
-			wp_enqueue_script(
-				'CourseManagerAjax',
-				CM_URLPATH . 'js/cmEditAjax.js',
-				array('jquery'),
-				'1.0.0', true
-			);
+		wp_enqueue_script(
+			'CourseManagerAjax',
+			CM_URLPATH . 'js/cmEditAjax.js',
+			array('jquery'),
+			'1.0.0', true
+		);
 
-			//Get current protocol
-			$protocol = isset( $_SERVER['HTTPS'] ) ? 'https://' : 'http://';
+		//Get current protocol
+		$protocol = isset( $_SERVER['HTTPS'] ) ? 'https://' : 'http://';
 
-			//Ajax params
-			$params = array(
-				// Get the url to the admin-ajax.php file using admin_url()
-				'ajaxurl' => admin_url( 'admin-ajax.php', $protocol )
-			);
+		//Ajax params
+		$params = array(
+			// Get the url to the admin-ajax.php file using admin_url()
+			'ajaxurl' => admin_url( 'admin-ajax.php', $protocol )
+		);
 
-			wp_localize_script(
-				'CourseManagerAjax',
-				'new_course',
-				$params
-			);
+		wp_localize_script(
+			'CourseManagerAjax',
+			'new_course',
+			$params
+		);
 	}
 }
 
@@ -177,12 +173,14 @@ if (isset($oCourseManager)) {
 	//uninstall
 	if (function_exists('register_uninstall_hook')) {
 		register_uninstall_hook(__FILE__, array($oCourseManager, 'uninstall'));
+
+		if (function_exists('register_deactivation_hook')) {
+			register_deactivation_hook(__FILE__, array($oCourseManager, 'deactivate'));
+		}
 	} elseif (function_exists('register_deactivation_hook')) {
 		//Fallback
 		register_deactivation_hook(__FILE__, array($oCourseManager, 'uninstall'));
 	}
-
-	register_deactivation_hook(__FILE__, array($oCourseManager, 'deactivate'));
 
 	//Load CSS and Scripts
 	add_action('wp_print_scripts', array($oCourseManager, 'addScripts'));
