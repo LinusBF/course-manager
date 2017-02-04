@@ -27,7 +27,7 @@ if (version_compare($sPhpVersion, "5.0") === -1) {
     add_action(
         'admin_notices',
         create_function(
-            '',-
+            '',
             'echo \'<div id="message" class="error"><p><strong>'.
             sprintf(TXT_CM_PHP_VERSION_TO_LOW, $sPhpVersion).
             '</strong></p></div>\';'
@@ -65,11 +65,12 @@ require_once 'class/CmCourse.class.php';
 require_once 'class/CmCoursePart.class.php';
 require_once 'class/CmPart.class.php';
 require_once 'class/CmPageBuilder.class.php';
+require_once 'class/CmUserManager.class.php';
 require_once 'widget/cmLinks.class.php';
 
 
 $oCourseManager = new CourseManager();
-
+$oUserManager = new CmUserManager();
 
 //START - core promote function for User Access Manager
 function promoteUser(){
@@ -167,19 +168,37 @@ if (!function_exists("cm_load_ajax")){
 
 if (isset($oCourseManager)) {
 
+	if(!function_exists("install_cm")){
+		function install_cm(){
+			$courseManager = new CourseManager();
+			$userManager = new CmUserManager();
+
+			$courseManager->install();
+			$userManager->install_UM();
+		}
+	}
+
+	if(!function_exists("uninstall_cm")){
+		function uninstall_cm(){
+			$courseManager = new CourseManager();
+			$userManager = new CmUserManager();
+
+			$courseManager->uninstall();
+			$userManager->uninstall_UM();
+		}
+	}
+
 	//Register Activation
-	register_activation_hook(__FILE__, array($oCourseManager, 'install'));
+	register_activation_hook(__FILE__, "install_cm");
 
 	//uninstall
 	if (function_exists('register_uninstall_hook')) {
-		register_uninstall_hook(__FILE__, array($oCourseManager, 'uninstall'));
+		register_uninstall_hook(__FILE__, "uninstall_cm");
 
-		if (function_exists('register_deactivation_hook')) {
-			register_deactivation_hook(__FILE__, array($oCourseManager, 'deactivate'));
-		}
 	} elseif (function_exists('register_deactivation_hook')) {
 		//Fallback
-		register_deactivation_hook(__FILE__, array($oCourseManager, 'uninstall'));
+		register_deactivation_hook(__FILE__, "uninstall_cm");
+
 	}
 
 	//Load CSS and Scripts

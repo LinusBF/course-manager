@@ -54,7 +54,7 @@ class CourseManager
      * 
      * @return string
      */
-    protected function _getCharset()
+    public static function getCharset()
     {
         global $wpdb;
         $sCharsetCollate = '';
@@ -204,7 +204,7 @@ class CourseManager
     	global $wpdb;
         include_once ABSPATH.'wp-admin/includes/upgrade.php';
 
-        $sCharsetCollate = $this->_getCharset();
+        $sCharsetCollate = $this->getCharset();
 
         //Checking if cm_courses table exists
         $sCmCourseTableName = $wpdb->prefix.'cm_courses';
@@ -464,14 +464,17 @@ class CourseManager
             $sAdminPage = $_GET['page'];
 
             if ($sAdminPage == 'cm_courses') {
-
                 include CM_REALPATH."tpl/adminCourses.php";
+
             } elseif ($sAdminPage == 'cm_tags') {
                 include CM_REALPATH."tpl/adminTags.php";
+
             } elseif ($sAdminPage == 'cm_settings') {
                 include CM_REALPATH."tpl/adminSettings.php";
+
             } elseif ($sAdminPage == 'cm_about') {
                 include CM_REALPATH."tpl/about.php";
+
             }
         }
     }
