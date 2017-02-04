@@ -7,3 +7,4 @@
 * Implement tag system fully
 * Implement settings system fully. Functionality and choices on settings page?
 * ~~UAM maybe not needed?~~ - Not needed
+* Ask Tina about cm_user_answers structure
