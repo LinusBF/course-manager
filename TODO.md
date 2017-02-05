@@ -2,9 +2,11 @@
 * Course Shop image in admin panel?
 * Course pages have own sidebar field. Maybe through template?
 * Course shop, how? Use plugin and make Courses a "product"? Code own "shop page" that comes with the plugin
+    * Shop page generated, user adds it in to a menu. Page uses a custom "Shop" template.
 * ~~User entitlements and user registration. Existing plugin?~~
-    * Implement user token system instead
+    * Implement user token system instead - Ground work done
 * Implement tag system fully
 * Implement settings system fully. Functionality and choices on settings page?
 * ~~UAM maybe not needed?~~ - Not needed
 * Ask Tina about cm_user_answers structure
+* Look into changing database table calls from CmCourse* classes
