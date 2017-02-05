@@ -1,5 +1,6 @@
 * Course description in admin panel?
 * Course Shop image in admin panel?
+* **Create and use a cm_course_meta table for handling shop related settings**
 * Course pages have own sidebar field. Maybe through template?
 * Course shop, how? Use plugin and make Courses a "product"? Code own "shop page" that comes with the plugin
     * Shop page generated, user adds it in to a menu. Page uses a custom "Shop" template.
