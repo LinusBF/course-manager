@@ -421,14 +421,14 @@ class CourseManager
 				),
 				'public' => false,
 				'exclude_from_search' => true,
-				'publicly_queryable' => false,
+				'publicly_queryable' => true,
 				'show_in_nav_menus' => false,
 				'show_ui' => true,
 				'show_in_menu' => true,
 				'menu_icon' => 'dashicons-format-aside',
 				'hierarchical' => false,
 				'has_archive' => false,
-				'rewrite' => array('slug' => __( 'course', 'course-manager' )),
+				'rewrite' => array('slug' => __( 'courses', 'course-manager' )),
 			)
 		);
 	}
