@@ -40,6 +40,7 @@ define('TXT_CM_ERROR_DB_QUERY', __('The database query failed, please try again.
 define('TXT_CM_MENU_COURSES', __('Courses','course-manager'));
 define('TXT_CM_MENU_TAGS', __('Tags','course-manager'));
 define('TXT_CM_MENU_ABOUT', __('About','course-manager'));
+define('TXT_CM_MENU_STORE', __('Store','course-manager'));
 
 // --- Courses Menu --- \\
 define('TXT_CM_ADMIN_COURSE_SINGULAR', __('Course','course-manager'));
@@ -90,6 +91,13 @@ define('TXT_CM_EDIT_SAVE_BEFORE_NEW_PARTS', __('You need to save the course firs
 
 // --- Course Pages --- \\
 define('TXT_CM_PAGE_TYPE_NOT_SUPPORTED', __('Content type not supported yet','course-manager'));
+
+
+// --- Admin Store --- \\
+define('TXT_CM_STORE_IN_STORE_TITLE', __('Set what courses should appear in the store', 'course-manager'));
+define('TXT_CM_STORE_NO_ACTIVE', __('You have no active courses, activate them in the Courses menu.', 'course-manager'));
+define('TXT_CM_STORE_ACTIVATE_STORE', __('Activate the store', 'course-manager'));
+define('TXT_CM_STORE_DEACTIVATE_STORE', __('Deactivate the store', 'course-manager'));
 
 
 ?>
