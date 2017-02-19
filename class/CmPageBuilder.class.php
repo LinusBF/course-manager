@@ -181,7 +181,7 @@ class CmPageBuilder
 		$aPostData = array(
 			'ID' => $iPostID,
 			'post_excerpt' => 'cm_course',
-			'post_type' => 'page',
+			'post_type' => 'cm_course_page',
 			'post_status' => ($blCourseStatus ? 'publish' : 'draft'),
 			'comment_status' => 'closed',
 			'post_title' => wp_strip_all_tags($sCoursePartTitle),

@@ -100,7 +100,9 @@ class CourseManager
     {
         if ($this->_aAdminOptions === null) {
             $aCmAdminOptions = array(
-                'edit_access_role' => 'administrator'
+                'edit_access_role' => 'administrator',
+	            'store_active' => false,
+	            'courses_in_store' => array()
             );
             
             $aCmOptions = $this->getWPOption($this->_sAdminOptionsName);
@@ -133,6 +135,21 @@ class CourseManager
         }
 
         return $this->_aWPOptions[$sOption];
+    }
+
+
+	/**
+	 * @param string $sOptionKey
+	 * @param mixed $mNewValue
+	 *
+	 * @return bool
+	 */
+	public function setOption($sOptionKey, $mNewValue)
+    {
+    	$aOptions = $this->getOptions();
+
+	    $aOptions[$sOptionKey] = $mNewValue;
+	    return update_option($this->_sAdminOptionsName, $aOptions);
     }
 
 
@@ -183,6 +200,23 @@ class CourseManager
         
         return $aRoles;
     }
+
+
+	/**
+	 * See "Flushing Rewrite on Activation" https://codex.wordpress.org/Function_Reference/register_post_type
+	 */
+	public function rewrite_flush()
+	{
+		// First, we "add" the custom post type via the above written function.
+		// Note: "add" is written with quotes, as CPTs don't get added to the DB,
+		// They are only referenced in the post_type column with a post entry,
+		// when you add a post of this CPT.
+		$this->create_cm_post_type();
+
+		// ATTENTION: This is *only* done during plugin activation hook in this example!
+		// You should *NEVER EVER* do this on every page load!!
+		flush_rewrite_rules();
+	}
 
 
     /**
@@ -367,6 +401,39 @@ class CourseManager
     }
 
 
+	/**
+	 *
+	 */
+	function create_cm_post_type() {
+		register_post_type( 'cm_course_page',
+			array(
+				'labels' => array(
+					'name' => __( 'Course Pages', 'course-manager' ),
+					'singular_name' => __( 'Course Page', 'course-manager' ),
+					'add_new'            => __( 'Add New Course page', 'slide', 'course-manager' ),
+					'add_new_item'       => __( 'Add New Course page', 'course-manager' ),
+					'edit_item'          => __( 'Edit Course page', 'course-manager' ),
+					'new_item'           => __( 'New Course page', 'course-manager' ),
+					'view_item'          => __( 'View Course page', 'course-manager' ),
+					'search_items'       => __( 'Search Course page', 'course-manager' ),
+					'not_found'          => __( 'No course pages have been added yet', 'course-manager' ),
+					'not_found_in_trash' => __( 'Nothing found in Trash', 'course-manager' ),
+				),
+				'public' => false,
+				'exclude_from_search' => true,
+				'publicly_queryable' => false,
+				'show_in_nav_menus' => false,
+				'show_ui' => true,
+				'show_in_menu' => true,
+				'menu_icon' => 'dashicons-format-aside',
+				'hierarchical' => false,
+				'has_archive' => false,
+				'rewrite' => array('slug' => __( 'course', 'course-manager' )),
+			)
+		);
+	}
+
+
     /**
      * Checks to see if the user has access to the Course Manager Adminpanel
      * 
@@ -465,6 +532,9 @@ class CourseManager
 
             if ($sAdminPage == 'cm_courses') {
                 include CM_REALPATH."tpl/adminCourses.php";
+
+            } elseif ($sAdminPage == 'cm_store') {
+	            include CM_REALPATH."tpl/adminStore.php";
 
             } elseif ($sAdminPage == 'cm_tags') {
                 include CM_REALPATH."tpl/adminTags.php";

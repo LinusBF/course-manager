@@ -813,6 +813,32 @@ class CmCourse
 
 
 	/**
+	 * Returns all the courses in the DB.
+	 *
+	 * @return CmCourse[]
+	 */
+	public static function getAllActiveCourses($blGetCourseParts = false)
+	{
+		global $wpdb;
+		$aAllCourses = array();
+		$oCmCourse = new self();
+
+		$sSQL = "SELECT ID FROM ".$oCmCourse->_getDbTableName()." WHERE active = 1";
+
+		$aCourseIDs = $wpdb->get_col($sSQL);
+
+		foreach ($aCourseIDs as $iID) {
+
+			$instance = CmCourse::getCourseByID($iID,$blGetCourseParts);
+
+			array_push($aAllCourses,$instance);
+		}
+
+		return $aAllCourses;
+	}
+
+
+	/**
 	 * Checks to see if the given name is used for any other Course.
 	 *
 	 * @param string $sName

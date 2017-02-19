@@ -128,6 +128,7 @@ if(!function_exists("cmAdminPanel")){
 
 			//Admin sub menus
 			add_submenu_page('cm_courses', TXT_CM_MENU_COURSES, TXT_CM_MENU_COURSES, 'read', 'cm_courses', array($oCourseManager, 'prtAdminPage'));
+			add_submenu_page('cm_courses', TXT_CM_MENU_STORE, TXT_CM_MENU_STORE, 'read', 'cm_store', array($oCourseManager, 'prtAdminPage'));
 			add_submenu_page('cm_courses', TXT_CM_MENU_TAGS, TXT_CM_MENU_TAGS, 'read', 'cm_tags', array($oCourseManager, 'prtAdminPage'));
 			add_submenu_page('cm_courses', TXT_CM_SETTINGS, TXT_CM_SETTINGS, 'read', 'cm_settings', array($oCourseManager, 'prtAdminPage'));
 			add_submenu_page('cm_courses', TXT_CM_MENU_ABOUT, TXT_CM_MENU_ABOUT, 'read', 'cm_about', array($oCourseManager, 'prtAdminPage'));
@@ -189,7 +190,9 @@ if (isset($oCourseManager)) {
 	}
 
 	//Register Activation
+	register_activation_hook(__FILE__, array($oCourseManager, 'rewrite_flush'));
 	register_activation_hook(__FILE__, "install_cm");
+
 
 	//uninstall
 	if (function_exists('register_uninstall_hook')) {
@@ -200,6 +203,8 @@ if (isset($oCourseManager)) {
 		register_deactivation_hook(__FILE__, "uninstall_cm");
 
 	}
+
+	add_action('init', array($oCourseManager, 'create_cm_post_type'));
 
 	//Load CSS and Scripts
 	add_action('wp_print_scripts', array($oCourseManager, 'addScripts'));
