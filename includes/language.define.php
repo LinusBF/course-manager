@@ -61,7 +61,7 @@ define('TXT_CM_EDIT_TITLE', __('You\'re editing ','course-manager'));
 define('TXT_CM_CREATE_TITLE', __('You\'re creating a new course','course-manager'));
 define('TXT_CM_EDIT_COURSENAME', __('Course name','course-manager'));
 define('TXT_CM_EDIT_COURSEDESC', __('Course description','course-manager'));
-define('TXT_CM_EDIT_COURSEPRICE', __('Course price','course-manager'));
+define('TXT_CM_EDIT_COURSEPRICE', __('Course price (kr)','course-manager'));
 define('TXT_CM_EDIT_COURSESPAN', __('Course span (days)','course-manager'));
 define('TXT_CM_EDIT_SAVE', __('Save Course','course-manager'));
 define('TXT_CM_EDIT_COURSEPARTS', __('Course parts','course-manager'));
@@ -98,6 +98,10 @@ define('TXT_CM_STORE_IN_STORE_TITLE', __('Set what courses should appear in the 
 define('TXT_CM_STORE_NO_ACTIVE', __('You have no active courses, activate them in the Courses menu.', 'course-manager'));
 define('TXT_CM_STORE_ACTIVATE_STORE', __('Activate the store', 'course-manager'));
 define('TXT_CM_STORE_DEACTIVATE_STORE', __('Deactivate the store', 'course-manager'));
+define('TXT_CM_STORE_PAGE_TITLE', __('Store', 'course-manager'));
+define('TXT_CM_STORE_PAGE_NAME', __('course-store', 'course-manager'));
+define('TXT_CM_STORE_ACTIVATED', __('You have activated the store, check your menus to make sure that it has been added where you like.', 'course-manager'));
+define('TXT_CM_STORE_DEACTIVATED', __('You have deactivated the store.', 'course-manager'));
 
 
 ?>
