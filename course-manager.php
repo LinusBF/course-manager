@@ -65,6 +65,7 @@ require_once 'class/CmCourse.class.php';
 require_once 'class/CmCoursePart.class.php';
 require_once 'class/CmPart.class.php';
 require_once 'class/CmPageBuilder.class.php';
+require_once 'class/CmStore.class.php';
 require_once 'class/CmUserManager.class.php';
 require_once 'widget/cmLinks.class.php';
 
@@ -216,12 +217,24 @@ if (isset($oCourseManager)) {
 	add_action('wp_ajax_cm_change_part_type', 'cm_change_part_type');
 	add_action('wp_ajax_cm_add_question', 'cm_add_question');
 
+	//Load templates for plugin specific pages
+	add_filter('template_include', 'store_page_template', 99);
+
 	//Register Plugin
 	add_action('admin_menu', 'cmAdminPanel');
 
 	//Register widget
 	add_action('widgets_init', 'cmLinks_init');
 }
+
+
+function store_page_template($page_template){
+	if(is_page('course-store')){
+		$page_template = dirname(__FILE__).'/tpl/templates/store-page-template.php';
+	}
+	return $page_template;
+}
+
 
 function wpa54064_inspect_scripts() {
 	global $wp_scripts;
