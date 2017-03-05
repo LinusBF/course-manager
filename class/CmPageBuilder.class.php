@@ -80,7 +80,7 @@ class CmPageBuilder
 		$sCpTitle = $oCoursePart->getCoursePartName();
 		$sPageTitle = $sCourseName." - ".$sCpTitle;
 		$sPageElementId = "cm_course_".$iCourseId."_".$iCpIndex;
-		$sPageName = $sCourseName."-".$iCpIndex."-".$sCpTitle;
+		$sPageName = $sCourseName."-".$sCpTitle;  // Add index if client thinks that s/he will use the same title within a Course
 
 		$sPageContent = "<div id='$sPageElementId' class='cm_page_wrap'>";
 
