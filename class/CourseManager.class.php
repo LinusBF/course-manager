@@ -121,20 +121,68 @@ class CourseManager
     }
 
 
-    /**
-     * Returns a option value
-     *
-     * @param string $sOption
-     *
-     * @return array
-     */
-    public function getWPOption($sOption)
+	/**
+	 * Returns a option value
+	 *
+	 * @param string $sOption
+	 *
+	 * @param bool $blCacheBust
+	 *
+	 * @return array
+	 */
+    public function getWPOption($sOption, $blCacheBust = false)
     {
-        if (!isset($this->_aWPOptions[$sOption])) {
+        if (!isset($this->_aWPOptions[$sOption]) || $blCacheBust) {
             $this->_aWPOptions[$sOption] = get_option($sOption);
         }
 
         return $this->_aWPOptions[$sOption];
+    }
+
+
+	/**
+	 * @return array
+	 */
+	public function updateOptionsFromDb(){
+    	$aCurrentOptions = $this->getOptions();
+	    $aOptionsFromDb = $this->getWPOption($this->_sAdminOptionsName, true);
+
+	    $aUpdatedOptions = array_merge($aCurrentOptions, $aOptionsFromDb);
+
+	    $this->_aAdminOptions = $aUpdatedOptions;
+
+	    return $aUpdatedOptions;
+
+    }
+
+
+	/**
+	 * @param string $sOptionKey
+	 * @param mixed $mValue
+	 * @param bool $blSetIfNonExistent
+	 *
+	 *
+	 * @return bool
+	 */
+	public function setOption($sOptionKey, $mValue, $blSetIfNonExistent = false)
+    {
+    	$aOptions = $this->getOptions();
+
+	    if(array_key_exists($sOptionKey, $aOptions)) {
+		    $aOptions[ $sOptionKey ] = $mValue;
+
+		    $this->_aAdminOptions[$sOptionKey] = $mValue;
+
+		    return update_option( $this->_sAdminOptionsName, $aOptions );
+	    }
+	    else{
+	    	if($blSetIfNonExistent){
+				return $this->setNewOption($sOptionKey, $mValue);
+		    }
+		    else{
+			    return false;
+		    }
+	    }
     }
 
 
@@ -144,13 +192,16 @@ class CourseManager
 	 *
 	 * @return bool
 	 */
-	public function setOption($sOptionKey, $mNewValue)
-    {
-    	$aOptions = $this->getOptions();
+	public function setNewOption($sOptionKey, $mNewValue)
+	{
+		$aOptions = $this->getOptions();
 
-	    $aOptions[$sOptionKey] = $mNewValue;
-	    return update_option($this->_sAdminOptionsName, $aOptions);
-    }
+		$aOptions[ $sOptionKey ] = $mNewValue;
+
+		$this->_aAdminOptions = $aOptions;
+
+		return update_option( $this->_sAdminOptionsName, $aOptions );
+	}
 
 
 	/**
