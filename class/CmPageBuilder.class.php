@@ -39,10 +39,14 @@ class CmPageBuilder
 	/**
 	 * @param CmCourse $oCourse
 	 *
-	 * @return int[] IDs of the pages created
+	 * @return bool|int[] - false if the course is active | IDs of the pages created
 	 */
 	public function createCoursePages($oCourse)
 	{
+		if ($oCourse->getCourseStatus()){
+			return false;
+		}
+
 		//Go through all CmCourseParts and generate wp_posts with its CmParts
 		$aCourseParts = $oCourse->getCourseParts();
 		$iCourseId = $oCourse->getCourseID();
@@ -126,7 +130,7 @@ class CmPageBuilder
 			return $sPostHeader."<p id='$sPartAttrId' class='cm_page_text'>$sContent</p>";
 
 		} elseif ($sType == "image"){
-			return $sPostHeader."<img id='$sPartAttrId' class='cm_page_image' src='$sContent' />";
+			return $sPostHeader."<img id='$sPartAttrId' class='cm_page_image' src='".wp_get_attachment_url($sContent)."' />";
 
 		} elseif ($sType == "video"){
 			//Handle youtube link
@@ -206,11 +210,11 @@ class CmPageBuilder
 		global $wpdb;
 
 		$sTablePosts = $wpdb->prefix."posts";
-		$sTablePostmeta = $wpdb->prefix."postmeta";
+		$sTablePostMeta = $wpdb->prefix."postmeta";
 
 		$sSQL = "SELECT $sTablePosts.ID FROM $sTablePosts 
-				JOIN $sTablePostmeta ON $sTablePosts.ID = $sTablePostmeta.post_id 
-				WHERE $sTablePostmeta.meta_key = 'cm_course_part_id' AND $sTablePostmeta.meta_value = %d";
+				JOIN $sTablePostMeta ON $sTablePosts.ID = $sTablePostMeta.post_id 
+				WHERE $sTablePostMeta.meta_key = 'cm_course_part_id' AND $sTablePostMeta.meta_value = %d";
 
 		$sQuery = $wpdb->prepare($sSQL, $iCoursePartID);
 
@@ -233,9 +237,9 @@ class CmPageBuilder
 	{
 		global $wpdb;
 
-		$sTablePostmeta = $wpdb->prefix."postmeta";
+		$sTablePostMeta = $wpdb->prefix."postmeta";
 
-		$sSQL = "SELECT post_id FROM $sTablePostmeta AS meta WHERE meta.meta_key = 'cm_course_id' AND meta.meta_value = %d";
+		$sSQL = "SELECT post_id FROM $sTablePostMeta AS meta WHERE meta.meta_key = 'cm_course_id' AND meta.meta_value = %d";
 
 		$sQuery = $wpdb->prepare($sSQL, $iCourseId);
 
@@ -243,9 +247,9 @@ class CmPageBuilder
 
 		if(isset($aResponse)){
 			foreach ($aResponse as $iPostId){
-				$sGetPartSQL = "SELECT meta_value FROM $sTablePostmeta AS meta WHERE meta.meta_key = 'cm_course_part_id' AND meta.post_id = %d";
+				$sGetPartSQL = "SELECT meta_value FROM $sTablePostMeta AS meta WHERE meta.meta_key = 'cm_course_part_id' AND meta.post_id = %d";
 				$sGetPartQuery = $wpdb->prepare($sGetPartSQL, $iPostId);
-				$iPartId = (int) $wpdb->get_row($sGetPartQuery);
+				$iPartId = (int) $wpdb->get_row($sGetPartQuery)->meta_value;
 
 				if (!in_array($iPartId, $aCoursePartIds)){
 					wp_delete_post($iPostId, true);
