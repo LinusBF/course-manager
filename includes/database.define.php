@@ -26,3 +26,4 @@ define('DB_CM_USERS', $wpdb->prefix . 'cm_users');
 define('DB_CM_USER_ENTITLEMENTS', $wpdb->prefix . 'cm_user_entitlements');
 define('DB_CM_USER_ANSWERS', $wpdb->prefix . 'cm_user_answers');
 define('DB_CM_USER_META', $wpdb->prefix . 'cm_user_meta');
+define('DB_CM_STORE_META', $wpdb->prefix . 'cm_store_meta');
