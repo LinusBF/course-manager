@@ -66,6 +66,7 @@ require_once 'class/CmCoursePart.class.php';
 require_once 'class/CmPart.class.php';
 require_once 'class/CmPageBuilder.class.php';
 require_once 'class/CmStore.class.php';
+require_once 'class/CmCourseStoreHandler.class.php';
 require_once 'class/CmUserManager.class.php';
 require_once 'widget/cmLinks.class.php';
 
@@ -174,9 +175,11 @@ if (isset($oCourseManager)) {
 		function install_cm(){
 			$courseManager = new CourseManager();
 			$userManager = new CmUserManager();
+			$store = new CmStore();
 
 			$courseManager->install();
 			$userManager->install_UM();
+			$store->installStore();
 		}
 	}
 
@@ -184,9 +187,11 @@ if (isset($oCourseManager)) {
 		function uninstall_cm(){
 			$courseManager = new CourseManager();
 			$userManager = new CmUserManager();
+			$store = new CmStore();
 
 			$courseManager->uninstall();
 			$userManager->uninstall_UM();
+			$store->uninstallStore();
 		}
 	}
 
@@ -211,6 +216,8 @@ if (isset($oCourseManager)) {
 	add_action('wp_print_scripts', array($oCourseManager, 'addScripts'));
 	add_action('wp_print_styles', array($oCourseManager, 'addStyles'));
 	add_action('wp_print_scripts', 'cm_load_ajax');
+	add_action('admin_enqueue_scripts', 'create_edit_course_scripts');
+	add_action('admin_enqueue_scripts', 'store_page_scripts');
 	require_once "tpl/editCourseAjaxFunctions.php";
 	add_action('wp_ajax_cm_new_course_part', 'cm_add_new_coursePart');
 	add_action('wp_ajax_cm_new_part', 'cm_add_new_part');
@@ -228,11 +235,45 @@ if (isset($oCourseManager)) {
 }
 
 
+function create_edit_course_scripts(){
+	if(isset($_GET['action']) && $_GET['action'] == 'edit' && $_GET['page'] == 'cm_courses'){
+		wp_enqueue_script( 'cm_media_select_script_course', CM_URLPATH. 'js/media_selector_edit_course.js');
+
+		$script_data = array(
+			'post_id' => get_option('media_selector_attachment_id', 0),
+			'title' => TXT_CM_STORE_SELECT_IMAGE,
+			'text' => TXT_CM_CHOOSE,
+		);
+
+		wp_localize_script('cm_media_select_script_course', 'passed_options', $script_data);
+	}else{
+		return;
+	}
+}
+
+
 function store_page_template($page_template){
 	if(is_page('course-store')){
 		$page_template = dirname(__FILE__).'/tpl/templates/store-page-template.php';
 	}
 	return $page_template;
+}
+
+
+function store_page_scripts(){
+	if(isset($_GET['action']) && $_GET['action'] == 'store_settings'){
+		wp_enqueue_script( 'cm_media_select_script', CM_URLPATH. 'js/media_selector.js');
+
+		$script_data = array(
+			'post_id' => get_option( 'media_selector_attachment_id', 0 ),
+			'title' => TXT_CM_STORE_SELECT_IMAGE,
+			'text' => TXT_CM_CHOOSE,
+		);
+
+		wp_localize_script('cm_media_select_script', 'passed_options', $script_data);
+	}else{
+		return;
+	}
 }
 
 

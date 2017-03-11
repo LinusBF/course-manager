@@ -102,6 +102,7 @@ class CourseList extends WP_List_Table
 		$sDeleteNonce = wp_create_nonce('cm_delete_course');
 		$sEditNonce = wp_create_nonce('cm_edit_course');
 		$sGeneratePagesNonce = wp_create_nonce('cm_gen_pages');
+		$sStoreSettingsNonce = wp_create_nonce('cm_store_set');
 
 		$sTitle = sprintf("<strong><a href='?page=%s&action=%s&course=%s&_wpnonce=%s'>",esc_attr($_REQUEST['page']),
 				'edit', absint($oCourse->getCourseID()),$sEditNonce).$oCourse->getCourseName()."</a></strong>";
@@ -110,7 +111,9 @@ class CourseList extends WP_List_Table
 			"delete" => sprintf('<a href="?page=%s&action=%s&course=%s&_wpnonce=%s">'.TXT_CM_DELETE.'</a>',
 				esc_attr($_REQUEST['page']), 'delete', absint($oCourse->getCourseID()), $sDeleteNonce),
 			"gen_pages" => sprintf('<a href="?page=%s&action=%s&course=%s&_wpnonce=%s">'.TXT_CM_GENERATE_PAGES.'</a>',
-				esc_attr($_REQUEST['page']), 'gen_pages', absint($oCourse->getCourseID()), $sGeneratePagesNonce)
+				esc_attr($_REQUEST['page']), 'gen_pages', absint($oCourse->getCourseID()), $sGeneratePagesNonce),
+			"store_settings" => sprintf('<a href="?page=%s&action=%s&course=%s&_wpnonce=%s">'.TXT_CM_STORE_SETTINGS.'</a>',
+				esc_attr($_REQUEST['page']), 'store_settings', absint($oCourse->getCourseID()), $sStoreSettingsNonce)
 		];
 
 		return $sTitle.$this->row_actions($aActions);
@@ -291,10 +294,13 @@ class CourseList extends WP_List_Table
 			if (!wp_verify_nonce($sNonce,'cm_change_course_status')) {
 				die('Stop messing with it...');
 			} else{
-				self::changeStatus(absint($_GET['course']));
-				$oPageBuilder = new CmPageBuilder();
-				$oPageBuilder->updateCoursePagesStatus($_GET['course']);
-
+				if(CmCourse::checkActivate(absint( $_GET['course'] ))) {
+					self::changeStatus( absint( $_GET['course'] ) );
+					$oPageBuilder = new CmPageBuilder();
+					$oPageBuilder->updateCoursePagesStatus( $_GET['course'] );
+				} else{
+					echo "<h3 class='cm_result cm_result_failure'>".TXT_CM_ACTIVATE_FAILURE."</h3>";
+				}
 				//wp_redirect(esc_url(add_query_arg()));	TODO - FIX THIS
 			}
 		}
@@ -379,10 +385,38 @@ if (isset($_GET['action']) && ($_GET['action'] === 'edit' || $_GET['action'] ===
 		$oCourse = CmCourse::getCourseByID($_GET['course'], true);
 		$blCreateCheck = $oPageBuilder->createCoursePages($oCourse);
 
-		if ($blCreateCheck){
+		if ($blCreateCheck !== false){
 			echo "<h3 class='cm_result cm_result_success'>".TXT_CM_GENERATE_PAGES_SUCCESS."</h3>";
 		} else{
 			echo "<h3 class='cm_result cm_result_failure'>".TXT_CM_GENERATE_PAGES_FAILURE."</h3>";
+		}
+
+		$oCourseList = new CourseList();
+		$oCourseList->printCourseList();
+	} else{
+		die('Stop messing with it...');
+	}
+} else if(isset($_GET['action']) && $_GET['action'] === 'store_settings' && isset($_GET['course'])){ //Generate pages for the course
+	if (wp_verify_nonce($_GET['_wpnonce'],'cm_store_set')) {
+		require "storeSettings.php";
+
+		genStoreSettingsForm($_GET['course']);
+
+	} else{
+		die('Stop messing with it...');
+	}
+} else if(isset($_POST['action']) && $_POST['action'] === 'set_settings'){ //Save the store course options
+	$sNonce = $_POST['_wpnonce'];
+
+	if (wp_verify_nonce($sNonce,'cm_store_settings_set')) {
+		require_once 'storeSettings.php';
+
+		$blSaveCheck = saveOptions();
+
+		if ($blSaveCheck){
+			echo "<h3 class='cm_result cm_result_success'>".TXT_CM_STORE_SAVE_SUCCESS."</h3>";
+		} else{
+			echo "<h3 class='cm_result cm_result_failure'>".TXT_CM_STORE_SAVE_FAILURE."</h3>";
 		}
 
 		$oCourseList = new CourseList();

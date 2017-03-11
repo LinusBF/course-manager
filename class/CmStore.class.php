@@ -23,6 +23,44 @@ class CmStore {
 	}
 
 
+	public function installStore() {
+		global $wpdb;
+		include_once ABSPATH.'wp-admin/includes/upgrade.php';
+
+		$sCharsetCollate = CourseManager::getCharset();
+
+		//Checking if cm_store_meta table exists
+		$sNameInDb = $wpdb->get_var(
+			"SHOW TABLES LIKE '".DB_CM_STORE_META."'"
+		);
+
+		if ($sNameInDb != DB_CM_STORE_META) {
+			//Creating cm_store_meta table
+			dbDelta(
+				"CREATE TABLE ".DB_CM_STORE_META." (
+        			meta_id INT NOT NULL AUTO_INCREMENT,
+        			course_id INT NOT NULL,
+					meta_key VARCHAR(255) DEFAULT NULL,
+					meta_value LONGTEXT DEFAULT NULL,
+					FOREIGN KEY (course_id) REFERENCES ".DB_CM_COURSES."(ID) ON DELETE CASCADE,
+					PRIMARY KEY (meta_id)
+				) $sCharsetCollate;"
+			);
+		}
+	}
+
+
+	public function uninstallStore() {
+		global $wpdb;
+
+		$wpdb->query(
+			"
+             DROP TABLE IF EXISTS ".DB_CM_STORE_META."
+             "
+		);
+	}
+
+
 	/**
 	 * @return boolean
 	 */
