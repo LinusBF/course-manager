@@ -58,6 +58,8 @@ function cm_change_part_type(){
 					$newPart->setContent(TXT_CM_EDIT_CHANGE_TYPE_QUEST_CONTENT);
 				} elseif ($_POST['cm_part_type'] == "text"){
 					$newPart->setContent("<h2>".TXT_CM_EDIT_NEW_PART_CONTENT."</h2>");
+				} elseif ($_POST['cm_part_type'] == "image"){
+					$newPart->setContent("0");
 				} else{
 					$newPart->setContent(TXT_CM_EDIT_CHANGE_TYPE_GENERAL_CONTENT);
 				}
@@ -68,6 +70,8 @@ function cm_change_part_type(){
 				$newPart->setContent(TXT_CM_EDIT_CHANGE_TYPE_QUEST_CONTENT);
 			} elseif ($_POST['cm_part_type'] == "text"){
 				$newPart->setContent("<h2>".TXT_CM_EDIT_NEW_PART_CONTENT."</h2>");
+			} elseif ($_POST['cm_part_type'] == "image"){
+				$newPart->setContent("0");
 			} else{
 				$newPart->setContent(TXT_CM_EDIT_CHANGE_TYPE_GENERAL_CONTENT);
 			}

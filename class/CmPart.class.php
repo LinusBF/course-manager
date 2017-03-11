@@ -523,8 +523,12 @@ class CmPart
 				   for="<?php echo $sNamePrefix."_content_simple"; ?>">
 				<?php echo TXT_CM_EDIT_PART_CONTENT_IMAGE.": "; ?>
 			</label>
-			<input id="cm_part_content_img" class="cm_part_content_input" name="<?php echo $sNamePrefix."_content_simple"; ?>"
-				   type="text" value="<?php echo $this->getContent(); ?>" />
+			<div class='image-preview-wrapper cm_part_content_input'>
+				<img id='image-preview' src='<?php echo wp_get_attachment_url( $this->getContent() ); ?>' height='100'>
+			</div>
+			<input id="upload_image_button" type="button" class="cm_part_content_input button" value="<?php echo TXT_CM_STORE_ADD_IMAGE; ?>" />
+			<input type='hidden' name='<?php echo $sNamePrefix."_content_simple"; ?>' id='image_attachment_id' value='<?php echo $this->getContent(); ?>'>
+
 			<?php
 		} elseif ($this->getType() == "download"){
 			?>
