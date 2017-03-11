@@ -14,3 +14,4 @@
 * Look into changing database table calls from CmCourse* classes
 * ~~Swift theme not removing course pages from menu~~
     * No longer a problem with custom post types
+* Update DB calls from SQL to WPDB calls
