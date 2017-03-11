@@ -102,7 +102,8 @@ class CourseManager
             $aCmAdminOptions = array(
                 'edit_access_role' => 'administrator',
 	            'store_active' => false,
-	            'courses_in_store' => array()
+	            'courses_in_store' => array(),
+	            'currency' => 'kr'
             );
             
             $aCmOptions = $this->getWPOption($this->_sAdminOptionsName);
