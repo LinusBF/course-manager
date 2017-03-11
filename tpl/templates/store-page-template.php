@@ -29,12 +29,15 @@ get_header(); ?>
 							$aCourseOptions = $oStoreHandler->getStoreOptionsForCourse($oCourse->getCourseID());
 					?>
 						<div class="course_container w3-card-2"<?php
-						if (($iKey + 1) % 5 == 0){
+						if (($iKey + 1) % 4 == 0){
 							echo " id='row_last_course'";
 						}
 						?>>
 							<div class="course_image_container">
-								<img class="course_image" src="<?php echo wp_get_attachment_url( $aCourseOptions['store_image'] ); ?>">
+								<img class="course_image" src="<?php
+									$image_url = wp_get_attachment_url( $aCourseOptions['store_image'] );
+									echo ($image_url !== false ? $image_url: CM_URLPATH.'gfx/no_image.jpg');
+								?>">
 							</div>
 							<div class="flip-container" ontouchstart="this.classList.toggle('hover');">
 								<div class="flipper">
