@@ -121,22 +121,23 @@ class CmPageBuilder
 		$sPartAttrId = "cm_CP_".$iCPIndex."_P_".$iIndex;
 
 		$sPostHeader = "";
+		$sPostFooter = "";
 
 		if (isset($sTitle) && $sTitle != ""){
 			$sPostHeader = "<h3 class='cm_page_title'>$sTitle</h3>";
 		}
 
 		if ($sType == "text"){
-			return $sPostHeader."<p id='$sPartAttrId' class='cm_page_text'>$sContent</p>";
+			return $sPostHeader."<p id='$sPartAttrId' class='cm_page_text'>$sContent</p>".$sPostFooter;
 
 		} elseif ($sType == "image"){
-			return $sPostHeader."<img id='$sPartAttrId' class='cm_page_image' src='".wp_get_attachment_url($sContent)."' />";
+			return $sPostHeader."<img id='$sPartAttrId' class='cm_page_image' src='".wp_get_attachment_url($sContent)."' />".$sPostFooter;
 
 		} elseif ($sType == "video"){
 			//Handle youtube link
 			$sVideoId = explode("v=", $sContent)[1];
 			//Return iFrame element
-			return $sPostHeader."<iframe width='560' height='315' src='https://www.youtube.com/embed/$sVideoId' frameborder='0' allowfullscreen></iframe>";
+			return $sPostHeader."<iframe width='560' height='315' src='https://www.youtube.com/embed/$sVideoId' frameborder='0' allowfullscreen></iframe>".$sPostFooter;
 
 		} elseif ($sType == "question"){
 			if (!is_array($sContent)){
@@ -154,15 +155,15 @@ class CmPageBuilder
 								</li>";
 			}
 
-			//TODO - Add save button
 			$sHtmlString .= "</ul>";
+			$sHtmlString .= "<a class='w3-btn w3-teal' href='#'>".TXT_CM_PAGE_SAVE_ANSWERS."</a>"; //TODO - Expand save button
 
-			return $sPostHeader.$sHtmlString;
+			return $sPostHeader.$sHtmlString.$sPostFooter;
 
 		} elseif ($sType == "download"){
 			$sFileTypeClass = "cm_dl_".substr($sContent, strrpos($sContent, ".") + 1);
 
-			return $sPostHeader."<a id='$sPartAttrId' class='cm_page_dl $sFileTypeClass' href='$sContent' download>$sTitle</a>";
+			return $sPostHeader."<a id='$sPartAttrId' class='cm_page_dl $sFileTypeClass' href='$sContent' download>$sTitle</a>".$sPostFooter;
 
 		}
 
@@ -305,6 +306,35 @@ class CmPageBuilder
 		}
 
 		return $blUpdateSuccess;
+	}
+
+
+	/**
+	 * @param int $iCourseId
+	 *
+	 * @return bool|string
+	 */
+	public static function getCourseFirstPageName( $iCourseId ) {
+		global $wpdb;
+
+		$oFirstPart = CmCourse::getCourseByID($iCourseId, true)->getCourseParts()[0];
+
+		$iPartId = $oFirstPart->getCoursePartID();
+
+		$sQuery = $wpdb->prepare("SELECT post_id FROM ".$wpdb->postmeta." WHERE meta_key = 'cm_course_part_id' AND meta_value = %d", $iPartId);
+
+		$iPostId = $wpdb->get_row($sQuery);
+
+		if (isset($iPostId)){
+			$sNameQuery = $wpdb->prepare("SELECT post_name FROM ".$wpdb->posts." WHERE ID = %d", (int) $iPostId->post_id);
+			$sPageName = $wpdb->get_row($sNameQuery);
+
+			if (isset($sPageName)){
+				return $sPageName->post_name;
+			}
+		}
+
+		return false;
 	}
 
 }
