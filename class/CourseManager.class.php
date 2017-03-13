@@ -531,7 +531,7 @@ class CourseManager
     public function addStyles()
     {
         wp_enqueue_style(
-            'CourseManagerEditCourse', 
+            'CourseManagerEditCourse',
             CM_URLPATH . "css/cmEditCourse.css",
             array() ,
             '1.0',
