@@ -39,10 +39,14 @@ class CmPageBuilder
 	/**
 	 * @param CmCourse $oCourse
 	 *
-	 * @return int[] IDs of the pages created
+	 * @return bool|int[] - false if the course is active | IDs of the pages created
 	 */
 	public function createCoursePages($oCourse)
 	{
+		if ($oCourse->getCourseStatus()){
+			return false;
+		}
+
 		//Go through all CmCourseParts and generate wp_posts with its CmParts
 		$aCourseParts = $oCourse->getCourseParts();
 		$iCourseId = $oCourse->getCourseID();
@@ -80,7 +84,7 @@ class CmPageBuilder
 		$sCpTitle = $oCoursePart->getCoursePartName();
 		$sPageTitle = $sCourseName." - ".$sCpTitle;
 		$sPageElementId = "cm_course_".$iCourseId."_".$iCpIndex;
-		$sPageName = $sCourseName."-".$iCpIndex."-".$sCpTitle;
+		$sPageName = $sCourseName."-".$sCpTitle;  // Add index if client thinks that s/he will use the same title within a Course
 
 		$sPageContent = "<div id='$sPageElementId' class='cm_page_wrap'>";
 
@@ -126,7 +130,7 @@ class CmPageBuilder
 			return $sPostHeader."<p id='$sPartAttrId' class='cm_page_text'>$sContent</p>";
 
 		} elseif ($sType == "image"){
-			return $sPostHeader."<img id='$sPartAttrId' class='cm_page_image' src='$sContent' />";
+			return $sPostHeader."<img id='$sPartAttrId' class='cm_page_image' src='".wp_get_attachment_url($sContent)."' />";
 
 		} elseif ($sType == "video"){
 			//Handle youtube link
@@ -181,7 +185,7 @@ class CmPageBuilder
 		$aPostData = array(
 			'ID' => $iPostID,
 			'post_excerpt' => 'cm_course',
-			'post_type' => 'page',
+			'post_type' => 'cm_course_page',
 			'post_status' => ($blCourseStatus ? 'publish' : 'draft'),
 			'comment_status' => 'closed',
 			'post_title' => wp_strip_all_tags($sCoursePartTitle),
@@ -206,11 +210,11 @@ class CmPageBuilder
 		global $wpdb;
 
 		$sTablePosts = $wpdb->prefix."posts";
-		$sTablePostmeta = $wpdb->prefix."postmeta";
+		$sTablePostMeta = $wpdb->prefix."postmeta";
 
 		$sSQL = "SELECT $sTablePosts.ID FROM $sTablePosts 
-				JOIN $sTablePostmeta ON $sTablePosts.ID = $sTablePostmeta.post_id 
-				WHERE $sTablePostmeta.meta_key = 'cm_course_part_id' AND $sTablePostmeta.meta_value = %d";
+				JOIN $sTablePostMeta ON $sTablePosts.ID = $sTablePostMeta.post_id 
+				WHERE $sTablePostMeta.meta_key = 'cm_course_part_id' AND $sTablePostMeta.meta_value = %d";
 
 		$sQuery = $wpdb->prepare($sSQL, $iCoursePartID);
 
@@ -233,24 +237,21 @@ class CmPageBuilder
 	{
 		global $wpdb;
 
-		$sTablePostmeta = $wpdb->prefix."postmeta";
+		$sTablePostMeta = $wpdb->prefix."postmeta";
 
-		$sSQL = "SELECT DISTINCT meta1.meta_value FROM $sTablePostmeta AS meta1 
-				JOIN $sTablePostmeta AS meta2 ON meta2.meta_key = 'cm_course_id' AND meta2.meta_value = %d
-				WHERE meta1.meta_key = 'cm_course_part_id'";
+		$sSQL = "SELECT post_id FROM $sTablePostMeta AS meta WHERE meta.meta_key = 'cm_course_id' AND meta.meta_value = %d";
 
 		$sQuery = $wpdb->prepare($sSQL, $iCourseId);
 
 		$aResponse = $wpdb->get_col($sQuery);
 
 		if(isset($aResponse)){
-			foreach ($aResponse as $iPartId){
+			foreach ($aResponse as $iPostId){
+				$sGetPartSQL = "SELECT meta_value FROM $sTablePostMeta AS meta WHERE meta.meta_key = 'cm_course_part_id' AND meta.post_id = %d";
+				$sGetPartQuery = $wpdb->prepare($sGetPartSQL, $iPostId);
+				$iPartId = (int) $wpdb->get_row($sGetPartQuery)->meta_value;
+
 				if (!in_array($iPartId, $aCoursePartIds)){
-					$sDelSQL = "SELECT meta.post_id FROM $sTablePostmeta AS meta WHERE meta.meta_key = 'cm_course_part_id' AND meta.meta_value = %d";
-
-					$sQuery = $wpdb->prepare($sDelSQL, $iPartId);
-					$iPostId = $wpdb->get_row($sQuery)->post_id;
-
 					wp_delete_post($iPostId, true);
 				}
 			}

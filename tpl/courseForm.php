@@ -29,6 +29,8 @@ function getCourseForm($iCourseID = null)
 		$oCourse = CmCourse::getCourseByID($iCourseID,true);
 	}
 
+	wp_enqueue_media();
+
 	?>
 	<form id = "cm_course_form" method='post' action='<?php
 	$aUri = explode("?", $_SERVER["REQUEST_URI"]);
@@ -150,6 +152,10 @@ function saveCourseChanges(){
 
 	if (!isset($_POST['course'])){
 		$iCId = $oNewCourse->save(false);
+
+		$oStoreHandler = new CmCourseStoreHandler();
+		$oStoreHandler->setStoreOptions($iCId);
+
 		$oNewCourse = CmCourse::getCourseByID($iCId, true);
 	} else{
 		$iCId = $_POST['course'];

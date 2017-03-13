@@ -25,10 +25,12 @@ define('TXT_CM_SETTINGS', __('Settings','course-manager'));
 define('TXT_CM_ADD_NEW', __('Add New','course-manager'));
 define('TXT_CM_DELETE', __('Delete','course-manager'));
 define('TXT_CM_GENERATE_PAGES', __('Generate pages','course-manager'));
+define('TXT_CM_STORE_SETTINGS', __('Store settings','course-manager'));
 define('TXT_CM_ACTIVE', __('Active','course-manager'));
 define('TXT_CM_NOT_ACTIVE', __('Not active','course-manager'));
 define('TXT_CM_ACTIVATE', __('Activate','course-manager'));
 define('TXT_CM_DEACTIVATE', __('Deactivate','course-manager'));
+define('TXT_CM_CHOOSE', __('Choose','course-manager'));
 
 // --- Errors --- \\
 define('TXT_CM_PHP_VERSION_TO_LOW', __('Your PHP version is too low, please update it before using Course Manager','course-manager'));
@@ -40,6 +42,7 @@ define('TXT_CM_ERROR_DB_QUERY', __('The database query failed, please try again.
 define('TXT_CM_MENU_COURSES', __('Courses','course-manager'));
 define('TXT_CM_MENU_TAGS', __('Tags','course-manager'));
 define('TXT_CM_MENU_ABOUT', __('About','course-manager'));
+define('TXT_CM_MENU_STORE', __('Store','course-manager'));
 
 // --- Courses Menu --- \\
 define('TXT_CM_ADMIN_COURSE_SINGULAR', __('Course','course-manager'));
@@ -51,6 +54,8 @@ define('TXT_CM_ADMIN_COURSE_SPAN', __('Span','course-manager'));
 define('TXT_CM_ADMIN_COURSE_PARTS', __('Parts','course-manager'));
 define('TXT_CM_ADMIN_COURSE_STATUS', __('Status','course-manager'));
 define('TXT_CM_ADMIN_COURSE_TAGS', __('Tags','course-manager'));
+define('TXT_CM_ACTIVATE_FAILURE', __('Course could not be activated. Have you generated pages for it and set the store settings for it?','course-manager'));
+
 
 // --- Tags Menu --- \\
 
@@ -60,7 +65,7 @@ define('TXT_CM_EDIT_TITLE', __('You\'re editing ','course-manager'));
 define('TXT_CM_CREATE_TITLE', __('You\'re creating a new course','course-manager'));
 define('TXT_CM_EDIT_COURSENAME', __('Course name','course-manager'));
 define('TXT_CM_EDIT_COURSEDESC', __('Course description','course-manager'));
-define('TXT_CM_EDIT_COURSEPRICE', __('Course price','course-manager'));
+define('TXT_CM_EDIT_COURSEPRICE', __('Course price (kr)','course-manager'));
 define('TXT_CM_EDIT_COURSESPAN', __('Course span (days)','course-manager'));
 define('TXT_CM_EDIT_SAVE', __('Save Course','course-manager'));
 define('TXT_CM_EDIT_COURSEPARTS', __('Course parts','course-manager'));
@@ -71,14 +76,14 @@ define('TXT_CM_ADD_NEW_PART', __('Add New Part','course-manager'));
 define('TXT_CM_EDIT_PARTS', __('Parts','course-manager'));
 define('TXT_CM_EDIT_PART_TITLE', __('Title','course-manager'));
 define('TXT_CM_EDIT_PART_CONTENT_VIDEO', __('Video Link','course-manager'));
-define('TXT_CM_EDIT_PART_CONTENT_IMAGE', __('Image Link','course-manager'));
+define('TXT_CM_EDIT_PART_CONTENT_IMAGE', __('Image','course-manager'));
 define('TXT_CM_EDIT_PART_CONTENT_DOWNLOAD', __('Download Link','course-manager'));
 define('TXT_CM_EDIT_PART_CONTENT_QUESTIONS', __('Questions','course-manager'));
 define('TXT_CM_EDIT_PART_CONTENT_QUESTION', __('Question','course-manager'));
 define('TXT_CM_EDIT_SAVE_SUCCESS', __('The Course have successfully been saved','course-manager'));
 define('TXT_CM_EDIT_SAVE_FAILURE', __('Something went wrong. Your Course updates/creation have not been saved','course-manager'));
 define('TXT_CM_GENERATE_PAGES_SUCCESS', __('The course pages have successfully been generated','course-manager'));
-define('TXT_CM_GENERATE_PAGES_FAILURE', __('ERROR: Some course pages were not generated correctly!','course-manager'));
+define('TXT_CM_GENERATE_PAGES_FAILURE', __('ERROR: The course page could not be generated. Is the course active?','course-manager'));
 define('TXT_CM_EDIT_NEW_COURSE_PART_TITLE', __('New course part','course-manager'));
 define('TXT_CM_EDIT_NEW_PART_TITLE', __('New part','course-manager'));
 define('TXT_CM_EDIT_NEW_PART_CONTENT', __('New part content','course-manager'));
@@ -90,6 +95,26 @@ define('TXT_CM_EDIT_SAVE_BEFORE_NEW_PARTS', __('You need to save the course firs
 
 // --- Course Pages --- \\
 define('TXT_CM_PAGE_TYPE_NOT_SUPPORTED', __('Content type not supported yet','course-manager'));
+
+
+// --- Admin Store --- \\
+define('TXT_CM_STORE_IN_STORE_TITLE', __('Set what courses should appear in the store', 'course-manager'));
+define('TXT_CM_STORE_NO_ACTIVE', __('You have no active courses, activate them in the Courses menu.', 'course-manager'));
+define('TXT_CM_STORE_ACTIVATE_STORE', __('Activate the store', 'course-manager'));
+define('TXT_CM_STORE_DEACTIVATE_STORE', __('Deactivate the store', 'course-manager'));
+define('TXT_CM_STORE_PAGE_TITLE', __('Store', 'course-manager'));
+define('TXT_CM_STORE_PAGE_NAME', __('course-store', 'course-manager'));
+define('TXT_CM_STORE_ACTIVATED', __('You have activated the store, check your menus to make sure that it has been added where you like.', 'course-manager'));
+define('TXT_CM_STORE_DEACTIVATED', __('You have deactivated the store.', 'course-manager'));
+define('TXT_CM_STORE_SAVE_CHANGES', __('Save Changes', 'course-manager'));
+define('TXT_CM_STORE_SAVE_SUCCESS', __('The store options for the course have successfully been saved','course-manager'));
+define('TXT_CM_STORE_SAVE_FAILURE', __('Something went wrong. Your updates/creation have not been saved','course-manager'));
+define('TXT_CM_STORE_ADD_IMAGE', __('Choose Image','course-manager'));
+define('TXT_CM_STORE_SELECT_IMAGE', __('Select an image to use','course-manager'));
+define('TXT_CM_STORE_COURSE_IMAGE', __('Course store image','course-manager'));
+define('TXT_CM_STORE_COURSE_DISCOUNT', __('Course discount','course-manager'));
+define('TXT_CM_STORE_BUY', __('Buy for','course-manager'));
+define('TXT_CM_STORE_FREE', __('Free - Start course now!','course-manager'));
 
 
 ?>

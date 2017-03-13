@@ -54,7 +54,7 @@ class CourseManager
      * 
      * @return string
      */
-    protected function _getCharset()
+    public static function getCharset()
     {
         global $wpdb;
         $sCharsetCollate = '';
@@ -100,7 +100,10 @@ class CourseManager
     {
         if ($this->_aAdminOptions === null) {
             $aCmAdminOptions = array(
-                'edit_access_role' => 'administrator'
+                'edit_access_role' => 'administrator',
+	            'store_active' => false,
+	            'courses_in_store' => array(),
+	            'currency' => 'kr'
             );
             
             $aCmOptions = $this->getWPOption($this->_sAdminOptionsName);
@@ -119,21 +122,87 @@ class CourseManager
     }
 
 
-    /**
-     * Returns a option value
-     *
-     * @param string $sOption
-     *
-     * @return array
-     */
-    public function getWPOption($sOption)
+	/**
+	 * Returns a option value
+	 *
+	 * @param string $sOption
+	 *
+	 * @param bool $blCacheBust
+	 *
+	 * @return array
+	 */
+    public function getWPOption($sOption, $blCacheBust = false)
     {
-        if (!isset($this->_aWPOptions[$sOption])) {
+        if (!isset($this->_aWPOptions[$sOption]) || $blCacheBust) {
             $this->_aWPOptions[$sOption] = get_option($sOption);
         }
 
         return $this->_aWPOptions[$sOption];
     }
+
+
+	/**
+	 * @return array
+	 */
+	public function updateOptionsFromDb(){
+    	$aCurrentOptions = $this->getOptions();
+	    $aOptionsFromDb = $this->getWPOption($this->_sAdminOptionsName, true);
+
+	    $aUpdatedOptions = array_merge($aCurrentOptions, $aOptionsFromDb);
+
+	    $this->_aAdminOptions = $aUpdatedOptions;
+
+	    return $aUpdatedOptions;
+
+    }
+
+
+	/**
+	 * @param string $sOptionKey
+	 * @param mixed $mValue
+	 * @param bool $blSetIfNonExistent
+	 *
+	 *
+	 * @return bool
+	 */
+	public function setOption($sOptionKey, $mValue, $blSetIfNonExistent = false)
+    {
+    	$aOptions = $this->getOptions();
+
+	    if(array_key_exists($sOptionKey, $aOptions)) {
+		    $aOptions[ $sOptionKey ] = $mValue;
+
+		    $this->_aAdminOptions[$sOptionKey] = $mValue;
+
+		    return update_option( $this->_sAdminOptionsName, $aOptions );
+	    }
+	    else{
+	    	if($blSetIfNonExistent){
+				return $this->setNewOption($sOptionKey, $mValue);
+		    }
+		    else{
+			    return false;
+		    }
+	    }
+    }
+
+
+	/**
+	 * @param string $sOptionKey
+	 * @param mixed $mNewValue
+	 *
+	 * @return bool
+	 */
+	public function setNewOption($sOptionKey, $mNewValue)
+	{
+		$aOptions = $this->getOptions();
+
+		$aOptions[ $sOptionKey ] = $mNewValue;
+
+		$this->_aAdminOptions = $aOptions;
+
+		return update_option( $this->_sAdminOptionsName, $aOptions );
+	}
 
 
 	/**
@@ -185,6 +254,23 @@ class CourseManager
     }
 
 
+	/**
+	 * See "Flushing Rewrite on Activation" https://codex.wordpress.org/Function_Reference/register_post_type
+	 */
+	public function rewrite_flush()
+	{
+		// First, we "add" the custom post type via the above written function.
+		// Note: "add" is written with quotes, as CPTs don't get added to the DB,
+		// They are only referenced in the post_type column with a post entry,
+		// when you add a post of this CPT.
+		$this->create_cm_post_type();
+
+		// ATTENTION: This is *only* done during plugin activation hook in this example!
+		// You should *NEVER EVER* do this on every page load!!
+		flush_rewrite_rules();
+	}
+
+
     /**
      * Installs course manager.
      * 
@@ -204,7 +290,7 @@ class CourseManager
     	global $wpdb;
         include_once ABSPATH.'wp-admin/includes/upgrade.php';
 
-        $sCharsetCollate = $this->_getCharset();
+        $sCharsetCollate = $this->getCharset();
 
         //Checking if cm_courses table exists
         $sCmCourseTableName = $wpdb->prefix.'cm_courses';
@@ -367,6 +453,39 @@ class CourseManager
     }
 
 
+	/**
+	 *
+	 */
+	function create_cm_post_type() {
+		register_post_type( 'cm_course_page',
+			array(
+				'labels' => array(
+					'name' => __( 'Course Pages', 'course-manager' ),
+					'singular_name' => __( 'Course Page', 'course-manager' ),
+					'add_new'            => __( 'Add New Course page', 'slide', 'course-manager' ),
+					'add_new_item'       => __( 'Add New Course page', 'course-manager' ),
+					'edit_item'          => __( 'Edit Course page', 'course-manager' ),
+					'new_item'           => __( 'New Course page', 'course-manager' ),
+					'view_item'          => __( 'View Course page', 'course-manager' ),
+					'search_items'       => __( 'Search Course page', 'course-manager' ),
+					'not_found'          => __( 'No course pages have been added yet', 'course-manager' ),
+					'not_found_in_trash' => __( 'Nothing found in Trash', 'course-manager' ),
+				),
+				'public' => false,
+				'exclude_from_search' => true,
+				'publicly_queryable' => true,
+				'show_in_nav_menus' => false,
+				'show_ui' => true,
+				'show_in_menu' => true,
+				'menu_icon' => 'dashicons-format-aside',
+				'hierarchical' => false,
+				'has_archive' => false,
+				'rewrite' => array('slug' => __( 'courses', 'course-manager' )),
+			)
+		);
+	}
+
+
     /**
      * Checks to see if the user has access to the Course Manager Adminpanel
      * 
@@ -464,14 +583,20 @@ class CourseManager
             $sAdminPage = $_GET['page'];
 
             if ($sAdminPage == 'cm_courses') {
-
                 include CM_REALPATH."tpl/adminCourses.php";
+
+            } elseif ($sAdminPage == 'cm_store') {
+	            include CM_REALPATH."tpl/adminStore.php";
+
             } elseif ($sAdminPage == 'cm_tags') {
                 include CM_REALPATH."tpl/adminTags.php";
+
             } elseif ($sAdminPage == 'cm_settings') {
                 include CM_REALPATH."tpl/adminSettings.php";
+
             } elseif ($sAdminPage == 'cm_about') {
                 include CM_REALPATH."tpl/about.php";
+
             }
         }
     }

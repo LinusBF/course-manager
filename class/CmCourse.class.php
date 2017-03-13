@@ -89,7 +89,7 @@ class CmCourse
      *
      * @return CmCourse|bool instance
      */
-    public static function createCompleteCourse($sName, $sDesc, $iPrice, $blActive,$iSpan,$aCourseParts)
+    public static function createCompleteCourse($sName, $sDesc, $iPrice, $blActive, $iSpan,$aCourseParts)
     {
     	$instance = new self();
     	if (!$instance->checkCourseName($sName)) {
@@ -455,7 +455,7 @@ class CmCourse
 				return true;
 
     		} else{
-    			return $blSaveCheck['insertId'];
+    			return (isset($blSaveCheck['insertId']) ? $blSaveCheck['insertId'] : true);
 			}
 
     	} else{
@@ -508,6 +508,7 @@ class CmCourse
 
 				if(!isset($this->_iCourseID)){
 					$iInsertId = $wpdb->insert_id;
+
 				}
 
 		    	if (isset($this->_aCourseTags)) {
@@ -610,6 +611,27 @@ class CmCourse
     	$instance = new self();
 
     	$wpdb->delete($instance->_getDbTableName(), array('ID' => $iID), array('%d'));
+    }
+
+
+	/**
+	 * Checks if the course can be activated
+	 *
+	 * @param int $iId
+	 *
+	 * @return bool
+	 */
+	public static function checkActivate( $iId ) {
+		if (CmCourse::getCourseByID($iId)->getCourseStatus()){
+			return true;
+		}
+
+		$oStoreHandler = new CmCourseStoreHandler();
+		$oPageBuilder = new CmPageBuilder();
+
+		$aPageIds = $oPageBuilder->getCoursePageIds($iId);
+
+		return (bool) $oStoreHandler->getStoreOptionsForCourse($iId)['settings_modified'] && !in_array(0, $aPageIds);
     }
 
 
@@ -810,6 +832,32 @@ class CmCourse
 
     	return $aAllCourses;
     }
+
+
+	/**
+	 * Returns all the courses in the DB.
+	 *
+	 * @return CmCourse[]
+	 */
+	public static function getAllActiveCourses($blGetCourseParts = false)
+	{
+		global $wpdb;
+		$aAllCourses = array();
+		$oCmCourse = new self();
+
+		$sSQL = "SELECT ID FROM ".$oCmCourse->_getDbTableName()." WHERE active = 1";
+
+		$aCourseIDs = $wpdb->get_col($sSQL);
+
+		foreach ($aCourseIDs as $iID) {
+
+			$instance = CmCourse::getCourseByID($iID,$blGetCourseParts);
+
+			array_push($aAllCourses,$instance);
+		}
+
+		return $aAllCourses;
+	}
 
 
 	/**
