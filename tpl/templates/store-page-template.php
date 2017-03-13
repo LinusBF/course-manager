@@ -9,6 +9,7 @@ add_action('wp_head', 'store_header');
 function store_header(){
 	echo "<link rel='stylesheet' href='".CM_URLPATH."css/cm_store.css'>
 		  <link rel='stylesheet' href='".CM_URLPATH."css/flip_animation.css'>
+		  <link rel='stylesheet' href='".CM_URLPATH."css/popup_box.css'>
 		  <link rel=\"stylesheet\" href=\"https://www.w3schools.com/lib/w3.css\">";
 }
 
@@ -22,6 +23,8 @@ get_header(); ?>
 						$oStore = new CmStore();
 						$oStoreHandler = new CmCourseStoreHandler();
 						$oCourseManager = new CourseManager();
+
+						$aUri = explode("course-store", $_SERVER["REQUEST_URI"]);
 
 						$aCourses = $oStore->getCoursesForStore();
 
@@ -47,7 +50,8 @@ get_header(); ?>
 									</div>
 									<div class="course_text back">
 										<p class="course_name"><?php echo $oCourse->getCourseName(); ?></p>
-										<a href="#" class="w3-btn w3-teal"><?php
+										<a href="<?php echo reset($aUri) . "/courses/" . CmPageBuilder::getCourseFirstPageName($oCourse->getCourseID()); ?>"
+										   class="w3-btn w3-teal"><?php #buy_course_<?php echo $oCourse->getCourseID();
 												if($oCourse->getCoursePrice() > 0) {
 													$iPrice = $oCourse->getCoursePrice() * ( 1 - ( $aCourseOptions['current_discount'] / 100 ) );
 													$iPrice = floor( $iPrice );
@@ -61,6 +65,15 @@ get_header(); ?>
 								</div>
 							</div>
 						</div>
+						<!--<div id="buy_course_<?php /*echo $oCourse->getCourseID(); */?>" class="popup_overlay">
+							<div class="popup">
+								<h2>Buy <?php /*echo $oCourse->getCourseName(); */?></h2>
+								<a class="close" href="#">&times;</a>
+								<div class="content">
+									<input type="hidden" value="<?php /*echo $oCourse->getCourseID(); */?>">
+								</div>
+							</div>
+						</div>-->
 					<?php
 						endforeach;
 					?>
