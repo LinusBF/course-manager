@@ -1,5 +1,4 @@
 <?php
-$oCM = new CourseManager();
 $oStore = new CmStore();
 
 $blStateChange = false;
@@ -45,9 +44,9 @@ if (isset($_GET['action']) && $_GET['action'] == "store_courses"){
 	}
 }
 
+$oCM = new CourseManager();
 $aSettings = $oCM->getOptions();
 
-$blStore = $aSettings['store_active'];
 $aCoursesInStore = $aSettings['courses_in_store'];
 $aAllActiveCourses = CmCourse::getAllActiveCourses();
 ?>
@@ -59,7 +58,7 @@ $aAllActiveCourses = CmCourse::getAllActiveCourses();
 
 
 <?php
-($blStore ? $sButtonText = TXT_CM_STORE_DEACTIVATE_STORE : $sButtonText = TXT_CM_STORE_ACTIVATE_STORE);
+$sButtonText = ($oStore->isStoreActive() ? TXT_CM_STORE_DEACTIVATE_STORE : TXT_CM_STORE_ACTIVATE_STORE);
 
 $sActivateStoreNonce = wp_create_nonce('cm_change_store_state');
 echo sprintf('<a class="button button-primary alignright" href="?page=%s&action=%s&_wpnonce=%s">'.$sButtonText.'</a>',
