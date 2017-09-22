@@ -215,7 +215,6 @@ if (isset($oCourseManager)) {
 	//Load CSS and Scripts
 	add_action('wp_print_scripts', array($oCourseManager, 'addScripts'));
 	add_action('wp_print_styles', array($oCourseManager, 'addStyles'));
-	add_action('wp_print_scripts', 'cm_load_ajax');
 	add_action('admin_enqueue_scripts', 'create_edit_course_scripts');
 	add_action('admin_enqueue_scripts', 'store_page_scripts');
 	require_once "tpl/editCourseAjaxFunctions.php";
@@ -237,7 +236,9 @@ if (isset($oCourseManager)) {
 
 function create_edit_course_scripts(){
 	if(isset($_GET['action']) && $_GET['action'] == 'edit' && $_GET['page'] == 'cm_courses'){
+		wp_enqueue_script('cm_edit_course_script', CM_URLPATH. 'js/edit_course.js');
 		wp_enqueue_script( 'cm_media_select_script_course', CM_URLPATH. 'js/media_selector_edit_course.js');
+		cm_load_ajax();
 
 		$script_data = array(
 			'post_id' => get_option('media_selector_attachment_id', 0),
