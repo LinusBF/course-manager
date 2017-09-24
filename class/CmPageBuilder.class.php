@@ -56,11 +56,39 @@ class CmPageBuilder
 		$aPageIds = array();
 		$aCoursePartIds = array();
 
-		foreach ($aCourseParts as $oCoursePart){
+		$aUri = explode("wp-admin", $_SERVER["REQUEST_URI"]);
+
+		foreach ($aCourseParts as $iIndex => $oCoursePart){
 			array_push($aCoursePartIds, $oCoursePart->getCoursePartID());
 			$iPostId = $this->_checkCoursePartPost($oCoursePart->getCoursePartID());
 
-			array_push($aPageIds, $this->_genCoursePage($iCourseId, $sCourseName, $oCoursePart, $blCourseStatus, $iPostId));
+			//Data for the links to the previous and next course part
+			if ($iIndex === 0){
+				$aPrevPartData = null;
+			} else{
+				$aPrevPartData = array(
+					'title' => $aCourseParts[$iIndex - 1]->getCoursePartName(),
+					'link' => reset($aUri) . 'courses/' .
+					          CmPageBuilder::getPartUrlName($sCourseName . '-' . $aCourseParts[$iIndex - 1]->getCoursePartName())
+				);
+			}
+
+			if ($iIndex === count($aCourseParts) - 1){
+				$aNextPartData = null;
+			} else{
+				$aNextPartData = array(
+					'title' => $aCourseParts[$iIndex + 1]->getCoursePartName(),
+					'link' => reset($aUri) . 'courses/' .
+					          CmPageBuilder::getPartUrlName($sCourseName . '-' . $aCourseParts[$iIndex + 1]->getCoursePartName())
+				);
+			}
+
+			$aSurroundingPartsData = array(
+				'prev' => $aPrevPartData,
+				'next' => $aNextPartData
+			);
+
+			array_push($aPageIds, $this->_genCoursePage($iCourseId, $sCourseName, $oCoursePart, $aSurroundingPartsData, $blCourseStatus, $iPostId));
 		}
 
 		//Cleanup deleted CmCourseParts
@@ -74,11 +102,13 @@ class CmPageBuilder
 	 * @param int $iCourseId
 	 * @param string $sCourseName
 	 * @param CmCoursePart $oCoursePart
+	 * @param $aSurroundingParts
 	 * @param bool $blCourseStatus
 	 * @param int $iPostID Function will update page instead of creating if not 0
+	 *
 	 * @return int|WP_Error
 	 */
-	protected function _genCoursePage($iCourseId, $sCourseName, $oCoursePart, $blCourseStatus, $iPostID = 0){
+	protected function _genCoursePage($iCourseId, $sCourseName, $oCoursePart, $aSurroundingParts, $blCourseStatus, $iPostID = 0){
 		$iCpIndex = $oCoursePart->getCourseIndex();
 		$iCpId = $oCoursePart->getCoursePartID();
 		$sCpTitle = $oCoursePart->getCoursePartName();
@@ -87,6 +117,24 @@ class CmPageBuilder
 		$sPageName = $sCourseName."-".$sCpTitle;  // Add index if client thinks that s/he will use the same title within a Course
 
 		$sPageContent = "<div id='$sPageElementId' class='cm_page_wrap'>";
+
+		if(isset($aSurroundingParts['prev']) || isset($aSurroundingParts['next'])) {
+			$sPageContent .= "<div class='cm_course_links'>";
+
+			if ( isset( $aSurroundingParts['prev'] ) ) {
+				$sPageContent .= "<a id='cm_prev_part_link' class='cm_part_nav_link' 
+									href='" . $aSurroundingParts['prev']['link'] . "'><< "
+				                 . $aSurroundingParts['prev']['title'] . "</a>";
+			}
+
+			if ( isset( $aSurroundingParts['next'] ) ) {
+				$sPageContent .= "<a id='cm_next_part_link' class='cm_part_nav_link' 
+									href='" . $aSurroundingParts['next']['link'] . "'>"
+				                 . $aSurroundingParts['next']['title'] . " >></a>";
+			}
+
+			$sPageContent .= "</div>";
+		}
 
 		foreach ($oCoursePart->getParts() as $oPart){
 			$sDivId = "cm_part_divider_".$oPart->getIndex();
@@ -335,6 +383,11 @@ class CmPageBuilder
 		}
 
 		return false;
+	}
+
+
+	public static function getPartUrlName($sPartName){
+		return sanitize_title($sPartName);
 	}
 
 }
