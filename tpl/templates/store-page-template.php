@@ -50,7 +50,7 @@ get_header(); ?>
 									</div>
 									<div class="course_text back">
 										<p class="course_name"><?php echo $oCourse->getCourseName(); ?></p>
-										<a href="<?php echo reset($aUri) . "/courses/" . CmPageBuilder::getCourseFirstPageName($oCourse->getCourseID()); ?>"
+										<a href="<?php echo reset($aUri) . "courses/" . CmPageBuilder::getCourseFirstPageName($oCourse->getCourseID()); ?>"
 										   class="w3-btn w3-teal"><?php #buy_course_<?php echo $oCourse->getCourseID();
 												if($oCourse->getCoursePrice() > 0) {
 													$iPrice = $oCourse->getCoursePrice() * ( 1 - ( $aCourseOptions['current_discount'] / 100 ) );
@@ -65,7 +65,9 @@ get_header(); ?>
 								</div>
 							</div>
 						</div>
-						<!--<div id="buy_course_<?php /*echo $oCourse->getCourseID(); */?>" class="popup_overlay">
+						<!--
+						TODO REMOVE THIS BEFORE RELEASE
+						<div id="buy_course_<?php /*echo $oCourse->getCourseID(); */?>" class="popup_overlay">
 							<div class="popup">
 								<h2>Buy <?php /*echo $oCourse->getCourseName(); */?></h2>
 								<a class="close" href="#">&times;</a>
