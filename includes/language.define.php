@@ -54,6 +54,7 @@ define('TXT_CM_ADMIN_COURSE_SPAN', __('Span','course-manager'));
 define('TXT_CM_ADMIN_COURSE_PARTS', __('Parts','course-manager'));
 define('TXT_CM_ADMIN_COURSE_STATUS', __('Status','course-manager'));
 define('TXT_CM_ADMIN_COURSE_TAGS', __('Tags','course-manager'));
+define('TXT_CM_ADMIN_COURSE_DELETE_CONFIRM', __('Are you sure you want to delete this course and all its content?', 'course-manager'));
 define('TXT_CM_ACTIVATE_FAILURE', __('Course could not be activated. Have you generated pages for it and set the store settings for it?','course-manager'));
 
 
