@@ -255,7 +255,7 @@ function create_edit_course_scripts(){
 
 
 function create_admin_courses_scripts(){
-	if(!isset($_GET['action']) && $_GET['page'] == 'cm_courses'){
+	if($_GET['page'] == 'cm_courses'){
 		wp_enqueue_script('cm_admin_courses_script', CM_URLPATH. 'js/admin_courses.js');
 
 		$script_data = array(
