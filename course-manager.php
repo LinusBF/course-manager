@@ -216,6 +216,7 @@ if (isset($oCourseManager)) {
 	add_action('wp_print_scripts', array($oCourseManager, 'addScripts'));
 	add_action('wp_print_styles', array($oCourseManager, 'addStyles'));
 	add_action('admin_enqueue_scripts', 'create_edit_course_scripts');
+	add_action('admin_enqueue_scripts', 'create_admin_courses_scripts');
 	add_action('admin_enqueue_scripts', 'store_page_scripts');
 	require_once "tpl/editCourseAjaxFunctions.php";
 	add_action('wp_ajax_cm_new_course_part', 'cm_add_new_coursePart');
@@ -253,8 +254,23 @@ function create_edit_course_scripts(){
 }
 
 
+function create_admin_courses_scripts(){
+	if(!isset($_GET['action']) && $_GET['page'] == 'cm_courses'){
+		wp_enqueue_script('cm_admin_courses_script', CM_URLPATH. 'js/admin_courses.js');
+
+		$script_data = array(
+			'confirm_dialog' => TXT_CM_ADMIN_COURSE_DELETE_CONFIRM,
+		);
+
+		wp_localize_script('cm_admin_courses_script', 'passed_options', $script_data);
+	}else{
+		return;
+	}
+}
+
+
 function store_page_template($page_template){
-	if(is_page('course-store')){
+	if(is_page('course-store')){  //Make this name dynamic?
 		$page_template = dirname(__FILE__).'/tpl/templates/store-page-template.php';
 	}
 	return $page_template;

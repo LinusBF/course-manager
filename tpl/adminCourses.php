@@ -108,7 +108,7 @@ class CourseList extends WP_List_Table
 				'edit', absint($oCourse->getCourseID()),$sEditNonce).$oCourse->getCourseName()."</a></strong>";
 
 		$aActions = [
-			"delete" => sprintf('<a href="?page=%s&action=%s&course=%s&_wpnonce=%s">'.TXT_CM_DELETE.'</a>',
+			"delete" => sprintf('<a class="cm_delete_course" href="?page=%s&action=%s&course=%s&_wpnonce=%s">'.TXT_CM_DELETE.'</a>',
 				esc_attr($_REQUEST['page']), 'delete', absint($oCourse->getCourseID()), $sDeleteNonce),
 			"gen_pages" => sprintf('<a href="?page=%s&action=%s&course=%s&_wpnonce=%s">'.TXT_CM_GENERATE_PAGES.'</a>',
 				esc_attr($_REQUEST['page']), 'gen_pages', absint($oCourse->getCourseID()), $sGeneratePagesNonce),
