@@ -31,6 +31,8 @@ function getCourseForm($iCourseID = null)
 
 	wp_enqueue_media();
 
+	$sCourseDesc = (isset($oCourse) ? $oCourse->getCourseDescription() : 'Just another Course');
+
 	?>
 	<form id = "cm_course_form" method='post' action='<?php
 	$aUri = explode("?", $_SERVER["REQUEST_URI"]);
@@ -60,8 +62,10 @@ function getCourseForm($iCourseID = null)
 						<label class="cm_table_label" for='cm_course_description'><?php echo TXT_CM_EDIT_COURSEDESC; ?></label>
 					</th>
 					<td>
-						<input name='cm_course_description' type='text' id='cm_edit_course_desc' class='regular-text'
-							   value='<?php echo (isset($oCourse) ? $oCourse->getCourseDescription() : 'Just another Course'); ?>'>
+						<div class="textarea-wrap">
+							<textarea name='cm_course_description' id='cm_edit_course_desc' class='cm_text_area'><?php echo $sCourseDesc;?>
+							</textarea>
+						</div>
 					</td>
 				</tr>
 				<tr>

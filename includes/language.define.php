@@ -117,6 +117,8 @@ define('TXT_CM_STORE_COURSE_IMAGE', __('Course store image','course-manager'));
 define('TXT_CM_STORE_COURSE_DISCOUNT', __('Course discount','course-manager'));
 define('TXT_CM_STORE_BUY', __('Buy for','course-manager'));
 define('TXT_CM_STORE_FREE', __('Free - Start course now!','course-manager'));
+define('TXT_CM_STORE_FREE_EMAIL', __('Free <br> Enter your email to start!','course-manager'));
+define('TXT_CM_STORE_MORE_INFO', __('Click to see more info','course-manager'));
 
 
 ?>

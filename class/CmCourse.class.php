@@ -263,6 +263,16 @@ class CmCourse
     	return htmlspecialchars($this->_sCourseName, ENT_QUOTES, 'UTF-8');
     }
 
+    /**
+     * Returns the Course name sanitized.
+     *
+     * @return string
+     */
+    public function getCourseURLName()
+    {
+    	return sanitize_title(htmlspecialchars($this->_sCourseName, ENT_QUOTES, 'UTF-8'));
+    }
+
 
     /**
      * Sets the Course name.
