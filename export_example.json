@@ -1,0 +1,156 @@
+[
+	{
+		"type": "courses",
+		"item": [
+			{
+				"ID": 1,
+				"type": "Course",
+				"name" : "Test Course",
+				"description": "Just another Course",
+				"price": 150,
+				"span": 15,
+				"course_parts": [
+					{
+						"ID": 1,
+						"name": "Week 1",
+						"index": 0,
+						"parts": [
+							{
+								"ID": 1,
+								"title": "Look at this picture",
+								"content": 4,
+								"type": "image",
+								"index": 0,
+							},
+							{
+								"ID": 2,
+								"title": "Week 1 - What we are doing",
+								"content": "<h2>Once upon a time....</h2>",
+								"type": "text",
+								"index": 1,
+							},
+						],
+					},
+				],
+			},
+			{
+				"ID": 2,
+				"type": "Course",
+				"name" : "Another Course",
+				"description": "This describes the course ",
+				"price": 75,
+				"span": 10,
+				"course_parts": [
+					{
+						"ID": 2,
+						"name": "Part 1",
+						"index": 0,
+						"parts": [
+							{
+								"ID": 3,
+								"title": "First part text",
+								"content": "<h2>Intro to the course</h2>\r\nThis is a captivating intro to the course",
+								"type": "text",
+								"index": 0,
+							},
+							{
+								"ID": 4,
+								"title": "This is a nice image",
+								"content": 9,
+								"type": "image",
+								"index": 1,
+							},
+						],
+					},
+					{
+						"ID": 3,
+						"name": "Part 2",
+						"index": 1,
+						"parts": [
+							{
+								"ID": 5,
+								"title": "Intro to part 2",
+								"content": "<h2>Welcome back</h2>\r\nWelcome back to the second part of the course!",
+								"type": "text",
+								"index": 0,
+							},
+							{
+								"ID": 6,
+								"title": "Cont.",
+								"content": "<h2>New goal</h2>\r\nThis will describe the new goal of the course in this part",
+								"type": "text",
+								"index": 1,
+							},
+						],
+					},
+				],
+			},
+		],
+	},
+	{
+		"type": "store",
+		"item": [
+			{
+				"ID": 1,
+				"course_id": 1,
+				"meta_key": "store_image",
+				"meta_value": 4,
+			},
+			{
+				"ID": 2,
+				"course_id": 1,
+				"meta_key": "store_description",
+				"meta_value": "Awesome course",
+			},
+			{
+				"ID": 3,
+				"course_id": 1,
+				"meta_key": "current_discount",
+				"meta_value": 20,
+			},
+			{
+				"ID": 4,
+				"course_id": 1,
+				"meta_key": "settings_modified",
+				"meta_value": 1,
+			},
+			{
+				"ID": 5,
+				"course_id": 2,
+				"meta_key": "store_image",
+				"meta_value": 9,
+			},
+			{
+				"ID": 6,
+				"course_id": 2,
+				"meta_key": "store_description",
+				"meta_value": "This is a short description",
+			},
+			{
+				"ID": 7,
+				"course_id": 2,
+				"meta_key": "current_discount",
+				"meta_value": 20,
+			},
+			{
+				"ID": 8,
+				"course_id": 2,
+				"meta_key": "settings_modified",
+				"meta_value": 1,
+			},
+		],
+	},
+	{
+		"type": "options",
+		"item": [
+			{
+				"type": "admin_options",
+				"item": "a:4:{s:16:\"edit_access_role\";s:13:\"administrator\";s:12:\"store_active\";s:4:\"true\";s:16:\"courses_in_store\";a:2:{i:0;i:1;i:1;i:2;}s:8:\"currency\";s:2:\"kr\";}"
+			},
+		],
+	},
+	{
+		"type": "db_version",
+		"item": 1.0,
+	},
+]

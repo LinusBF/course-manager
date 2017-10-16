@@ -453,6 +453,24 @@ class CourseManager
     }
 
 
+    /**
+     * Export current instance of Course Manager plugin state
+     */
+    public function export(){
+        $aCourses = CmCourse::getAllCourses(true);
+
+
+    }
+
+
+    /**
+     * Import current instance of Course Manager plugin state
+     */
+    public function import($aImportData){
+
+    }
+
+
 	/**
 	 *
 	 */
