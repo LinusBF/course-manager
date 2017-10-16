@@ -458,8 +458,19 @@ class CourseManager
      */
     public function export(){
         $aCourses = CmCourse::getAllCourses(true);
+	    $oStore = new CmStore();
+		$aPluginData = array();
 
+	    $aCourseData = array("type" => "courses", "item" => array());
+	    foreach ($aCourses as $oCourse){
+	    	array_push($aCourseData['item'], json_decode($oCourse->exportToJSON()));
+	    }
+	    array_push($aPluginData, $aCourseData);
+	    array_push($aPluginData, array("type" => "store", "item" => json_decode($oStore->exportToJSON())));
+	    array_push($aPluginData, array("type" => "options", "item" => $this->getOptions()));
+	    array_push($aPluginData, array("type" => "db_version", "item" => $this->_sCmDBVersion));
 
+	    return json_encode($aPluginData);
     }
 
 

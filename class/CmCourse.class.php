@@ -930,6 +930,29 @@ class CmCourse
     }
 
 
+	/**
+	 *
+	 */
+	public function exportToJSON(){
+    	$aJSONCourse = array(
+    		"ID" => $this->getCourseID(),
+		    "type" => "Course",
+		    "name" => $this->getCourseName(),
+		    "description" => $this->getCourseDescription(),
+		    "price" => $this->getCoursePrice(),
+		    "span" => $this->getCourseSpan(),
+	    );
+
+		$aCourseParts = array();
+		foreach ($this->getCourseParts() as $oCoursePart){
+			array_push($aCourseParts, json_decode($oCoursePart->toJSON()));
+		}
+		$aJSONCourse["parts"] = $aCourseParts;
+
+		return json_encode($aJSONCourse);
+    }
+
+
     /**
      * Prints the <ul> element representing this Course | For tpl/courseForm.php
 	 *

@@ -590,6 +590,26 @@ class CmCoursePart
     }
 
 
+	/**
+	 *
+	 */
+	public function toJSON() {
+		$aJSONCoursePart = array(
+			"ID"          => $this->getCoursePartID(),
+			"name"        => $this->getCoursePartName(),
+			"index"       => $this->getCourseIndex(),
+		);
+
+		$aParts = array();
+		foreach ($this->getParts() as $oPart){
+			array_push($aParts, json_decode($oPart->toJSON()));
+		}
+		$aJSONCoursePart["parts"] = $aParts;
+
+		return json_encode($aJSONCoursePart);
+	}
+
+
     /**
      * toString
      */

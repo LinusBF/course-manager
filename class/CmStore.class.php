@@ -177,6 +177,28 @@ class CmStore {
 
 
 	/**
+	 *  Returns the store data in JSON-format
+	 */
+	public function exportToJSON(){
+		return json_encode($this->_getAllStoreData());
+	}
+
+
+	/**
+	 *  Returns an array containing all of the rows in the store_meta table
+	 */
+	private function _getAllStoreData(){
+		global $wpdb;
+
+		$sSQL = "SELECT * FROM ".DB_CM_STORE_META;
+
+		$aResults = $wpdb->get_results($sSQL);
+
+		return $aResults;
+	}
+
+
+	/**
 	 * @return int - ID of the page, 0 if not found
 	 */
 	protected function _getStorePageId(){

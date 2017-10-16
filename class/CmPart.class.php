@@ -645,6 +645,22 @@ class CmPart
     }
 
 
+	/**
+	 *
+	 */
+	public function toJSON() {
+		$aJSONPart = array(
+			"ID"          => $this->getPartID(),
+			"title"        => $this->getTitle(),
+			"content" => $this->getContent(),
+			"type"       => $this->getType(),
+			"index"        => $this->getIndex(),
+		);
+
+		return json_encode($aJSONPart);
+	}
+
+
     /**
      * toString
      */
