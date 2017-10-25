@@ -64,6 +64,25 @@ class CmCoursePart
 
 
 	/**
+	 * Constructor with params
+	 *
+	 * @param $iIndex
+	 * @param $iCourseID
+	 * @param $sCoursePartName
+	 *
+	 * @return CmCoursePart instance
+	 */
+	public static function createWParams($iIndex, $iCourseID, $sCoursePartName)
+	{
+		$instance = new self();
+		$instance->setCourseIndex($iIndex);
+		$instance->setCourseID($iCourseID);
+		$instance->setCoursePartName($sCoursePartName);
+		return $instance;
+	}
+
+
+	/**
      * Constructor with CmParts and a Course index.
      *
      * @param array - $aParts - array of CmParts | int - $iIndex - This index in a Course
