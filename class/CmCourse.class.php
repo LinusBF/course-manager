@@ -82,26 +82,31 @@ class CmCourse
     }
 
 
-    /**
-     * Constructor with all parameters to make a new Course in the db.
-     *
-     * @param CmCoursePart[] $aCourseParts
-     *
-     * @return CmCourse|bool instance
-     */
-    public static function createCompleteCourse($sName, $sDesc, $iPrice, $blActive, $iSpan,$aCourseParts)
+	/**
+	 * Constructor with all parameters to make a new Course in the db.
+	 *
+	 * @param $sName
+	 * @param $sDesc
+	 * @param $iPrice
+	 * @param $blActive
+	 * @param $iSpan
+	 * @param CmCoursePart[] $aCourseParts
+	 *
+	 * @return bool|CmCourse instance
+	 */
+    public static function createCompleteCourse($sName, $sDesc, $iPrice, $blActive, $iSpan, $aCourseParts)
     {
     	$instance = new self();
     	if (!$instance->checkCourseName($sName)) {
     		return false;
     	}
-    	$instance->_sCourseName = $sName;
-		$instance->_sCourseDescription = $sDesc;
-		$instance->_iCoursePrice = $iPrice;
-    	$instance->_blCourseActive = $blActive;
-    	$instance->_iCourseSpan = $iSpan;
-    	$instance->_aCourseParts = $aCourseParts;
-    	$instance->_iNrOfCourseParts = count($aCourseParts);
+    	$instance->setCourseName($sName);
+		$instance->setCourseDescription($sDesc);
+		$instance->setCoursePrice($iPrice);
+    	$instance->setCourseStatus($blActive);
+    	$instance->setCourseSpan($iSpan);
+    	$instance->setCourseParts($aCourseParts);
+    	$instance->setNrCourseParts(count($aCourseParts));
     	return $instance;
     }
 
