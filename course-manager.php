@@ -74,41 +74,6 @@ require_once 'widget/cmLinks.class.php';
 $oCourseManager = new CourseManager();
 $oUserManager = new CmUserManager();
 
-//START - core promote function for User Access Manager
-function promoteUser(){
-
-  $iUserId = get_current_user_id();
-
-  if (!class_exists("UserAccessManager")) {
-    return false;
-  }
-  else{
-    $oUserAccessManager = new UserAccessManager();
-    $oHandler = $oUserAccessManager->getAccessHandler();
-    $oGroups = $oHandler->getUserGroupsForObject('user', $iUserId);
-    $isBuyer = false;
-
-    foreach ($oGroups as $group) {
-      if ($group->getId() == 2) {
-        $isBuyer = true;
-      }
-    }
-
-    if(!$isBuyer){
-
-      $oBuyerGroup = $oHandler->getUserGroups(2);
-      if (is_array($oBuyerGroup)) {
-        $oBuyerGroup = $oBuyerGroup[0];
-      }
-
-      $oBuyerGroup->addObject('user', $iUserId);
-      $oBuyerGroup->save(false);
-
-    }
-  }	
-}
-//END - core promote function for User Access Manager
-
 
 if(!function_exists("cmAdminPanel")){
 
