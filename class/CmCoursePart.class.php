@@ -319,7 +319,7 @@ class CmCoursePart
 
     	if ($blVarSet) {
     		$blSaveCheck = $this->_saveToDB();
-    		if($blSaveCheck === false){
+    		if($blSaveCheck['result'] === false){
     			return false;
     		}
 
@@ -338,15 +338,14 @@ class CmCoursePart
 					}
 
 					if (count($aSavedParts) < $this->getNrParts()) {
-						echo "Not all Parts were saved!";
 						return false;
 					}
 				}
     		} else{
-    			return $blSaveCheck;
+    			return $blSaveCheck['result'];
 			}
 
-    		return true;
+		    return (isset($blSaveCheck['insertId']) ? $blSaveCheck['insertId'] : $blSaveCheck['result']);
 
     	} else{
 			echo "Vars are not set for DB!";
@@ -358,7 +357,7 @@ class CmCoursePart
     /**
      * Saves the course to the database.
      *
-     * @return boolean | TRUE if successfully saved to DB - FALSE if something went wrong
+     * @return array | [result] - TRUE if successfully saved to DB - FALSE if something went wrong | [reason] string with error msg
      */
     protected function _saveToDB()
     {
@@ -370,26 +369,35 @@ class CmCoursePart
 
 	    if(!isset($this->_iCoursePartID)){
 
-		    $sSQL = "INSERT INTO ".$this->_getDbTableName()."(courseID,name,courseIndex)
+		    $sSQL = "INSERT INTO %s(courseID,name,courseIndex)
 		    VALUES(%d,%s,%d)";
 
+		    $sQuery = $wpdb->prepare($sSQL,$this->_getDbTableName(),$icID,$sName,$iCIndex);
 	    } else{
 
-		  	$sSQL = "UPDATE ".$this->_getDbTableName()."
+		  	$sSQL = "UPDATE %s
 		   	SET courseID = %d, name = %s, courseIndex = %d
-		    WHERE ID = ".$this->getCoursePartID();
+		    WHERE ID = %d";
+
+		    $sQuery = $wpdb->prepare($sSQL,$this->_getDbTableName(),$icID,$sName,$iCIndex,$this->getCoursePartID());
 	    }
 
-		$sQuery = $wpdb->prepare($sSQL,$icID,$sName,$iCIndex);
+
 
 	    if ($wpdb->query($sQuery) !== false) {
 	    	if(!isset($this->_iCoursePartID)){
-	    		return $wpdb->insert_id;
+			    $iInsertId = $wpdb->insert_id;
 			} else{
-				return true;
+				return array('result' => true);
 			}
+
+		    if(isset($iInsertId)){
+			    return array('result' => true, 'insertId' => $iInsertId);
+		    } else{
+			    return array('result' => true);
+		    }
 	    } else{
-	    	return false;
+	    	return array('result' => false);
 	    }
     }
 

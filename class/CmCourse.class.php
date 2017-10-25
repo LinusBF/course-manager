@@ -470,7 +470,7 @@ class CmCourse
 				return true;
 
     		} else{
-    			return (isset($blSaveCheck['insertId']) ? $blSaveCheck['insertId'] : true);
+    			return (isset($blSaveCheck['insertId']) ? $blSaveCheck['insertId'] : $blSaveCheck['result']);
 			}
 
     	} else{
@@ -501,23 +501,23 @@ class CmCourse
 
 	    	if(!isset($this->_iCourseID)){
 
-		    	$sSQL = "INSERT INTO ".$this->_getDbTableName()."(name,description,price,active,span)
+		    	$sSQL = "INSERT INTO %s(name,description,price,active,span)
 		    	VALUES(%s,%s,%d,%d,%d)";
 
+			    $sQuery = $wpdb->prepare($sSQL,$this->_getDbTableName(),$sName,$sDesc,$iPrice,$iActive,$iSpan);
 	    	} else{
 
 	    		if($this->checkCourseName($sName,$this->_iCourseID)){
 
-		    		$sSQL = "UPDATE ".$this->_getDbTableName()."
+		    		$sSQL = "UPDATE %s
 		    		SET name = %s, description = %s, price = %d, active = %d, span = %d
-			    	WHERE ID = ".$this->_iCourseID;
+			    	WHERE ID = %d";
 
+				    $sQuery = $wpdb->prepare($sSQL,$this->_getDbTableName(),$sName,$sDesc,$iPrice,$iActive,$iSpan,$this->_iCourseID);
 			    } else{
 			    	return array('result' => false, 'reason' => TXT_CM_ERROR_NAME_CHECK);
 			    }
 	    	}
-
-		    $sQuery = $wpdb->prepare($sSQL,$sName,$sDesc,$iPrice,$iActive,$iSpan);
 
 		    if ($wpdb->query($sQuery) !== false) {
 
@@ -557,10 +557,10 @@ class CmCourse
     	global $wpdb;
     	$instance = new self();
 
-    	$sSQL = "INSERT INTO ".$instance->_getDbTableNameTags()."(name) 
+    	$sSQL = "INSERT INTO %s(name) 
     	VALUES(%s)";
 
-    	$wpdb->query($wpdb->prepare($sSQL,$sName));
+    	$wpdb->query($wpdb->prepare($sSQL,$instance->_getDbTableNameTags(),$sName));
 
     	return $wpdb->insert_id;
     }
@@ -584,10 +584,10 @@ class CmCourse
     				$iTagID = $this->saveTagToDB($CourseTag);
     			}
 
-    			$sSQL = "INSERT INTO ".$this->_getDbTableNameTagRel()."(courseID,tagID) 
+    			$sSQL = "INSERT INTO %s(courseID,tagID) 
     			VALUES(%d,%d)";
 
-    			$wpdb->query($wpdb->prepare($sSQL,$this->_iCourseID,$iTagID));
+    			$wpdb->query($wpdb->prepare($sSQL,$this->_getDbTableNameTagRel(),$this->_iCourseID,$iTagID));
     		}
 
     		

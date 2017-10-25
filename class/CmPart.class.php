@@ -364,9 +364,6 @@ class CmPart
 			return true;
 
 		} else{
-			//Debug
-			var_dump($this);
-
 			return false;
 		}
 	}
@@ -395,17 +392,19 @@ class CmPart
 
 		if(!isset($this->_iPartID)){
 
-			$sSQL = "INSERT INTO ".$this->_getDbTableName()."(coursePartID,title,content,type,partIndex)
+			$sSQL = "INSERT INTO %s(coursePartID,title,content,type,partIndex)
 		    VALUES(%d,%s,%s,%s,%d)";
-
+			$sQuery = $wpdb->prepare($sSQL,$this->_getDbTableName(),$iCPID,$sTitle,$sContent,$sType,$iPIndex);
 		} else{
 
-			$sSQL = "UPDATE ".$this->_getDbTableName()."
+			$sSQL = "UPDATE %s
 		   	SET coursePartID = %d, title = %s, content = %s, type = %s, partIndex = %d
-		    WHERE ID = ".$this->_iPartID;
+		    WHERE ID = %d";
+
+			$sQuery = $wpdb->prepare($sSQL,$this->_getDbTableName(),$iCPID,$sTitle,$sContent,$sType,$iPIndex, $this->_iPartID);
 		}
 
-		$sQuery = $wpdb->prepare($sSQL,$iCPID,$sTitle,$sContent,$sType,$iPIndex);
+
 
 		if ($wpdb->query($sQuery) !== false) {
 			return true;
