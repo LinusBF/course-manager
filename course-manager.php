@@ -176,6 +176,7 @@ if (isset($oCourseManager)) {
 	}
 
 	add_action('init', array($oCourseManager, 'create_cm_post_type'));
+	add_action('admin_init', array($oCourseManager, 'export_download'));
 
 	//Load CSS and Scripts
 	add_action('wp_print_scripts', array($oCourseManager, 'addScripts'));

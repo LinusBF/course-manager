@@ -474,6 +474,25 @@ class CourseManager
     }
 
 
+    public function export_download(){
+	    if( empty( $_POST['cm_action'] ) || 'export_settings' != $_POST['cm_action'] )
+		    return;
+	    if( ! wp_verify_nonce( $_POST['cm_export_nonce'], 'cm_export_nonce' ) )
+		    return;
+	    if( ! current_user_can( 'manage_options' ) )
+		    return;
+
+	    ignore_user_abort( true );
+	    nocache_headers();
+	    header( 'Content-Type: application/json; charset=utf-8' );
+	    header( 'Content-Disposition: attachment; filename=course-manager-export-' . date( 'm-d-Y' ) . '.json' );
+	    header( "Expires: 0" );
+
+	    echo $this->export();
+	    exit;
+    }
+
+
     /**
      * Import current instance of Course Manager plugin state
      */
