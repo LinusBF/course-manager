@@ -493,11 +493,91 @@ class CourseManager
     }
 
 
-    /**
-     * Import current instance of Course Manager plugin state
-     */
-    public function import($aImportData){
+	/**
+	 * Import current instance of Course Manager plugin state. Needs to be updated to deal with bad/damaged JSON
+	 *
+	 * @param string $sImportData - The exported data in JSON format
+	 *
+	 * @return bool True if successfully imported, false if something went wrong (probably wrong JSON structure)
+	 */
+    public function import($sImportData){
+		$aPluginData = json_decode($sImportData);
+	    $blImportCheck = true;
 
+	    if ($aPluginData[0]->type != "courses" && $aPluginData[1]->type!= "store"
+	        && $aPluginData[2]->type != "options" && $aPluginData[3]->type != "db_version"){
+	    	return false;
+	    }
+
+	    foreach ($aPluginData[0]->item as $aCourseData){
+	    	if ($aCourseData->item != "Course")
+	    		continue;
+
+		    $oCourse = CmCourse::create();
+		    $oCourse->setCourseName($aCourseData->name);
+		    $oCourse->setCourseDescription($aCourseData->description);
+		    $oCourse->setCoursePrice($aCourseData->price);
+		    $oCourse->setCourseSpan($aCourseData->span);
+		    $oCourse->setCourseStatus(false);
+
+		    $iInsertID = $oCourse->save();
+
+		    $aCourseParts = array();
+
+		    foreach ($aCourseData->parts as $aCoursePartData){
+			    $aParts = array();
+
+				$oCoursePart = CmCoursePart::createWParams($aCoursePartData->index, $iInsertID, $aCoursePartData->name);
+			    $iCPIndex = $oCoursePart->save();
+
+			    foreach ($aCoursePartData->parts as $aPartData){
+			    	$oPart = CmPart::createWParams($aPartData->title, $aPartData->content, $aPartData->index, $aPartData->type, $iCPIndex);
+
+			    	array_push($aParts, $oPart);
+			    }
+
+			    $oCoursePart->setParts($aParts);
+
+			    array_push($aCourseParts, $oCoursePart);
+		    }
+
+		    $oCourse->setCourseParts($aCourseParts);
+
+		    if(!$oCourse->save(true)){
+			    $blImportCheck = false;
+		    }
+	    }
+
+	    foreach ($aPluginData[1]->item as $aStore_meta){
+	    	//TODO - Have to store the relations between the old Course IDs and the created ones.
+	    }
+
+	    $oOldOptions = $aPluginData[2]->item;
+	    CourseManager::setOption('edit_access_role',$oOldOptions->edit_access_role,true);
+	    CourseManager::setOption('currency',$oOldOptions->currency,true);
+
+	    return $blImportCheck;
+    }
+
+    public function import_upload(){
+	    if( empty( $_POST['cm_action'] ) || 'import_settings' != $_POST['cm_action'] )
+		    return;
+	    if( ! wp_verify_nonce( $_POST['cm_import_nonce'], 'cm_import_nonce' ) )
+		    return;
+	    if( ! current_user_can( 'manage_options' ) )
+		    return;
+	    $extension = end( explode( '.', $_FILES['import_file']['name'] ) );
+	    if( $extension != 'json' ) {
+		    wp_die( __( 'Please upload a valid .json file' ) );
+	    }
+	    $import_file = $_FILES['import_file']['tmp_name'];
+	    if( empty( $import_file ) ) {
+		    wp_die( __( 'Please upload a file to import' ) );
+	    }
+
+	    $sData = file_get_contents( $import_file );
+
+	    $this->import($sData);
     }
 
 
