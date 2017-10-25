@@ -69,15 +69,17 @@ class CmCoursePart
 	 * @param $iIndex
 	 * @param $iCourseID
 	 * @param $sCoursePartName
+	 * @param CmPart[] $aCmParts
 	 *
 	 * @return CmCoursePart instance
 	 */
-	public static function createWParams($iIndex, $iCourseID, $sCoursePartName)
+	public static function createWParams($iIndex, $iCourseID, $sCoursePartName, $aCmParts)
 	{
 		$instance = new self();
 		$instance->setCourseIndex($iIndex);
 		$instance->setCourseID($iCourseID);
 		$instance->setCoursePartName($sCoursePartName);
+		$instance->setParts($aCmParts);
 		return $instance;
 	}
 
