@@ -392,16 +392,16 @@ class CmPart
 
 		if(!isset($this->_iPartID)){
 
-			$sSQL = "INSERT INTO %s(coursePartID,title,content,type,partIndex)
+			$sSQL = "INSERT INTO ".$this->_getDbTableName()."(coursePartID,title,content,type,partIndex)
 		    VALUES(%d,%s,%s,%s,%d)";
-			$sQuery = $wpdb->prepare($sSQL,$this->_getDbTableName(),$iCPID,$sTitle,$sContent,$sType,$iPIndex);
+			$sQuery = $wpdb->prepare($sSQL,$iCPID,$sTitle,$sContent,$sType,$iPIndex);
 		} else{
 
-			$sSQL = "UPDATE %s
+			$sSQL = "UPDATE ".$this->_getDbTableName()."
 		   	SET coursePartID = %d, title = %s, content = %s, type = %s, partIndex = %d
 		    WHERE ID = %d";
 
-			$sQuery = $wpdb->prepare($sSQL,$this->_getDbTableName(),$iCPID,$sTitle,$sContent,$sType,$iPIndex, $this->_iPartID);
+			$sQuery = $wpdb->prepare($sSQL,$iCPID,$sTitle,$sContent,$sType,$iPIndex, $this->_iPartID);
 		}
 
 

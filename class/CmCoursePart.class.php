@@ -319,7 +319,7 @@ class CmCoursePart
 
     	if ($blVarSet) {
     		$blSaveCheck = $this->_saveToDB();
-    		if($blSaveCheck['result'] === false){
+    		if(!$blSaveCheck['result']){
     			return false;
     		}
 
@@ -341,9 +341,7 @@ class CmCoursePart
 						return false;
 					}
 				}
-    		} else{
-    			return $blSaveCheck['result'];
-			}
+    		}
 
 		    return (isset($blSaveCheck['insertId']) ? $blSaveCheck['insertId'] : $blSaveCheck['result']);
 
@@ -369,17 +367,17 @@ class CmCoursePart
 
 	    if(!isset($this->_iCoursePartID)){
 
-		    $sSQL = "INSERT INTO %s(courseID,name,courseIndex)
+		    $sSQL = "INSERT INTO ".$this->_getDbTableName()."(courseID,name,courseIndex)
 		    VALUES(%d,%s,%d)";
 
-		    $sQuery = $wpdb->prepare($sSQL,$this->_getDbTableName(),$icID,$sName,$iCIndex);
+		    $sQuery = $wpdb->prepare($sSQL,$icID,$sName,$iCIndex);
 	    } else{
 
-		  	$sSQL = "UPDATE %s
+		  	$sSQL = "UPDATE ".$this->_getDbTableName()."
 		   	SET courseID = %d, name = %s, courseIndex = %d
 		    WHERE ID = %d";
 
-		    $sQuery = $wpdb->prepare($sSQL,$this->_getDbTableName(),$icID,$sName,$iCIndex,$this->getCoursePartID());
+		    $sQuery = $wpdb->prepare($sSQL,$icID,$sName,$iCIndex,$this->getCoursePartID());
 	    }
 
 

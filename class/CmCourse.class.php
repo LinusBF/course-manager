@@ -501,19 +501,19 @@ class CmCourse
 
 	    	if(!isset($this->_iCourseID)){
 
-		    	$sSQL = "INSERT INTO %s(name,description,price,active,span)
+		    	$sSQL = "INSERT INTO ".$this->_getDbTableName()."(name,description,price,active,span)
 		    	VALUES(%s,%s,%d,%d,%d)";
 
-			    $sQuery = $wpdb->prepare($sSQL,$this->_getDbTableName(),$sName,$sDesc,$iPrice,$iActive,$iSpan);
+			    $sQuery = $wpdb->prepare($sSQL,$sName,$sDesc,$iPrice,$iActive,$iSpan);
 	    	} else{
 
 	    		if($this->checkCourseName($sName,$this->_iCourseID)){
 
-		    		$sSQL = "UPDATE %s
+		    		$sSQL = "UPDATE ".$this->_getDbTableName()."
 		    		SET name = %s, description = %s, price = %d, active = %d, span = %d
 			    	WHERE ID = %d";
 
-				    $sQuery = $wpdb->prepare($sSQL,$this->_getDbTableName(),$sName,$sDesc,$iPrice,$iActive,$iSpan,$this->_iCourseID);
+				    $sQuery = $wpdb->prepare($sSQL,$sName,$sDesc,$iPrice,$iActive,$iSpan,$this->_iCourseID);
 			    } else{
 			    	return array('result' => false, 'reason' => TXT_CM_ERROR_NAME_CHECK);
 			    }
@@ -557,10 +557,10 @@ class CmCourse
     	global $wpdb;
     	$instance = new self();
 
-    	$sSQL = "INSERT INTO %s(name) 
+    	$sSQL = "INSERT INTO ".$instance->_getDbTableNameTags()."(name) 
     	VALUES(%s)";
 
-    	$wpdb->query($wpdb->prepare($sSQL,$instance->_getDbTableNameTags(),$sName));
+    	$wpdb->query($wpdb->prepare($sSQL,$sName));
 
     	return $wpdb->insert_id;
     }
@@ -584,10 +584,10 @@ class CmCourse
     				$iTagID = $this->saveTagToDB($CourseTag);
     			}
 
-    			$sSQL = "INSERT INTO %s(courseID,tagID) 
+    			$sSQL = "INSERT INTO ".$this->_getDbTableNameTagRel()."(courseID,tagID) 
     			VALUES(%d,%d)";
 
-    			$wpdb->query($wpdb->prepare($sSQL,$this->_getDbTableNameTagRel(),$this->_iCourseID,$iTagID));
+    			$wpdb->query($wpdb->prepare($sSQL,$this->_iCourseID,$iTagID));
     		}
 
     		
@@ -968,8 +968,7 @@ class CmCourse
     	?>
     	<ul class='cm_coursePartList'>
     	<?php
-    		for ($i=0; $i < $this->getNrCourseParts(); $i++) {
-	    		$oCoursePart = $this->_getCoursePartByIndex($i);
+    		foreach($this->getCourseParts() as $oCoursePart) {
 	    		$oCoursePart->printListItemRep();
 	    	}
     	?>
