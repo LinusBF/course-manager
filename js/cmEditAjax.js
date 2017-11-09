@@ -48,8 +48,9 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 		var cPElem = $(e.target).parents(".cm_coursePart");
 		var cPElemId = cPElem.attr('id');
-		var cPIndex = cPElemId.substring(cPElemId.length - 1, cPElemId.length);
-		var cPID = cPElem.find("input[name = 'cm_CP_" + cPIndex + "_ID']").attr('value');
+		var cPIndex = cPElemId.substring(cPElemId.lastIndexOf("_") + 1);
+		var cPID = $("input[name = 'cm_CP_" + cPIndex + "_ID']").attr('value');
+		console.log(cPID);
 		var index = $("input[name = 'cm_CP_" + cPIndex + "_nr_of_parts']").attr('value');
 		var nonce = $(e.target).attr( 'data-nonce' );
 

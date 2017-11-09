@@ -610,7 +610,7 @@ class CmPart
 						<?php echo TXT_CM_EDIT_PART_INDEX.": "; ?>
 					</label>
 					<input class="cm_P_index" name="<?php echo $sNamePrefix."_index"; ?>" type="number"
-						   min="1" max="<?php echo ($this->getCoursePartID() != -1 ? $this->getParentCoursePart()->getNrParts(): 20); ?>"
+						   min="1" max="<?php echo ($this->getCoursePartID() != -1 ? $this->getParentCoursePart()->getNrParts(): ($this->getIndex() + 1)); ?>"
 						   value="<?php echo ($this->getIndex() + 1); ?>">
 				</li>
 				<li>
