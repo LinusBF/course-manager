@@ -4,7 +4,7 @@ Plugin Name: Course Manager
 Plugin URI:
 Description: Make and update course pages easily
 Author: Linus Bein Fahlander
-Version: 0.3
+Version: 0.5
 Author URI:
 */
 
