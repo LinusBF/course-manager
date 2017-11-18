@@ -51,7 +51,7 @@ function genStoreSettingsForm($iCourseId){
 						<div class='image-preview-wrapper'>
 							<img id='image-preview' src='<?php echo wp_get_attachment_url( $aOptions['store_image'] ); ?>' height='100'>
 						</div>
-						<input id="upload_image_button" type="button" class="button" value="<?php echo TXT_CM_STORE_ADD_IMAGE; ?>" />
+						<input id="upload_image_button" type="button" class="button add_media" value="<?php echo TXT_CM_STORE_ADD_IMAGE; ?>" />
 						<input type='hidden' name='store_image' id='image_attachment_id' value='<?php echo $aOptions['store_image']; ?>'>
 					</td>
 				</tr>
