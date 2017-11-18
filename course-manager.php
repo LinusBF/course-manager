@@ -40,7 +40,7 @@ if (version_compare($sPhpVersion, "5.0") === -1) {
 //Check wordpress version
 global $wp_version;
 
-if (version_compare($wp_version, "3.0") === -1) {
+if (version_compare($wp_version, "4.8.3") === -1) {
     add_action(
         'admin_notices',
         create_function(
