@@ -1,0 +1,55 @@
+<?php
+/**
+ * Template Name: Course Page Template
+ * Template Post Type: cm_course_page
+ * The template for displaying a course page
+ *
+ */
+
+add_action('wp_head', 'course_page_header');
+
+function course_page_header(){
+	echo "<link rel='stylesheet' href='".CM_URLPATH."css/cmCoursePage.css'>
+		  <link rel=\"stylesheet\" href=\"https://www.w3schools.com/lib/w3.css\">
+		  <script type='application/javascript' src='".CM_URLPATH."js/course_page.js'></script>";
+}
+//get_header()
+?>
+<html <?php language_attributes(); ?>>
+	<head>
+		<?php
+		wp_head();
+		?>
+	</head>
+	<body <?php body_class(); ?>>
+		<div class="page-heading  page-heading-breadcrumbs clearfix">
+			<div class="container">
+				<div class="heading-text">
+					<h1 class="entry-title"><?php the_title(); ?></h1>
+				</div>
+			</div>
+		</div>
+		<div class="wrap">
+			<div id="primary" class="content-area">
+				<main id="main" class="site-main" role="main">
+					<?php
+
+					while ( have_posts() ) : the_post(); ?> <!--Because the_content() works only inside a WP Loop -->
+						<div class="container" id="course_page_container">
+							<?php the_content(); ?> <!-- Page Content -->
+						</div><!-- .entry-content-page -->
+
+						<?php
+					endwhile; //resetting the page loop
+
+					?>
+				</main><!-- #main -->
+			</div><!-- #primary -->
+		</div><!-- .wrap -->
+		<footer id="footer" class="cm_footer">
+			<a class="cm_store_link" href="<?php echo CmCourseStoreHandler::getStoreURL(); ?>"><?php echo TXT_CM_STORE_PAGE_TITLE; ?></a>
+			<?php wp_footer(); ?>
+		</footer>
+	</body>
+</html>
+<?php

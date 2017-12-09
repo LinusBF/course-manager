@@ -118,23 +118,8 @@ class CmPageBuilder
 
 		$sPageContent = "<div id='$sPageElementId' class='cm_page_wrap'>";
 
-		if(isset($aSurroundingParts['prev']) || isset($aSurroundingParts['next'])) {
-			$sPageContent .= "<div class='cm_course_links'>";
-
-			if ( isset( $aSurroundingParts['prev'] ) ) {
-				$sPageContent .= "<a id='cm_prev_part_link' class='cm_part_nav_link' 
-									href='" . $aSurroundingParts['prev']['link'] . "'><< "
-				                 . $aSurroundingParts['prev']['title'] . "</a>";
-			}
-
-			if ( isset( $aSurroundingParts['next'] ) ) {
-				$sPageContent .= "<a id='cm_next_part_link' class='cm_part_nav_link' 
-									href='" . $aSurroundingParts['next']['link'] . "'>"
-				                 . $aSurroundingParts['next']['title'] . " >></a>";
-			}
-
-			$sPageContent .= "</div>";
-		}
+		$sPageContent .= $this->_getCourseNavBar($aSurroundingParts);
+		$sPageContent .= "<div class='cm_parts_wrap'>";
 
 		foreach ($oCoursePart->getParts() as $oPart){
 			$sDivId = "cm_part_divider_".$oPart->getIndex();
@@ -144,6 +129,8 @@ class CmPageBuilder
 			$sPageContent .= "</div>";
 		}
 
+		$sPageContent .= "</div>";
+		$sPageContent .= $this->_getCourseNavBar($aSurroundingParts, 1);
 		$sPageContent .= "</div>";
 
 		$aPostData = $this->_getPostDataArray($sPageTitle, $sPageContent, $iCourseId, $iCpId, $sPageName, $blCourseStatus, $iPostID);
@@ -216,6 +203,37 @@ class CmPageBuilder
 		}
 
 		return TXT_CM_PAGE_TYPE_NOT_SUPPORTED;
+	}
+
+
+	/**
+	 * @param $aSurroundingParts
+	 * @param int $iPos - Position of the nav bar, top = 0, bottom = 1
+	 *
+	 * @return string
+	 */
+	protected function _getCourseNavBar($aSurroundingParts, $iPos = 0){
+		$sPartLinks = "";
+
+		if(isset($aSurroundingParts['prev']) || isset($aSurroundingParts['next'])) {
+			$sPartLinks = "<div class='cm_course_links " . (!$iPos ? 'cm_course_nav_top' : 'cm_course_nav_bot') . "'>";
+
+			if ( isset( $aSurroundingParts['prev'] ) ) {
+				$sPartLinks .= "<a id='cm_prev_part_link' class='cm_part_nav_link' 
+									href='" . $aSurroundingParts['prev']['link'] . "'><< "
+				               . $aSurroundingParts['prev']['title'] . "</a>";
+			}
+
+			if ( isset( $aSurroundingParts['next'] ) ) {
+				$sPartLinks .= "<a id='cm_next_part_link' class='cm_part_nav_link cm_part_nav_bot' 
+									href='" . $aSurroundingParts['next']['link'] . "'>"
+				               . $aSurroundingParts['next']['title'] . " >></a>";
+			}
+
+			$sPartLinks .= "</div>";
+		}
+
+		return $sPartLinks;
 	}
 
 
