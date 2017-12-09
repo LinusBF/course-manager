@@ -76,13 +76,13 @@ get_header(); ?>
 											<br>
 											<div class="cm_center">
 												<a class="w3-btn w3-teal buy_course_btn" href="<?php
-															echo reset($aUri) . "courses/" . CmPageBuilder::getCourseFirstPageName($oCourse->getCourseID());
+															echo CmCourseStoreHandler::getLandingPageURL($oCourse->getCourseID());
 														?>">
 													<?php
 													if($oCourse->getCoursePrice() > 0) {
-														echo TXT_CM_STORE_BUY . " " . $iPrice . $sCurrency;
+														echo TXT_CM_STORE_LEARN_MORE . " " . $iPrice . $sCurrency;
 													} else{
-														echo TXT_CM_STORE_FREE_EMAIL;
+														echo TXT_CM_STORE_FREE_LEARN_MORE;
 													}
 													?>
 												</a>

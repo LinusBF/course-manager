@@ -18,7 +18,7 @@ class CmCourseStoreHandler {
 	 *
 	 * @return array
 	 */
-	public function getStoreOptionsForCourse( $iCourseId ) {
+	public static function getStoreOptionsForCourse( $iCourseId ) {
 		global $wpdb;
 
 		$sSQL = "SELECT meta_key, meta_value FROM ".DB_CM_STORE_META." WHERE course_id = %d";
@@ -130,8 +130,32 @@ class CmCourseStoreHandler {
 			'store_image' => '',
 			'store_description' => (isset($iCourseId) ? CmCourse::getCourseByID($iCourseId)->getCourseDescription() : ''),
 			'current_discount' => '0',
-			'settings_modified' => '0'
+			'settings_modified' => '0',
+			'landing_page' => '0'
 		);
+	}
+
+
+	public static function getStoreURL(){
+		$store = get_posts(array('post_name' => TXT_CM_STORE_PAGE_NAME, 'post_type' => 'page'))[0];
+		return get_permalink($store->ID);
+	}
+
+
+	/**
+	 * @param $iCourseID
+	 *
+	 * @return false|string
+	 */
+	public static function getLandingPageURL($iCourseID){
+		global $wpdb;
+
+		$sSQL = "SELECT meta_value FROM ".DB_CM_STORE_META." WHERE course_id = %d AND meta_key = 'landing_page'";
+
+		$sQuery = $wpdb->prepare($sSQL, $iCourseID);
+		$iPageID = $wpdb->get_var($sQuery);
+
+		return get_permalink($iPageID);
 	}
 
 }

@@ -876,6 +876,23 @@ class CmCourse
 
 
 	/**
+	 * @param $iLandingPageID - Post ID of the landing page of the course
+	 *
+	 * @return CmCourse
+	 */
+	public static function getCourseByLandingPage($iLandingPageID){
+		global $wpdb;
+
+		$sSQL = "SELECT course_id FROM ".DB_CM_STORE_META." WHERE meta_key = 'landing_page' AND meta_value = %d";
+
+		$sQuery = $wpdb->prepare($sSQL, $iLandingPageID);
+		$iCourseID = $wpdb->get_var($sQuery);
+
+		return CmCourse::getCourseByID($iCourseID);
+	}
+
+
+	/**
 	 * Checks to see if the given name is used for any other Course.
 	 *
 	 * @param string $sName

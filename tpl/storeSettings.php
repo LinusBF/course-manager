@@ -25,16 +25,21 @@
  */
 
 function genStoreSettingsForm($iCourseId){
-	$oStoreHandler = new CmCourseStoreHandler();
 
-	$aOptions = $oStoreHandler->getStoreOptionsForCourse($iCourseId);
+	$aOptions = CmCourseStoreHandler::getStoreOptionsForCourse($iCourseId);
+
+	$oLandingPageTable = new LandingPageTable();
+
+	$sExplodedUrl = explode("?", $_SERVER["REQUEST_URI"]);
+	$sFormAction = reset($sExplodedUrl) . "?page=cm_courses";
 
 	?>
-	<form id = "cm_course_setting_form" method='post' action='<?php echo reset(explode("?", $_SERVER["REQUEST_URI"])) . "?page=cm_courses"; ?>'>
+	<form id = "cm_course_setting_form" method='post' action='<?php echo $sFormAction; ?>'>
 		<input type='hidden' name='action' value='set_settings'>
-		<input type='hidden' name='_wpnonce' value='<?php echo wp_create_nonce('cm_store_settings_set'); ?>'>
+		<input type='hidden' name='_wpnonce_cm' value='<?php echo wp_create_nonce('cm_store_settings_set'); ?>'>
 		<input type='hidden' name='course' value="<?php echo $iCourseId; ?>">
 		<input type="hidden" name="settings_modified" value="1">
+		<input type="hidden" name="old_landing_page" value="<?php echo $aOptions['landing_page']; ?>">
 
 		<table id='cm_edit_course' class='form-table'>
 			<tbody>
@@ -78,11 +83,14 @@ function genStoreSettingsForm($iCourseId){
 			</tbody>
 		</table>
 
+		<?php
+			$oLandingPageTable->print_landing_page_table();
+		?>
+
 		<div class='submit'>
 			<input type='submit' name='submit' id='cm_submit' class='button button-primary' value='<?php echo TXT_CM_EDIT_SAVE?>'>
 		</div>
 	</form>
-
 <?php
 }
 
@@ -101,7 +109,29 @@ function saveOptions(){
 		}
 	}
 
-	return $oStoreHandler->setStoreOptions($_POST['course'], $aOptions);
+	$blSetCheck = $oStoreHandler->setStoreOptions($_POST['course'], $aOptions);
+
+	if($blSetCheck && $_POST['landing_page'] != $_POST['old_landing_page']){
+		configLandingPage($_POST['old_landing_page'], false);
+		configLandingPage($_POST['landing_page'], true);
+	}
+
+	return $blSetCheck;
+}
+
+function configLandingPage($iPageID, $blActive){
+	global $wpdb;
+
+	$wpdb_table = $wpdb->prefix . 'posts';
+	$wpdb_data = array(
+		'post_excerpt' => ($blActive ? 'landing_page' : ''),
+	);
+	$wpdb_where = array(
+		'ID' => $iPageID,
+		'post_type' => 'page',
+	);
+
+	return $wpdb->update($wpdb_table, $wpdb_data, $wpdb_where);
 }
 
 ?>

@@ -400,7 +400,7 @@ if (isset($_GET['action']) && ($_GET['action'] === 'edit' || $_GET['action'] ===
 		die('Stop messing with it...');
 	}
 } else if(isset($_POST['action']) && $_POST['action'] === 'set_settings'){ //Save the store course options
-	$sNonce = $_POST['_wpnonce'];
+	$sNonce = $_POST['_wpnonce_cm'];
 
 	if (wp_verify_nonce($sNonce,'cm_store_settings_set')) {
 		require_once 'storeSettings.php';
