@@ -31,6 +31,7 @@ define('TXT_CM_NOT_ACTIVE', __('Not active','course-manager'));
 define('TXT_CM_ACTIVATE', __('Activate','course-manager'));
 define('TXT_CM_DEACTIVATE', __('Deactivate','course-manager'));
 define('TXT_CM_CHOOSE', __('Choose','course-manager'));
+define('TXT_CM_ID', __('ID','course-manager'));
 
 // --- Errors --- \\
 define('TXT_CM_PHP_VERSION_TO_LOW', __('Your PHP version is too low, please update it before using Course Manager','course-manager'));
@@ -116,9 +117,14 @@ define('TXT_CM_STORE_SELECT_IMAGE', __('Select an image to use','course-manager'
 define('TXT_CM_STORE_COURSE_IMAGE', __('Course store image','course-manager'));
 define('TXT_CM_STORE_COURSE_DISCOUNT', __('Course discount','course-manager'));
 define('TXT_CM_STORE_BUY', __('Buy for','course-manager'));
-define('TXT_CM_STORE_FREE', __('Free - Start course now!','course-manager'));
+define('TXT_CM_STORE_LEARN_MORE', __('Learn more and <br> Buy the course','course-manager'));
+define('TXT_CM_STORE_FREE_LEARN_MORE', __('Learn more and <br> start the course for free!','course-manager'));
+define('TXT_CM_STORE_FREE', __('Free!','course-manager'));
 define('TXT_CM_STORE_FREE_EMAIL', __('Free <br> Enter your email to start!','course-manager'));
 define('TXT_CM_STORE_MORE_INFO', __('Click to see more info','course-manager'));
+define('TXT_CM_STORE_SELECT_LADNING_PAGE', __('Choose a landing page','course-manager'));
+define('TXT_CM_STORE_TABLE_PAGE_TITLE', __('Page Title','course-manager'));
+define('TXT_CM_STORE_TABLE_CHOICE', __('Choice','course-manager'));
 
 
 ?>
