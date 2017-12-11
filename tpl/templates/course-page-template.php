@@ -53,3 +53,5 @@ function course_page_header(){
 	</body>
 </html>
 <?php
+
+?>
