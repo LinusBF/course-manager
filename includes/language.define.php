@@ -127,4 +127,10 @@ define('TXT_CM_STORE_TABLE_PAGE_TITLE', __('Page Title','course-manager'));
 define('TXT_CM_STORE_TABLE_CHOICE', __('Choice','course-manager'));
 
 
+// --- Landing Pages --- \\
+define('TXT_CM_LANDING_PAGE_MODAL_HEADER', __('Get Course','course-manager'));
+define('TXT_CM_LANDING_PAGE_EMAIL', __('Enter email','course-manager'));
+define('TXT_CM_LANDING_PAGE_SEND_PROMOTIONS', __('Send me offers for other courses','course-manager'));
+
+
 ?>
