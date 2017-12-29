@@ -43,10 +43,13 @@ get_header(); ?>
 				?>
 
 				<div class="get_course_wrapper">
-					<a class="w3-btn w3-teal buy_course_btn" href="<?php
-					echo reset($aUri) . "courses/" . CmPageBuilder::getCourseFirstPageName($oCourse->getCourseID());
-					?>">
+					<a class="w3-btn w3-teal buy_course_btn" href="#signupModal" data-toggle="modal">
 						<?php
+						/*
+							<?php
+								echo reset($aUri) . "courses/" . CmPageBuilder::getCourseFirstPageName($oCourse->getCourseID());
+							?>
+						*/
 						if($oCourse->getCoursePrice() > 0) {
 							echo TXT_CM_STORE_BUY . " " . $iPrice . $sCurrency;
 						} else{
@@ -54,6 +57,37 @@ get_header(); ?>
 						}
 						?>
 					</a>
+				</div>
+				<div class="modal fade" id="signupModal" role="dialog">
+					<div class="modal-dialog modal-sm">
+
+						<!-- Modal content-->
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title"><?php echo TXT_CM_LANDING_PAGE_MODAL_HEADER; ?></h4>
+							</div>
+							<div class="modal-body">
+								<form role="form">
+									<div class="form-group">
+										<label for="email"><span class="glyphicon glyphicon-email"></span> Email</label>
+										<input type="text" class="form-control" id="email" placeholder="<?php echo TXT_CM_LANDING_PAGE_EMAIL; ?>">
+									</div>
+									<div class="checkbox">
+										<label class="pull-right"><input type="checkbox" value=""><?php echo TXT_CM_LANDING_PAGE_SEND_PROMOTIONS; ?></label>
+									</div>
+									<button type="submit" class="w3-btn w3-teal btn-block">Buy Course</button>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button type="submit" class="w3-button w3-white w3-border w3-round w3-border-red pull-left w3-padding-small w3-hover-red" data-dismiss="modal">
+									<span class="glyphicon glyphicon-remove"></span> Cancel</button>
+								<p>Already have a <a href="#">Course Token?</a></p>
+								<p>Lost your <a href="#">Course Token?</a></p>
+							</div>
+						</div>
+
+					</div>
 				</div>
 			</main><!-- #main -->
 		</div><!-- #primary -->

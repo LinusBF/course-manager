@@ -6,6 +6,18 @@
  *
  */
 
+//Check if user is entitled to course
+if(!isset($_SESSION['course_user'])){
+	wp_redirect(CmCourseStoreHandler::getStoreURL());
+}
+
+$iPost_id = get_the_ID();
+$iCourseId = CmCourse::getCourseByPageID($iPost_id, true);
+
+if(!CmUserManager::checkAccess($_SESSION['course_user']->Id, $iCourseId)){
+	wp_redirect(CmCourseStoreHandler::getStoreURL());
+}
+
 add_action('wp_head', 'course_page_header');
 
 function course_page_header(){
@@ -13,7 +25,7 @@ function course_page_header(){
 		  <link rel=\"stylesheet\" href=\"https://www.w3schools.com/lib/w3.css\">
 		  <script type='application/javascript' src='".CM_URLPATH."js/course_page.js'></script>";
 }
-//get_header()
+
 ?>
 <html <?php language_attributes(); ?>>
 	<head>

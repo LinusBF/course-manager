@@ -202,6 +202,12 @@ if (isset($oCourseManager)) {
 
 	//Register widget
 	//add_action('widgets_init', 'cmLinks_init'); DEPRECATED FOR NOW
+
+	//Initiate session
+	add_action('init', 'startSession', 1);
+	add_action('wp_logout', 'endSession');
+	add_action('wp_login', 'endSession');
+
 }
 
 
@@ -277,6 +283,17 @@ function store_page_scripts(){
 	}else{
 		return;
 	}
+}
+
+
+function startSession() {
+	if(!session_id()) {
+		session_start();
+	}
+}
+
+function endSession() {
+	session_destroy();
 }
 
 

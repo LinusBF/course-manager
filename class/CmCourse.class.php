@@ -893,6 +893,29 @@ class CmCourse
 
 
 	/**
+	 * @param $iPageID - Post ID of the page of the course part
+	 * @param bool $blJustID - Should the function only return the ID of the course?
+	 *
+	 * @return CmCourse|int
+	 */
+	public static function getCourseByPageID($iPageID, $blJustID = false){
+		global $wpdb;
+
+		$sSQL = "SELECT post_excerpt FROM ".$wpdb->prefix."posts"." WHERE ID = %d";
+
+		$sQuery = $wpdb->prepare($sSQL, $iPageID);
+		$iCourseExcerpt = $wpdb->get_var($sQuery);
+
+		if($blJustID){
+			return intval(substr($iCourseExcerpt, 0, 1));
+		}
+		else{
+			return CmCourse::getCourseByID(intval(substr($iCourseExcerpt, 0, 1)));
+		}
+	}
+
+
+	/**
 	 * Checks to see if the given name is used for any other Course.
 	 *
 	 * @param string $sName

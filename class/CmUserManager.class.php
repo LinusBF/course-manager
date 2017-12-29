@@ -29,87 +29,6 @@ class CmUserManager {
 
 
 	/**
-	 * Returns a list of meta keys that every user should hav in the DB when registered
-	 *
-	 * @return array
-	 */
-	private static function getDefaultMetaKeys(){
-		$aUserMeta = array(
-			"first_name",
-			"last_name",
-			"phone"
-		);
-
-		return $aUserMeta;
-	}
-
-
-	/**
-	 * @param string $sEmail - The users email
-	 * @param array $aUserMeta - An array containing user meta data
-	 *
-	 * @return bool
-	 */
-	public static function registerUser($sEmail, $aUserMeta = array()){
-
-		//Add default meta values if not present
-		foreach (self::getDefaultMetaKeys() as $defaultMetaKey){
-			!in_array( $defaultMetaKey, array_keys($aUserMeta) ) ? $aUserMeta[$defaultMetaKey] = null : null;
-		}
-		//Generate unique user token
-		$sToken = substr(md5(microtime()), 0, 16);
-
-
-		//Add the user to the DB and update the meta information for that user
-		global $wpdb;
-
-		$sSQL = "INSERT INTO ".DB_CM_USERS."(user_token, email) VALUES(%s, %s)";
-		$sQuery = $wpdb->prepare($sSQL, $sToken, $sEmail);
-
-		if($wpdb->query($sQuery) === false){
-			return false;
-		} else{
-			$iUserId = $wpdb->insert_id;
-		}
-
-		return self::updateUserMeta($iUserId, $aUserMeta) ? true : false;
-	}
-
-
-	/**
-	 * @param int $iUserId
-	 * @param array $aUserMeta - An array containing user meta data
-	 *
-	 * @return bool
-	 */
-	public static function updateUserMeta($iUserId, $aUserMeta){
-		global $wpdb;
-
-		//Get used meta keys
-		$sMetaKeyCheckSQL = "SELECT meta_key FROM ".DB_CM_USER_META." WHERE user_id = %d";
-		$sMetaKeyCheckQuery = $wpdb->prepare($sMetaKeyCheckSQL, $iUserId);
-		$aActiveMetaKeys = $wpdb->get_col($sMetaKeyCheckQuery);
-
-		$blQuerySuccess = true;
-		//Go through all the meta keys and update/set their value
-		foreach ($aUserMeta as $sMetaKey => $sMetaValue){
-			if(in_array($sMetaKey, $aActiveMetaKeys)){
-				$sSQL = "UPDATE ".DB_CM_USER_META." SET meta_value = %s WHERE meta_key = %s AND user_id = %d";
-			} else{
-				$sSQL = "INSERT INTO ".DB_CM_USER_META."(meta_value, meta_key, user_id) VALUES(%s, %s, %d)";
-			}
-
-			$sQuery = $wpdb->prepare($sSQL, $sMetaValue === null ? null : (string) $sMetaValue, $sMetaKey, (int) $iUserId);
-			if($wpdb->query($sQuery) === false){
-				$blQuerySuccess = false;
-			}
-		}
-
-		return $blQuerySuccess;
-	}
-
-
-	/**
 	 * Adds the user manager DB tables
 	 */
 	public function install_UM(){
@@ -134,6 +53,7 @@ class CmUserManager {
         			ID INT NOT NULL auto_increment,
 					user_token VARCHAR(32) NOT NULL,
 					email TEXT NOT NULL,
+					created_at DATE NOT NULL,
 					PRIMARY KEY (ID)
 				) $sCharsetCollate;"
 			);
@@ -150,12 +70,13 @@ class CmUserManager {
 			//Creating cm_users table
 			dbDelta(
 				"CREATE TABLE ".$sCmUserEntitlementTable." (
+					ID INT NOT NULL AUTO_INCREMENT,
         			user_id INT NOT NULL,
 					course_id INT,
 					purchase_date DATE NOT NULL,
 					FOREIGN KEY (user_id) REFERENCES ".$sCmUserManagerTable."(ID) ON DELETE CASCADE,
 					FOREIGN KEY (course_id) REFERENCES ".$sCmCourseTableName."(ID) ON DELETE SET NULL,
-					PRIMARY KEY (user_id)
+					PRIMARY KEY (ID)
 				) $sCharsetCollate;"
 			);
 		}
@@ -225,6 +146,124 @@ class CmUserManager {
              ".$sCmUserManagerTable."
              "
 		);
+	}
+
+
+	/**
+	 * Returns a list of meta keys that every user should hav in the DB when registered
+	 *
+	 * @return array
+	 */
+	private static function getDefaultMetaKeys(){
+		$aUserMeta = array(
+			"first_name",
+			"last_name",
+			"phone"
+		);
+
+		return $aUserMeta;
+	}
+
+
+	/**
+	 * @param string $sEmail - The users email
+	 * @param array $aUserMeta - An array containing user meta data
+	 *
+	 * @return bool
+	 */
+	public static function registerUser($sEmail, $aUserMeta = array()){
+
+		//Add default meta values if not present
+		foreach (self::getDefaultMetaKeys() as $defaultMetaKey){
+			!in_array( $defaultMetaKey, array_keys($aUserMeta) ) ? $aUserMeta[$defaultMetaKey] = null : null;
+		}
+		//Generate unique user token
+		$sToken = substr(md5(microtime().$sEmail), 0, 16);
+
+
+		//Add the user to the DB and update the meta information for that user
+		global $wpdb;
+
+		$sSQL = "INSERT INTO ".DB_CM_USERS."(user_token, email, created_at) VALUES(%s, %s, CURRENT_DATE())";
+		$sQuery = $wpdb->prepare($sSQL, $sToken, $sEmail);
+
+		if($wpdb->query($sQuery) === false){
+			return false;
+		} else{
+			$iUserId = $wpdb->insert_id;
+		}
+
+		return self::updateUserMeta($iUserId, $aUserMeta) ? true : false;
+	}
+
+
+	/**
+	 * @param int $iUserId
+	 * @param array $aUserMeta - An array containing user meta data
+	 *
+	 * @return bool
+	 */
+	public static function updateUserMeta($iUserId, $aUserMeta){
+		global $wpdb;
+
+		//Get used meta keys
+		$sMetaKeyCheckSQL = "SELECT meta_key FROM ".DB_CM_USER_META." WHERE user_id = %d";
+		$sMetaKeyCheckQuery = $wpdb->prepare($sMetaKeyCheckSQL, $iUserId);
+		$aActiveMetaKeys = $wpdb->get_col($sMetaKeyCheckQuery);
+
+		$blQuerySuccess = true;
+		//Go through all the meta keys and update/set their value
+		foreach ($aUserMeta as $sMetaKey => $sMetaValue){
+			if(in_array($sMetaKey, $aActiveMetaKeys)){
+				$sSQL = "UPDATE ".DB_CM_USER_META." SET meta_value = %s WHERE meta_key = %s AND user_id = %d";
+			} else{
+				$sSQL = "INSERT INTO ".DB_CM_USER_META."(meta_value, meta_key, user_id) VALUES(%s, %s, %d)";
+			}
+
+			$sQuery = $wpdb->prepare($sSQL, $sMetaValue === null ? null : (string) $sMetaValue, $sMetaKey, (int) $iUserId);
+			if($wpdb->query($sQuery) === false){
+				$blQuerySuccess = false;
+			}
+		}
+
+		return $blQuerySuccess;
+	}
+
+
+	public static function acquireCourse($iUserId, $iCourseId){
+		if(CmUserManager::checkAccess($iUserId, $iCourseId)){
+			return false;
+		}
+
+		global $wpdb;
+
+		$sSQL = "INSERT INTO ".DB_CM_USER_ENTITLEMENTS." (user_id, course_id, purchase_date) VALUES(%d, %d, CURRENT_DATE())";
+
+		$sQuery = $wpdb->prepare($sSQL, $iUserId, $iCourseId);
+
+		return $wpdb->query($sQuery);
+	}
+
+	public static function checkAccess($iUserId, $iCourseId) {
+		global $wpdb;
+
+		$sSQL = "SELECT purchase_date FROM ".DB_CM_USER_ENTITLEMENTS." WHERE user_id = %d AND course_id = %d";
+		$sDate = $wpdb->get_var($wpdb->prepare($sSQL, $iUserId, $iCourseId));
+
+		//Customer has not purchased the course
+		if ($sDate === null){
+			return false;
+		}
+
+		$sSQL = "SELECT span FROM ".DB_CM_COURSES." WHERE ID = %d";
+		$iSpan = $wpdb->get_var($wpdb->prepare($sSQL, $iCourseId));
+
+		//Customer has had access to the course for longer than the courses span.
+		if(strtotime("+".$iSpan." days", strtotime($sDate)) < strtotime(date(get_option('date_format')))){
+			return false;
+		}
+
+		return true;
 	}
 
 }
