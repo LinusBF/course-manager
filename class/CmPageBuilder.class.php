@@ -251,7 +251,7 @@ class CmPageBuilder
 	{
 		$aPostData = array(
 			'ID' => $iPostID,
-			'post_excerpt' => 'cm_course',
+			'post_excerpt' => $iCourseId.','.$iCoursePartId,
 			'post_type' => 'cm_course_page',
 			'post_status' => ($blCourseStatus ? 'publish' : 'draft'),
 			'comment_status' => 'closed',
