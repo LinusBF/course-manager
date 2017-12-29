@@ -137,7 +137,7 @@ class CmCourseStoreHandler {
 
 
 	public static function getStoreURL(){
-		$store = get_posts(array('post_name' => TXT_CM_STORE_PAGE_NAME, 'post_type' => 'page'))[0];
+		$store = get_posts(array('name' => TXT_CM_STORE_PAGE_NAME, 'post_type' => 'page'))[0];
 		return get_permalink($store->ID);
 	}
 
