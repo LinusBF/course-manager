@@ -3,6 +3,20 @@
 	padding: 10px 50px;
 }
 
+#auth_container{
+	margin-bottom: 15px;
+	padding-bottom: 5px;
+	border-bottom: 1px #eaeaea solid;
+}
+
+#cm_token_input{
+	width: 15%;
+	margin-right: 20px;
+	height: 30px;
+	padding-left: 5px;
+	display: inline-block;
+}
+
 .course_container{
 	width: 250px;
 	height: 350px;

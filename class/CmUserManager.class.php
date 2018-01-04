@@ -230,6 +230,29 @@ class CmUserManager {
 	}
 
 
+	public static function checkForCookie(){
+		if(isset($_COOKIE['cm_token']) && !isset($_SESSION['course_user'])){
+			$aUser = CmUserManager::getUserByToken($_COOKIE['cm_token']);
+
+			$_SESSION['course_user'] = array(
+				"id" => $aUser['ID'],
+				"email" => $aUser['email'],
+				"token" => $aUser['user_token']
+			);
+		}
+	}
+
+
+	public static function getUserByToken($sToken){
+		global $wpdb;
+
+		$sSQL = "SELECT * FROM ".DB_CM_USERS." WHERE user_token = %s";
+		$sQuery = $wpdb->prepare($sSQL, $sToken);
+		$aUser = $wpdb->get_row($sQuery, ARRAY_A);
+		return ($aUser !== null ? $aUser : false);
+	}
+
+
 	public static function acquireCourse($iUserId, $iCourseId){
 		if(CmUserManager::checkAccess($iUserId, $iCourseId)){
 			return false;

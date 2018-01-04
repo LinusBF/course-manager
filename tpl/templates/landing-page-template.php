@@ -4,6 +4,9 @@
  *
  */
 
+//Check for cookie
+CmUserManager::checkForCookie();
+
 add_action('wp_head', 'landing_page_header');
 
 function landing_page_header(){

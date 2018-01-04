@@ -4,6 +4,9 @@
  *
  */
 
+//Check for cookie
+CmUserManager::checkForCookie();
+
 add_action('wp_head', 'store_header');
 
 function store_header(){
@@ -19,6 +22,20 @@ get_header(); ?>
 		<div id="primary" class="content-area">
 			<main id="main" class="site-main" role="main">
 				<div class="container" id="store_container">
+					<div id="auth_container">
+						<?php
+						 if (isset($_SESSION['course_user'])):
+						?>
+							<a href="?your_courses=true">
+								<?php echo TXT_CM_STORE_GO_TO_YOUR_COURSES; ?>
+							</a>
+						<?php else: ?>
+							<input id="cm_token_input" type="text">
+							 <button id="token_btn" class="w3-btn w3-teal">
+								 <?php echo TXT_CM_STORE_ENTER_TOKEN;?>
+							 </button>
+					    <?php endif; ?>
+					</div>
 					<?php
 						$oStore = new CmStore();
 						$oStoreHandler = new CmCourseStoreHandler();
@@ -92,28 +109,6 @@ get_header(); ?>
 								</div>
 							</div>
 						</div>
-						<!--<div id="<?php /*echo $oCourse->getCourseURLName();*/?>" class="popup_overlay">
-							<div id="buy_course_<?php /*echo $oCourse->getCourseID();*/?>" class="popup">
-								<h2><?php /*echo $oCourse->getCourseName();*/?></h2>
-								<a class="close" href="#">&times;</a>
-								<div class="content">
-									<div class="course_text front">
-										<p class="course_name"><?php /*echo $oCourse->getCourseName(); */?></p>
-										<p class="course_description"><?php /*echo $aCourseOptions['store_description']; */?></p>
-									</div>
-									<input type="hidden" value="<?php /*echo $oCourse->getCourseID();*/?>">
-									<a href="<?php /*echo reset($aUri) . "courses/" . CmPageBuilder::getCourseFirstPageName($oCourse->getCourseID()); */?>">
-										<?php
-/*										if($oCourse->getCoursePrice() > 0) {
-											echo TXT_CM_STORE_BUY . " " . $iPrice . $sCurrency;
-										} else{
-											echo TXT_CM_STORE_FREE_EMAIL;
-										}
-										*/?>
-									</a>
-								</div>
-							</div>
-						</div>-->
 					<?php
 						endforeach;
 					?>

@@ -6,6 +6,10 @@
  *
  */
 
+
+//Check for cookie
+CmUserManager::checkForCookie();
+
 //Check if user is entitled to course
 if(!isset($_SESSION['course_user'])){
 	wp_redirect(CmCourseStoreHandler::getStoreURL());
@@ -14,7 +18,7 @@ if(!isset($_SESSION['course_user'])){
 $iPost_id = get_the_ID();
 $iCourseId = CmCourse::getCourseByPageID($iPost_id, true);
 
-if(!CmUserManager::checkAccess($_SESSION['course_user']->Id, $iCourseId)){
+if(!CmUserManager::checkAccess($_SESSION['course_user']['id'], $iCourseId)){
 	wp_redirect(CmCourseStoreHandler::getStoreURL());
 }
 
