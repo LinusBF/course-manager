@@ -158,4 +158,17 @@ class CmCourseStoreHandler {
 		return get_permalink($iPageID);
 	}
 
+	public static function activateStripe(){
+		$oCM = new CourseManager();
+		$aOptions = $oCM->getOptions();
+
+		if($aOptions['stripe']['secret_key'] === -1 || $aOptions['stripe']['publishable_key'] === -1){
+			return false;
+		}
+
+		\Stripe\Stripe::setApiKey($aOptions['stripe']['secret_key']);
+
+		return true;
+	}
+
 }

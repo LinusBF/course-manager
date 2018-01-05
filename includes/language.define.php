@@ -15,6 +15,7 @@
  * @link      Coming soon
  */
 
+
 // --- General Use --- \\
 define('TXT_CM_PLUGIN_NAME', __('Course Manager','course-manager'));
 define('TXT_CM_YES', __('Yes','course-manager'));
@@ -33,17 +34,20 @@ define('TXT_CM_DEACTIVATE', __('Deactivate','course-manager'));
 define('TXT_CM_CHOOSE', __('Choose','course-manager'));
 define('TXT_CM_ID', __('ID','course-manager'));
 
+
 // --- Errors --- \\
 define('TXT_CM_PHP_VERSION_TO_LOW', __('Your PHP version is too low, please update it before using Course Manager','course-manager'));
 define('TXT_CM_WORDPRESS_VERSION_TO_LOW', __('Your Wordpress version is too low, please it update before using Course Manager','course-manager'));
 define('TXT_CM_ERROR_NAME_CHECK', __('The name for the course is already in use, please edit that one instead.','course-manager'));
 define('TXT_CM_ERROR_DB_QUERY', __('The database query failed, please try again. If the problem persists please contact the site administrator.','course-manager'));
 
+
 // --- Menu --- \\
 define('TXT_CM_MENU_COURSES', __('Courses','course-manager'));
 define('TXT_CM_MENU_TAGS', __('Tags','course-manager'));
 define('TXT_CM_MENU_ABOUT', __('About','course-manager'));
 define('TXT_CM_MENU_STORE', __('Store','course-manager'));
+
 
 // --- Courses Menu --- \\
 define('TXT_CM_ADMIN_COURSE_SINGULAR', __('Course','course-manager'));
@@ -57,6 +61,10 @@ define('TXT_CM_ADMIN_COURSE_STATUS', __('Status','course-manager'));
 define('TXT_CM_ADMIN_COURSE_TAGS', __('Tags','course-manager'));
 define('TXT_CM_ADMIN_COURSE_DELETE_CONFIRM', __('Are you sure you want to delete this course and all its content?', 'course-manager'));
 define('TXT_CM_ACTIVATE_FAILURE', __('Course could not be activated. Have you generated pages for it and set the store settings for it?','course-manager'));
+
+
+// --- Settings Menu --- \\
+define('TXT_CM_ADMIN_SETTINGS_NOT_SET', __('Not Set','course-manager'));
 
 
 // --- Tags Menu --- \\
@@ -125,6 +133,15 @@ define('TXT_CM_STORE_MORE_INFO', __('Click to see more info','course-manager'));
 define('TXT_CM_STORE_SELECT_LADNING_PAGE', __('Choose a landing page','course-manager'));
 define('TXT_CM_STORE_TABLE_PAGE_TITLE', __('Page Title','course-manager'));
 define('TXT_CM_STORE_TABLE_CHOICE', __('Choice','course-manager'));
+define('TXT_CM_STORE_ENTER_TOKEN', __('Use token','course-manager'));
+define('TXT_CM_STORE_GO_TO_YOUR_COURSES', __('Go to your courses','course-manager'));
+define('TXT_CM_STORE_GO_TO_STORE', __('Go to the store','course-manager'));
+define('TXT_CM_STORE_GO_TO_COURSE', __('Go to course','course-manager'));
+define('TXT_CM_STORE_SWITCH_TOKEN', __('Use another token?','course-manager'));
+define('TXT_CM_STORE_CHECKOUT_DESCRIPTION', __('Buy course','course-manager'));
+define('TXT_CM_STORE_CHECKOUT_BUTTON_TEXT', __('Pay with card','course-manager'));
+define('TXT_CM_STORE_CHECKOUT_SUCCESS', __('Thank you for your purchase, click on the course to start it!','course-manager'));
+define('TXT_CM_STORE_CHECKOUT_CARD_DECLINED', __('Your card was declined, please try with another one or contact support.','course-manager'));
 
 
 // --- Landing Pages --- \\

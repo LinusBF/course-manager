@@ -103,7 +103,11 @@ class CourseManager
                 'edit_access_role' => 'administrator',
 	            'store_active' => false,
 	            'courses_in_store' => array(),
-	            'currency' => 'kr'
+	            'currency' => 'sek',
+	            'stripe' => array(
+		            "secret_key"      => -1,
+		            "publishable_key" => -1
+	            ),
             );
             
             $aCmOptions = $this->getWPOption($this->_sAdminOptionsName);
@@ -252,6 +256,25 @@ class CourseManager
         
         return $aRoles;
     }
+
+
+	public function update_stripe(){
+		if( empty( $_POST['cm_action'] ) || 'stripe_settings' != $_POST['cm_action'] )
+			return;
+		if( ! wp_verify_nonce( $_POST['cm_stripe_nonce'], 'cm_stripe_nonce' ) )
+			return;
+		if( ! current_user_can( 'manage_options' ) )
+			return;
+
+		$stripe_settings = array(
+			"secret_key"      => $_POST['cm_stripe_secret'],
+			"publishable_key" => $_POST['cm_stripe_public']
+		);
+
+		$this->setOption('stripe', $stripe_settings, true);
+
+		CmCourseStoreHandler::activateStripe();
+	}
 
 
 	/**

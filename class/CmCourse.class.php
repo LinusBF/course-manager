@@ -159,7 +159,7 @@ class CmCourse
 	 */
 	public function getCoursePrice()
 	{
-		return $this->_iCoursePrice;
+		return intval($this->_iCoursePrice);
 	}
 
 

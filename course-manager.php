@@ -16,6 +16,11 @@ define('CM_REALPATH', WP_PLUGIN_DIR.'/'.plugin_basename(dirname(__FILE__)).'/');
 //Defines
 require_once 'includes/database.define.php';
 require_once 'includes/language.define.php';
+require_once('third-party/stripe-php-5.8.0/init.php');
+
+//Setup Stripe settings
+\Stripe\Stripe::setAppInfo("Wordpress CourseManager", "0.6");
+
 
 //Check requirements
 $blStop = false;
@@ -69,6 +74,7 @@ require_once 'class/CmStore.class.php';
 require_once 'class/CmCourseStoreHandler.class.php';
 require_once 'class/CmLandingPageTable.class.php';
 require_once 'class/CmUserManager.class.php';
+require_once 'class/CmPaymentHandler.class.php';
 require_once 'widget/cmLinks.class.php';
 
 
@@ -179,6 +185,7 @@ if (isset($oCourseManager)) {
 	add_action('init', array($oCourseManager, 'create_cm_post_type'));
 	add_action('admin_init', array($oCourseManager, 'export_download'));
 	add_action('admin_init', array($oCourseManager, 'import_upload'));
+	add_action('admin_init', array($oCourseManager, 'update_stripe'));
 
 	//Load CSS and Scripts
 	add_action('wp_print_scripts', array($oCourseManager, 'addScripts'));
@@ -204,7 +211,7 @@ if (isset($oCourseManager)) {
 	//add_action('widgets_init', 'cmLinks_init'); DEPRECATED FOR NOW
 
 	//Initiate session
-	add_action('init', 'startSession', 1);
+	add_action('init', 'startSession', 99);
 	add_action('wp_logout', 'endSession');
 	add_action('wp_login', 'endSession');
 

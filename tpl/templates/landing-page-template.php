@@ -20,6 +20,9 @@ get_header(); ?>
 	<div class="wrap">
 		<div id="primary" class="content-area">
 			<main id="main" class="site-main landing_page_main" role="main">
+				<div id="purchase_error" <?php echo (!isset($_GET['card_declined']) ? "style='display: none;'": "") ?>>
+					<h3><?php echo TXT_CM_STORE_CHECKOUT_CARD_DECLINED; ?></h3>
+				</div>
 				<?php
 
 				while ( have_posts() ) : the_post(); ?> <!--Because the_content() works only inside a WP Loop -->
@@ -33,6 +36,8 @@ get_header(); ?>
 				?>
 
 				<?php
+				$oCM = new CourseManager();
+
 				$iPost_id = get_the_ID();
 				$oCourse = CmCourse::getCourseByLandingPage($iPost_id);
 				$aCourseOptions = CmCourseStoreHandler::getStoreOptionsForCourse($oCourse->getCourseID());
@@ -68,18 +73,38 @@ get_header(); ?>
 						<div class="modal-content">
 							<div class="modal-header">
 								<button type="button" class="close" data-dismiss="modal">&times;</button>
-								<h4 class="modal-title"><?php echo TXT_CM_LANDING_PAGE_MODAL_HEADER; ?></h4>
+								<h4 class="modal-title"><?php echo $oCourse->getCourseName(); ?></h4>
 							</div>
 							<div class="modal-body">
-								<form role="form">
-									<div class="form-group">
-										<label for="email"><span class="glyphicon glyphicon-email"></span> Email</label>
-										<input type="text" class="form-control" id="email" placeholder="<?php echo TXT_CM_LANDING_PAGE_EMAIL; ?>">
-									</div>
-									<div class="checkbox">
-										<label class="pull-right"><input type="checkbox" value=""><?php echo TXT_CM_LANDING_PAGE_SEND_PROMOTIONS; ?></label>
-									</div>
-									<button type="submit" class="w3-btn w3-teal btn-block">Buy Course</button>
+								<form action="<?php echo CmCourseStoreHandler::getStoreURL()."?my_courses=true"; ?>" method="post">
+									<?php if($oCourse->getCoursePrice() <= 0): ?>
+										<div class="form-group">
+											<label for="email"><span class="glyphicon glyphicon-email"></span> Email</label>
+											<input type="text" class="form-control" id="email"
+											       name="email" placeholder="<?php echo TXT_CM_LANDING_PAGE_EMAIL; ?>"
+												   <?php echo (isset($_SESSION['course_user']) ? 'value="'.$_SESSION['course_user']['email'].'"' : "") ?>>
+										</div>
+									<?php endif; ?>
+										<div class="checkbox">
+											<label class="pull-right"><input type="checkbox" name="subscribe"><?php echo TXT_CM_LANDING_PAGE_SEND_PROMOTIONS; ?></label>
+										</div>
+										<input type="hidden" name="course_id" value="<?php echo $oCourse->getCourseID() ?>">
+									<?php if($oCourse->getCoursePrice() <= 0): ?>
+										<input type="hidden" name="cm_action" value="get_course">
+										<button type="submit" class="w3-btn w3-teal btn-block">Get Course</button>
+									<?php else: ?>
+										<script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+										        data-key="<?php echo $oCM->getOptions()['stripe']['publishable_key']; ?>"
+										        data-description='<?php
+										            echo TXT_CM_STORE_CHECKOUT_DESCRIPTION." \"".$oCourse->getCourseName()."\"";
+										        ?>'
+										        data-amount="<?php echo ($iPrice * 100) ?>"
+										        data-locale="auto"
+										        data-currency="<?php echo $oCM->getOptions()['currency'] ?>"
+										        data-zip-code="true"
+										        data-label="<?php echo TXT_CM_STORE_CHECKOUT_BUTTON_TEXT; ?>"
+												data-email="<?php echo (isset($_SESSION['course_user']) ? $_SESSION['course_user']['email'] : "") ?>"></script>
+									<?php endif; ?>
 								</form>
 							</div>
 							<div class="modal-footer">
