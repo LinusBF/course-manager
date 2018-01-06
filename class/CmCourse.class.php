@@ -888,7 +888,7 @@ class CmCourse
 		$sQuery = $wpdb->prepare($sSQL, $iLandingPageID);
 		$iCourseID = $wpdb->get_var($sQuery);
 
-		return CmCourse::getCourseByID($iCourseID);
+		return CmCourse::getCourseByID($iCourseID, true);
 	}
 
 
@@ -910,7 +910,7 @@ class CmCourse
 			return intval(substr($iCourseExcerpt, 0, 1));
 		}
 		else{
-			return CmCourse::getCourseByID(intval(substr($iCourseExcerpt, 0, 1)));
+			return CmCourse::getCourseByID(intval(substr($iCourseExcerpt, 0, 1)), true);
 		}
 	}
 
