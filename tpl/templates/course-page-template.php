@@ -8,7 +8,7 @@
 
 
 //Check for cookie
-CmUserManager::checkForCookie();
+CmUserManager::updateSessionFromCookie();
 
 //Check if user is entitled to course
 if(!isset($_SESSION['course_user'])){

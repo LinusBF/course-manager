@@ -261,8 +261,9 @@ class CmUserManager {
 
 
 	public static function setCookie($sToken){
-		setcookie("cm_token", "", time() -  (60 * 60), "/");
+		setcookie("cm_token", "", (time() -  (60 * 60)), "/");
 		setcookie("cm_token", $sToken, time() +  (30 * 24 * 60 * 60), "/");
+		$_COOKIE['cm_token'] = $sToken;
 	}
 
 
@@ -271,8 +272,8 @@ class CmUserManager {
 	}
 
 
-	public static function checkForCookie(){
-		if(isset($_COOKIE['cm_token']) && !isset($_SESSION['course_user'])){
+	public static function updateSessionFromCookie(){
+		if(isset($_COOKIE['cm_token'])){
 			$aUser = CmUserManager::getUserByToken($_COOKIE['cm_token']);
 
 			if($aUser !== false){
@@ -416,6 +417,7 @@ class CmUserManager {
 
 			//Set current user in session to email used for purchase
 			$CmUser = CmUserManager::getUserById( $CmUserId );
+			CmUserManager::resetUserSession();
 			CmUserManager::setCookie( $CmUser['user_token'] );
 			CmUserManager::resetUserSession();
 		}

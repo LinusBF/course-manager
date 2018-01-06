@@ -27,7 +27,7 @@ if(isset($_POST['cm_action']) && $_POST['cm_action'] === "get_course" && isset($
 }
 
 //Check for cookie
-CmUserManager::checkForCookie();
+CmUserManager::updateSessionFromCookie();
 
 add_action('wp_head', 'store_header');
 

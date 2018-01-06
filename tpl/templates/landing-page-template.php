@@ -5,7 +5,7 @@
  */
 
 //Check for cookie
-CmUserManager::checkForCookie();
+CmUserManager::updateSessionFromCookie();
 
 add_action('wp_head', 'landing_page_header');
 
