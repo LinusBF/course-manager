@@ -22,5 +22,7 @@ jQuery(document).ready(function ($) {
 
 			document.cookie = "cm_token" + "=" + (value || "") + expires + "; path=/";
 		}
+
+		location.reload();
 	});
 });
