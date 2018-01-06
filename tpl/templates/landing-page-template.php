@@ -40,24 +40,30 @@ get_header(); ?>
 
 				$iPost_id = get_the_ID();
 				$oCourse = CmCourse::getCourseByLandingPage($iPost_id);
-				$aCourseOptions = CmCourseStoreHandler::getStoreOptionsForCourse($oCourse->getCourseID());
 
 				$sSlug = basename(get_permalink());
 				$aUri = explode($sSlug, $_SERVER["REQUEST_URI"]);
+
+				//If the user has access to the course, show link to the first CoursePart
+				if(isset($_SESSION['course_user']) && CmUserManager::checkAccess($_SESSION['course_user']['id'],$oCourse->getCourseID())):
+				?>
+					<div class="get_course_wrapper">
+						<a class="w3-btn w3-teal bold" href="<?php echo reset($aUri) . "courses/" . CmPageBuilder::getCourseFirstPageName($oCourse->getCourseID()); ?>">
+							<?php echo $oCourse->getCourseParts()[0]->getCoursePartName() ?>
+						</a>
+					</div>
+				<?php
+				//If the user does not have access to the course, show link to open checkout modal.
+				else:
+				$aCourseOptions = CmCourseStoreHandler::getStoreOptionsForCourse($oCourse->getCourseID());
 
 				$iPrice = $oCourse->getCoursePrice() * ( 1 - ( $aCourseOptions['current_discount'] / 100 ) );
 				$iPrice = floor( $iPrice );
 				$sCurrency = $oCourseManager->getOptions()['currency'];
 				?>
-
 				<div class="get_course_wrapper">
 					<a class="w3-btn w3-teal buy_course_btn" href="#signupModal" data-toggle="modal">
 						<?php
-						/*
-							<?php
-								echo reset($aUri) . "courses/" . CmPageBuilder::getCourseFirstPageName($oCourse->getCourseID());
-							?>
-						*/
 						if($oCourse->getCoursePrice() > 0) {
 							echo TXT_CM_STORE_BUY . " " . $iPrice . $sCurrency;
 						} else{
@@ -117,6 +123,7 @@ get_header(); ?>
 
 					</div>
 				</div>
+				<?php endif; ?>
 			</main><!-- #main -->
 		</div><!-- #primary -->
 	</div><!-- .wrap -->
