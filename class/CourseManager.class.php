@@ -473,6 +473,9 @@ class CourseManager
     public function deactivate()
     {
         #TODO
+	    $oStore = new CmStore();
+
+	    $oStore->deactivateStore();
     }
 
 

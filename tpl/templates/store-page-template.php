@@ -83,6 +83,7 @@ get_header(); ?>
 
 						$blMyCourses = isset($_GET['my_courses']) && isset($_SESSION['course_user']);
 
+						#TODO - Handle expired courses
 						if ($blMyCourses){
 							$aCourses = CmUserManager::getPurchasedCourses($_SESSION['course_user']['id']);
 						} else {

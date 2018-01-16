@@ -447,7 +447,7 @@ class CmUserManager {
 		$sSQL = "SELECT purchase_date FROM ".DB_CM_USER_ENTITLEMENTS." WHERE user_id = %d AND course_id = %d";
 		$sDate = $wpdb->get_var($wpdb->prepare($sSQL, $iUserId, $iCourseId));
 
-		//Customer has not purchased the course
+		//Customer has not purchased the course #TODO - Handle different than expired course
 		if ($sDate === null){
 			return false;
 		}
