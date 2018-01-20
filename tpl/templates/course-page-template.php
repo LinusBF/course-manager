@@ -62,10 +62,7 @@ function course_page_header(){
 				</main><!-- #main -->
 			</div><!-- #primary -->
 		</div><!-- .wrap -->
-		<footer id="footer" class="cm_footer">
-			<a class="cm_store_link" href="<?php echo CmCourseStoreHandler::getStoreURL(); ?>"><?php echo TXT_CM_STORE_PAGE_TITLE; ?></a>
-			<?php wp_footer(); ?>
-		</footer>
+		<?php get_footer(); ?>
 	</body>
 </html>
 <?php
