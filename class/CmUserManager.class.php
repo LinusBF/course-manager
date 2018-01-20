@@ -262,7 +262,7 @@ class CmUserManager {
 
 	public static function setCookie($sToken){
 		setcookie("cm_token", "", (time() -  (60 * 60)), "/");
-		setcookie("cm_token", $sToken, time() +  (30 * 24 * 60 * 60), "/");
+		setcookie("cm_token", $sToken, time() +  (180 * 24 * 60 * 60), "/");
 		$_COOKIE['cm_token'] = $sToken;
 	}
 
