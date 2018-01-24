@@ -7,6 +7,15 @@
  */
 
 class CmPaymentHandler {
+
+	/**
+	 * Constructor
+	 */
+	public function __construct()
+	{
+		do_action('cm_payment_manager_init', $this);
+	}
+
 	public static function createCustomer($sToken, $sEmail){
 		$oCM = new CourseManager();
 		\Stripe\Stripe::setApiKey($oCM->getOptions()['stripe']['secret_key']);
