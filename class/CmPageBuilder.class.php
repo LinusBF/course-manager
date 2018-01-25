@@ -191,7 +191,7 @@ class CmPageBuilder
 			}
 
 			$sHtmlString .= "</ul>";
-			$sHtmlString .= "<a class='w3-btn w3-teal' href='#'>".TXT_CM_PAGE_SAVE_ANSWERS."</a>"; //TODO - Expand save button
+			$sHtmlString .= "<a class='w3-btn w3-teal cm_answer_questions' href='#'>".TXT_CM_PAGE_SAVE_ANSWERS."</a>"; //TODO - Expand save button
 
 			return $sPostHeader.$sHtmlString.$sPostFooter;
 

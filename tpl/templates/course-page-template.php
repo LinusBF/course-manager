@@ -22,12 +22,12 @@ if(!CmUserManager::checkAccess($_SESSION['course_user']['id'], $iCourseId)){
 	wp_redirect(CmCourseStoreHandler::getStoreURL()."?no_access=true");
 }
 
+
 add_action('wp_head', 'course_page_header');
 
 function course_page_header(){
 	echo "<link rel='stylesheet' href='".CM_URLPATH."css/cmCoursePage.css'>
-		  <link rel=\"stylesheet\" href=\"https://www.w3schools.com/lib/w3.css\">
-		  <script type='application/javascript' src='".CM_URLPATH."js/course_page.js'></script>";
+		  <link rel=\"stylesheet\" href=\"https://www.w3schools.com/lib/w3.css\">";
 }
 
 ?>
@@ -59,6 +59,9 @@ function course_page_header(){
 					endwhile; //resetting the page loop
 
 					?>
+					<input id="cm_question_nonce" type="hidden" value="<?php echo wp_create_nonce("cm_answer_question") ?>">
+					<input id="cm_answers_nonce" type="hidden" value="<?php echo wp_create_nonce("cm_answers") ?>">
+					<input id="cm_ancestry_nonce" type="hidden" value="<?php echo wp_create_nonce("cm_part_ancestry") ?>">
 				</main><!-- #main -->
 			</div><!-- #primary -->
 		</div><!-- .wrap -->

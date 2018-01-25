@@ -461,7 +461,7 @@ class CmPart
 	 *
 	 * @param string || Array $content
 	 *
-	 * @return array if $toDB is not set - string if $toDB is set
+	 * @return string|array array if $toDB is not set - string if $toDB is set
 	 *
 	 */
     public static function parse_quest($content){

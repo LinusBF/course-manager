@@ -463,4 +463,30 @@ class CmUserManager {
 		return true;
 	}
 
+	public static function getAnswers($iUserId, $iPartId){
+		global $wpdb;
+
+		$sSQL = "SELECT questions, answers FROM ".DB_CM_USER_ANSWERS." WHERE user_id = %d AND cm_part_id = %d";
+		$sQnA = $wpdb->get_row($wpdb->prepare($sSQL, $iUserId, $iPartId));
+
+		//No answers to the question
+		if ($sQnA === null){
+			return false;
+		}
+
+		$aQs = CmPart::parse_quest($sQnA->questions);
+		$aAs = CmPart::parse_quest($sQnA->answers);
+
+		$aQnA = array(
+			"Q" => $aQs,
+			"A" => $aAs
+		);
+
+		return $aQnA;
+	}
+
+	public static function answerQuestion($iUserId, $iPartId, $aAnswers){
+		//TODO
+	}
+
 }

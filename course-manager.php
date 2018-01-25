@@ -116,6 +116,7 @@ if(!function_exists("cmAdminPanel")){
 
 if (!function_exists("cm_load_ajax")){
 	function cm_load_ajax(){
+		//Admin Edit
 		wp_enqueue_script(
 			'CourseManagerAjax',
 			CM_URLPATH . 'js/cmEditAjax.js',
@@ -135,6 +136,34 @@ if (!function_exists("cm_load_ajax")){
 		wp_localize_script(
 			'CourseManagerAjax',
 			'new_course',
+			$params
+		);
+	}
+}
+
+
+if (!function_exists("cm_load_course_page_ajax")){
+	function cm_load_course_page_ajax(){
+		//Course Page
+		wp_enqueue_script(
+			'CourseManagerCourseAjax',
+			CM_URLPATH . 'js/course_page.js',
+			array('jquery'),
+			'1.0.0'
+		);
+
+		//Get current protocol
+		$protocol = isset( $_SERVER['HTTPS'] ) ? 'https://' : 'http://';
+
+		//Ajax params
+		$params = array(
+			// Get the url to the admin-ajax.php file using admin_url()
+			'ajaxurl' => admin_url( 'admin-ajax.php', $protocol )
+		);
+
+		wp_localize_script(
+			'CourseManagerCourseAjax',
+			'course_qa',
 			$params
 		);
 	}
@@ -170,6 +199,7 @@ if (isset($oCourseManager)) {
 	//Register Activation
 	register_activation_hook(__FILE__, array($oCourseManager, 'rewrite_flush'));
 	register_activation_hook(__FILE__, "install_cm");
+	add_action('init', array($oCourseManager, 'create_cm_post_type'));
 
 
 	//uninstall
@@ -182,7 +212,7 @@ if (isset($oCourseManager)) {
 
 	}
 
-	add_action('init', array($oCourseManager, 'create_cm_post_type'));
+
 	add_action('admin_init', array($oCourseManager, 'export_download'));
 	add_action('admin_init', array($oCourseManager, 'import_upload'));
 	add_action('admin_init', array($oCourseManager, 'update_stripe'));
@@ -190,22 +220,38 @@ if (isset($oCourseManager)) {
 	//Load CSS and Scripts
 	add_action('wp_print_scripts', array($oCourseManager, 'addScripts'));
 	add_action('wp_print_styles', array($oCourseManager, 'addStyles'));
-	add_action('admin_enqueue_scripts', 'create_edit_course_scripts');
-	add_action('admin_enqueue_scripts', 'create_admin_courses_scripts');
-	add_action('admin_enqueue_scripts', 'store_page_scripts');
-	require_once "tpl/editCourseAjaxFunctions.php";
-	add_action('wp_ajax_cm_new_course_part', 'cm_add_new_coursePart');
-	add_action('wp_ajax_cm_new_part', 'cm_add_new_part');
-	add_action('wp_ajax_cm_change_part_type', 'cm_change_part_type');
-	add_action('wp_ajax_cm_add_question', 'cm_add_question');
 
+	add_action( 'wp_enqueue_scripts', 'course_page_scripts', 85);
+
+	if ( is_admin() ) {
+		add_action('admin_enqueue_scripts', 'create_edit_course_scripts');
+		add_action('admin_enqueue_scripts', 'create_admin_courses_scripts');
+		add_action('admin_enqueue_scripts', 'store_page_scripts');
+
+		//Load Course Page Ajax
+		require_once CM_REALPATH . 'tpl/coursePageAjax.php';
+		add_action( 'wp_ajax_cm_answer_question', 'cm_answer_question' );
+		add_action( 'wp_ajax_cm_get_answers', 'cm_get_answers' );
+		add_action( 'wp_ajax_cm_get_part_id', 'cm_get_part_id' );
+		add_action( 'wp_ajax_nopriv_cm_answer_question', 'cm_answer_question' );
+		add_action( 'wp_ajax_nopriv_cm_get_answers', 'cm_get_answers' );
+		add_action( 'wp_ajax_nopriv_cm_get_part_id', 'cm_get_part_id' );
+
+		//Load Admin AJAX Scripts
+		require_once "tpl/editCourseAjaxFunctions.php";
+		add_action( 'wp_ajax_cm_new_course_part', 'cm_add_new_coursePart' );
+		add_action( 'wp_ajax_cm_new_part', 'cm_add_new_part' );
+		add_action( 'wp_ajax_cm_change_part_type', 'cm_change_part_type' );
+		add_action( 'wp_ajax_cm_add_question', 'cm_add_question' );
+
+		//Add admin menu
+		add_action('admin_menu', 'cmAdminPanel');
+
+	}
 	//Load templates for plugin specific pages
 	add_filter('template_include', 'store_page_template', 99);
 	add_filter('template_include', 'course_page_template', 90);
 	add_filter('template_include', 'landing_page_template', 90);
-
-	//Register Plugin
-	add_action('admin_menu', 'cmAdminPanel');
 
 	//Register widget
 	//add_action('widgets_init', 'cmLinks_init'); DEPRECATED FOR NOW
@@ -265,6 +311,15 @@ function course_page_template($page_template){
 		$page_template = dirname(__FILE__).'/tpl/templates/course-page-template.php';
 	}
 	return $page_template;
+}
+
+
+function course_page_scripts(){
+	if(get_post_type() == 'cm_course_page'){
+		cm_load_course_page_ajax();
+	} else{
+		return;
+	}
 }
 
 
