@@ -485,8 +485,31 @@ class CmUserManager {
 		return $aQnA;
 	}
 
-	public static function answerQuestion($iUserId, $iPartId, $aAnswers){
-		//TODO
+	public static function answerQuestions($iUserId, $iPartId, $aAnswers){
+		$oPart = CmPart::getPartByID($iPartId);
+		if($oPart->getType() !== "question") {return false;}
+		$sQs = $oPart->getContent();
+		$sAs = CmPart::parse_quest($aAnswers);
+
+		global $wpdb;
+
+		$blResult = $wpdb->replace(
+			DB_CM_USER_ANSWERS,
+			array(
+				"user_id" => $iUserId,
+				"cm_part_id" => $iPartId,
+				"questions" => $sQs,
+				"answers" => $sAs
+			),
+			array(
+				'%d',
+				'%d',
+				'%s',
+				'%s',
+			)
+		);
+
+		return ($blResult);
 	}
 
 }
