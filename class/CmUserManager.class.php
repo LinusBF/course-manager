@@ -467,7 +467,7 @@ class CmUserManager {
 	public static function getAnswers($iUserId, $iPartId){
 		global $wpdb;
 
-		$sSQL = "SELECT questions, answers FROM ".DB_CM_USER_ANSWERS." WHERE user_id = %d AND cm_part_id = %d";
+		$sSQL = "SELECT questions, answers FROM ".DB_CM_USER_ANSWERS." WHERE user_id = %d AND cm_part_id = %d ORDER BY answered_at DESC";
 		$sQnA = $wpdb->get_row($wpdb->prepare($sSQL, $iUserId, $iPartId));
 
 		//No answers to the question
