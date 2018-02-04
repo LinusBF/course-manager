@@ -382,6 +382,8 @@ class CourseManager
         	);
         }
 
+        /*  NOT CURRENTLY USED
+
         //Checking if cm_tags table exists
         $sCmTagTableName = $wpdb->prefix.'cm_tags';
 
@@ -419,6 +421,8 @@ class CourseManager
 				) $sCharsetCollate;"
         	);
         }
+
+        */
 
         add_option("cm_db_version", $this->_sCmDBVersion);
     }
