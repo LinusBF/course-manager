@@ -118,7 +118,7 @@ class CmUserManager {
         			user_id INT NOT NULL,
         			questions LONGTEXT DEFAULT NULL,
 					answers LONGTEXT DEFAULT NULL,
-					answered_at DATE NOT NULL,
+					answered_at DATETIME NOT NULL CURRENT_TIMESTAMP,
 					FOREIGN KEY (cm_part_id) REFERENCES ".$sCmPartTableName."(ID) ON DELETE SET NULL,
 					FOREIGN KEY (user_id) REFERENCES ".$sCmUserManagerTable."(ID) ON DELETE CASCADE,
 					PRIMARY KEY (ID)
