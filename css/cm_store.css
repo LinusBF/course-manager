@@ -7,6 +7,8 @@
 	margin-bottom: 15px;
 	padding-bottom: 5px;
 	border-bottom: 1px #eaeaea solid;
+	justify-content: space-between;
+	display: flex;
 }
 
 #cm_token_input{
