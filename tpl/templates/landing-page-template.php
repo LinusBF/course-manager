@@ -12,7 +12,11 @@ add_action('wp_head', 'landing_page_header');
 function landing_page_header(){
 	echo "<link rel='stylesheet' href='".CM_URLPATH."css/cm_landing_page.css'>
 		  <link rel=\"stylesheet\" href=\"https://www.w3schools.com/lib/w3.css\">
-		  <script type='application/javascript' src='".CM_URLPATH."js/landing_page.js'></script>";
+		  <script type='application/javascript' src='".CM_URLPATH."js/landing_page.js'></script>
+		  <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css\">
+		  <script src=\"https://code.jquery.com/jquery-3.1.1.slim.min.js\"></script>
+		  <script src=\"https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js\"></script>
+		  <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js\"></script>";
 }
 
 get_header(); ?>
