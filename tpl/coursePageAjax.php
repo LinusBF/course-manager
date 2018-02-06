@@ -28,7 +28,11 @@ function cm_get_answers(){
 
 	if(isset($_POST['cm_part_id']) && wp_verify_nonce($_POST['cm_answers_nonce'], 'cm_answers')) {
 		$aAnswers = CmUserManager::getAnswers($_SESSION['course_user']['id'], $_POST['cm_part_id']);
-		echo json_encode(array("status" => "Success", "data" => $aAnswers));
+		if($aAnswers !== false) {
+			echo json_encode( array( "status" => "Success", "data" => $aAnswers ) );
+		} else{
+			echo json_encode(array("status" => "Failure", "data" => null));
+		}
 
 	} else{
 		echo json_encode(array("status" => "Failure", "data" => null));
