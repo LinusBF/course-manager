@@ -217,16 +217,16 @@ if (isset($oCourseManager)) {
 	add_action('admin_init', array($oCourseManager, 'import_upload'));
 	add_action('admin_init', array($oCourseManager, 'update_stripe'));
 
-	//Load CSS and Scripts
-	add_action('wp_print_scripts', array($oCourseManager, 'addScripts'));
-	add_action('wp_print_styles', array($oCourseManager, 'addStyles'));
-
 	add_action( 'wp_enqueue_scripts', 'course_page_scripts', 85);
 
 	if ( is_admin() ) {
 		add_action('admin_enqueue_scripts', 'create_edit_course_scripts');
 		add_action('admin_enqueue_scripts', 'create_admin_courses_scripts');
 		add_action('admin_enqueue_scripts', 'store_page_scripts');
+
+		//Load Admin CSS and Scripts
+		add_action('wp_print_scripts', array($oCourseManager, 'addScripts'));
+		add_action('wp_print_styles', array($oCourseManager, 'addStyles'));
 
 		//Load Course Page Ajax
 		require_once CM_REALPATH . 'tpl/coursePageAjax.php';
