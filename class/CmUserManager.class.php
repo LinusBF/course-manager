@@ -118,6 +118,7 @@ class CmUserManager {
         			user_id INT NOT NULL,
         			questions LONGTEXT DEFAULT NULL,
 					answers LONGTEXT DEFAULT NULL,
+					answered_at DATETIME NOT NULL CURRENT_TIMESTAMP,
 					FOREIGN KEY (cm_part_id) REFERENCES ".$sCmPartTableName."(ID) ON DELETE SET NULL,
 					FOREIGN KEY (user_id) REFERENCES ".$sCmUserManagerTable."(ID) ON DELETE CASCADE,
 					PRIMARY KEY (ID)
@@ -466,7 +467,7 @@ class CmUserManager {
 	public static function getAnswers($iUserId, $iPartId){
 		global $wpdb;
 
-		$sSQL = "SELECT questions, answers FROM ".DB_CM_USER_ANSWERS." WHERE user_id = %d AND cm_part_id = %d";
+		$sSQL = "SELECT questions, answers FROM ".DB_CM_USER_ANSWERS." WHERE user_id = %d AND cm_part_id = %d ORDER BY answered_at DESC";
 		$sQnA = $wpdb->get_row($wpdb->prepare($sSQL, $iUserId, $iPartId));
 
 		//No answers to the question
@@ -485,8 +486,31 @@ class CmUserManager {
 		return $aQnA;
 	}
 
-	public static function answerQuestion($iUserId, $iPartId, $aAnswers){
-		//TODO
+	public static function answerQuestions($iUserId, $iPartId, $aAnswers){
+		$oPart = CmPart::getPartByID($iPartId);
+		if($oPart->getType() !== "question") {return false;}
+		$sQs = $oPart->getContent();
+		$sAs = CmPart::parse_quest($aAnswers);
+
+		global $wpdb;
+
+		$blResult = $wpdb->replace(
+			DB_CM_USER_ANSWERS,
+			array(
+				"user_id" => $iUserId,
+				"cm_part_id" => $iPartId,
+				"questions" => $sQs,
+				"answers" => $sAs
+			),
+			array(
+				'%d',
+				'%d',
+				'%s',
+				'%s',
+			)
+		);
+
+		return ($blResult);
 	}
 
 }

@@ -9,12 +9,16 @@
 function cm_answer_question(){
 
 	if(isset($_POST['cm_part_id']) && isset($_POST['cm_answers']) && wp_verify_nonce($_POST['cm_question_nonce'], 'cm_answer_question')) {
-		CmUserManager::answerQuestion($_SESSION['course_user']['id'], $_POST['cm_part_id'], $_POST['cm_answers']);
+		$blResult = CmUserManager::answerQuestions($_SESSION['course_user']['id'], $_POST['cm_part_id'], $_POST['cm_answers']);
 
-		echo json_encode("Success");
+		if($blResult){
+			echo json_encode(array("status" => "Success", "data" => $blResult));
+		} else{
+			echo json_encode(array("status" => "Failure", "data" => null));
+		}
 
 	} else{
-		echo json_encode("Failure");
+		echo json_encode(array("status" => "Failure", "data" => null));
 	}
 	wp_die();
 }
@@ -23,11 +27,11 @@ function cm_answer_question(){
 function cm_get_answers(){
 
 	if(isset($_POST['cm_part_id']) && wp_verify_nonce($_POST['cm_answers_nonce'], 'cm_answers')) {
-		$aAnswers = CmUserManager::getAnswers($_SESSION['course_user']['id'], $_POST['cm_part_id'])['A'];
-		echo json_encode($aAnswers);
+		$aAnswers = CmUserManager::getAnswers($_SESSION['course_user']['id'], $_POST['cm_part_id']);
+		echo json_encode(array("status" => "Success", "data" => $aAnswers));
 
 	} else{
-		echo json_encode("Failure");
+		echo json_encode(array("status" => "Failure", "data" => null));
 	}
 	wp_die();
 }
@@ -40,10 +44,10 @@ function cm_get_part_id(){
 		$oCourse = CmCourse::getCourseByID($iCourseId, true);
 		$oPart = $oCourse->getCourseParts()[$iCoursePartIndex]->getParts()[$iPartIndex];
 
-		echo json_encode($oPart->getPartID());
+		echo json_encode(array("status" => "Success", "data" => $oPart->getPartID()));
 
 	} else{
-		echo json_encode("Failure");
+		echo json_encode(array("status" => "Failure", "data" => null));
 	}
 	wp_die();
 }

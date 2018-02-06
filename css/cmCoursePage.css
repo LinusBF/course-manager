@@ -32,5 +32,9 @@
 	float: right;
 }
 
+.cm_page_image{
+	max-width: 650px;
+}
+
 .cm_footer{
 }
