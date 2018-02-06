@@ -202,10 +202,19 @@ class CmStore {
 	 * @return int - ID of the page, 0 if not found
 	 */
 	protected function _getStorePageId(){
-		$oStorePage = get_page_by_title(wp_strip_all_tags(TXT_CM_STORE_PAGE_TITLE));
+		global $wpdb;
 
-		if (isset($oStorePage)){
-			return $oStorePage->ID;
+		$sSQL = "
+			SELECT ID
+			FROM $wpdb->posts
+			WHERE post_type = %s
+			AND post_excerpt = %s
+		";
+
+		$sStorePageId = $wpdb->get_row($wpdb->prepare($sSQL, "page", "cm_store"));
+
+		if (isset($sStorePageId)){
+			return intval($sStorePageId->ID);
 		} else {
 			return 0;
 		}
@@ -216,7 +225,7 @@ class CmStore {
 	 * @return string
 	 */
 	protected function _getStorePageData(){
-		return "<p>Look at all these chicken!</p>";
+		return "";
 	}
 
 
