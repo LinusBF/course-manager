@@ -4,6 +4,7 @@
  *
  */
 
+//TODO - Handle "no session" GET
 
 if(isset($_GET['new_token']) && $_GET['new_token']){
 	if(isset($_COOKIE['cm_token'])){
