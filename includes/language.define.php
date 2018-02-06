@@ -154,5 +154,6 @@ define('TXT_CM_LANDING_PAGE_SEND_PROMOTIONS', __('Send me offers for other cours
 // --- User Page --- \\
 define('TXT_CM_USER_PAGE_NAME', __('course-account', 'course-manager'));
 define('TXT_CM_USER_PAGE_TITLE', __('Account', 'course-manager'));
+define('TXT_CM_USER_PAGE_BACK_TO_COURSE', __('To question', 'course-manager'));
 
 ?>

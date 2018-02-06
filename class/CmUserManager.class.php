@@ -488,9 +488,11 @@ class CmUserManager {
 	 *
 	 * @param $iUserId - int
 	 *
+	 * @param bool $blFullObject
+	 *
 	 * @return CmCourse[] $aCourses
 	 */
-	public static function getPurchasedCourses($iUserId){
+	public static function getPurchasedCourses($iUserId, $blFullObject = false){
 		global $wpdb;
 
 		$sSQL = "SELECT course_id FROM ".DB_CM_USER_ENTITLEMENTS." WHERE user_id = %d ORDER BY purchase_date DESC";
@@ -501,7 +503,7 @@ class CmUserManager {
 		$aCourses = array();
 
 		foreach ($aCourseIds as $iId){
-			array_push($aCourses, CmCourse::getCourseByID(intval($iId)));
+			array_push($aCourses, CmCourse::getCourseByID(intval($iId), $blFullObject));
 		}
 
 		return $aCourses;
@@ -530,8 +532,7 @@ class CmUserManager {
 	}
 
 	public static function getAllPartsAndAnswers($iUserId){
-		$aCourses = CmUserManager::getPurchasedCourses($iUserId);
-
+		$aCourses = CmUserManager::getPurchasedCourses($iUserId, true);
 		$aAnswers = array();
 
 		foreach ($aCourses as $iIC => $oCourse){
@@ -544,17 +545,18 @@ class CmUserManager {
 
 				foreach ($aParts as $iIP => $oPart){
 					if($oPart->getType() == "question"){
-						array_push($aPAnswers, array("index" => $iIP, "part" => $oPart));
+						$aAnswer = CmUserManager::getAnswers($iUserId, $oPart->getPartID());
+						array_push($aPAnswers, array("index" => $iIP, "part" => $oPart, "answers" => $aAnswer));
 					}
 				}
 
 				if (count($aPAnswers) > 0){
-					array_push($aCpAnswers, array("index" => $iICP, "course_part" => $aPAnswers));
+					array_push($aCpAnswers, array("index" => $iICP, "course-part" => $oCoursePart, "answers" => $aPAnswers));
 				}
 			}
 
 			if (count($aCpAnswers) > 0){
-				array_push($aAnswers, array("index" => $iIC, "course" => $aCpAnswers));
+				array_push($aAnswers, array("index" => $iIC, "course" => $oCourse, "answers" => $aCpAnswers));
 			}
 		}
 

@@ -404,6 +404,32 @@ class CmPageBuilder
 	}
 
 
+	/**
+	 * @param $iCoursePartId
+	 *
+	 * @return bool|string
+	 *
+	 */
+	public static function getCoursePageName( $iCoursePartId ) {
+		global $wpdb;
+
+		$sQuery = $wpdb->prepare("SELECT post_id FROM ".$wpdb->postmeta." WHERE meta_key = 'cm_course_part_id' AND meta_value = %d", $iCoursePartId);
+
+		$iPostId = $wpdb->get_row($sQuery);
+
+		if (isset($iPostId)){
+			$sNameQuery = $wpdb->prepare("SELECT post_name FROM ".$wpdb->posts." WHERE ID = %d", (int) $iPostId->post_id);
+			$sPageName = $wpdb->get_row($sNameQuery);
+
+			if (isset($sPageName)){
+				return $sPageName->post_name;
+			}
+		}
+
+		return false;
+	}
+
+
 	public static function getPartUrlName($sPartName){
 		return sanitize_title($sPartName);
 	}

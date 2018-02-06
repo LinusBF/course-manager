@@ -1,0 +1,16 @@
+#user_account_container{
+
+	margin: auto;
+	padding: 10px 50px;
+	justify-content: space-between;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.cm_answers{
+	padding: 10px 20px;
+}
+
+.cm_answer_wrapper{
+	margin-bottom: 25px;
+}

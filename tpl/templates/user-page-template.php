@@ -29,13 +29,36 @@ get_header(); ?>
 				<div class="container" id="user_account_container">
 					<?php
 					$aCourses = CmUserManager::getAllPartsAndAnswers($_SESSION['course_user']['id']);
+					$aUri = explode("course-account", $_SERVER["REQUEST_URI"]);
 
-					var_dump($aCourses);
-
-					foreach ($aCourses as $iKey => $aCourseAnswers):
+					foreach ($aCourses as $aCourseAnswers):
 						?>
-						<div>
-							<p><?php echo print_r($aCourseAnswers, true) ?></p>
+						<div class="cm_course">
+							<?php foreach ($aCourseAnswers['answers'] as $aCpAnswer): ?>
+								<div class="cm_course_part">
+									<h2><?php echo $aCourseAnswers['course']->getCourseName()." - ".$aCpAnswer['course-part']->getCoursePartName(); ?></h2>
+									<?php foreach ($aCpAnswer['answers'] as $aPAnswer): ?>
+										<div class="cm_part">
+											<div class="cm_answers w3-card-2">
+												<header class="w3-container">
+													<h3><?php echo $aPAnswer['part']->getTitle() ?></h3>
+												</header>
+												<?php foreach ($aPAnswer['answers']['A'] as $iAKey => $sAnswer): ?>
+													<div class="cm_answer_wrapper">
+														<h4 class="w3-text-gray"><?php echo $aPAnswer['answers']['Q'][$iAKey]; ?></h4>
+														<p><?php echo $sAnswer; ?></p>
+													</div>
+												<?php endforeach; ?>
+												<footer class="w3-container w3-right-align">
+													<a href="<?php echo reset($aUri) . "courses/" . CmPageBuilder::getCoursePageName($aCpAnswer['course-part']->getCoursePartID()); ?>">
+														<?php echo TXT_CM_USER_PAGE_BACK_TO_COURSE; ?>
+													</a>
+												</footer>
+											</div>
+										</div>
+									<?php endforeach; ?>
+								</div>
+							<?php endforeach; ?>
 						</div>
 						<?php
 					endforeach;
