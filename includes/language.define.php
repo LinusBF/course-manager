@@ -136,6 +136,7 @@ define('TXT_CM_STORE_TABLE_CHOICE', __('Choice','course-manager'));
 define('TXT_CM_STORE_ENTER_TOKEN', __('Use token','course-manager'));
 define('TXT_CM_STORE_GO_TO_YOUR_COURSES', __('Go to your courses','course-manager'));
 define('TXT_CM_STORE_GO_TO_STORE', __('Go to the store','course-manager'));
+define('TXT_CM_STORE_GO_TO_ANSWERS', __('Your answers','course-manager'));
 define('TXT_CM_STORE_GO_TO_COURSE', __('Go to course','course-manager'));
 define('TXT_CM_STORE_SWITCH_TOKEN', __('Use another token?','course-manager'));
 define('TXT_CM_STORE_CHECKOUT_DESCRIPTION', __('Buy course','course-manager'));
@@ -149,5 +150,9 @@ define('TXT_CM_LANDING_PAGE_MODAL_HEADER', __('Get Course','course-manager'));
 define('TXT_CM_LANDING_PAGE_EMAIL', __('Enter email','course-manager'));
 define('TXT_CM_LANDING_PAGE_SEND_PROMOTIONS', __('Send me offers for other courses','course-manager'));
 
+
+// --- User Page --- \\
+define('TXT_CM_USER_PAGE_NAME', __('course-account', 'course-manager'));
+define('TXT_CM_USER_PAGE_TITLE', __('Account', 'course-manager'));
 
 ?>

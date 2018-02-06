@@ -126,6 +126,11 @@ class CmUserManager {
 			);
 		}
 
+		//Create user account page
+		$aPostData = $this->_getUserPageArray($this->_getUserPageId());
+
+		wp_insert_post($aPostData);
+
 	}
 
 	/**
@@ -147,6 +152,8 @@ class CmUserManager {
              ".$sCmUserManagerTable."
              "
 		);
+
+		wp_delete_post($this->_getUserPageId());
 	}
 
 
@@ -173,6 +180,56 @@ class CmUserManager {
 		$aUsers = $wpdb->get_results($sSQL);
 
 		return $aUsers;
+	}
+
+
+	/**
+	 * @return int - ID of the page, 0 if not found
+	 */
+	protected function _getUserPageId(){
+		global $wpdb;
+
+		$sSQL = "
+			SELECT ID
+			FROM $wpdb->posts
+			WHERE post_type = %s
+			AND post_excerpt = %s
+		";
+
+		$sStorePageId = $wpdb->get_row($wpdb->prepare($sSQL, "page", "cm_user_page"));
+
+		if (isset($sStorePageId)){
+			return intval($sStorePageId->ID);
+		} else {
+			return 0;
+		}
+	}
+
+
+	/**
+	 * @param int $iUserPageId
+	 *
+	 * @return array
+	 */
+	protected function _getUserPageArray($iUserPageId){
+		$aPostData = array(
+			'ID' => $iUserPageId,
+			'post_excerpt' => 'cm_user_page',
+			'post_type' => 'page',
+			'post_status' => 'publish',
+			'comment_status' => 'closed',
+			'post_title' => wp_strip_all_tags(TXT_CM_USER_PAGE_TITLE),
+			'post_name' => TXT_CM_USER_PAGE_NAME,
+			'post_content' => "",
+		);
+
+		return $aPostData;
+	}
+
+
+	public static function getUserPageURL(){
+		$store = get_posts(array('name' => TXT_CM_USER_PAGE_NAME, 'post_type' => 'page'))[0];
+		return get_permalink($store->ID);
 	}
 
 
@@ -426,6 +483,13 @@ class CmUserManager {
 		return $aRequestResponse;
 	}
 
+
+	/**
+	 *
+	 * @param $iUserId - int
+	 *
+	 * @return CmCourse[] $aCourses
+	 */
 	public static function getPurchasedCourses($iUserId){
 		global $wpdb;
 
@@ -462,6 +526,38 @@ class CmUserManager {
 		}
 
 		return true;
+	}
+
+	public static function getAllPartsAndAnswers($iUserId){
+		$aCourses = CmUserManager::getPurchasedCourses($iUserId);
+
+		$aAnswers = array();
+
+		foreach ($aCourses as $iIC => $oCourse){
+			$aCourseParts = $oCourse->getCourseParts();
+			$aCpAnswers = array();
+
+			foreach ($aCourseParts as $iICP => $oCoursePart){
+				$aParts = $oCoursePart->getParts();
+				$aPAnswers = array();
+
+				foreach ($aParts as $iIP => $oPart){
+					if($oPart->getType() == "question"){
+						array_push($aPAnswers, array("index" => $iIP, "part" => $oPart));
+					}
+				}
+
+				if (count($aPAnswers) > 0){
+					array_push($aCpAnswers, array("index" => $iICP, "course_part" => $aPAnswers));
+				}
+			}
+
+			if (count($aCpAnswers) > 0){
+				array_push($aAnswers, array("index" => $iIC, "course" => $aCpAnswers));
+			}
+		}
+
+		return $aAnswers;
 	}
 
 	public static function getAnswers($iUserId, $iPartId){

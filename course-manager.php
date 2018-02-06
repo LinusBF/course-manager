@@ -250,6 +250,7 @@ if (isset($oCourseManager)) {
 	}
 	//Load templates for plugin specific pages
 	add_filter('template_include', 'store_page_template', 99);
+	add_filter('template_include', 'user_page_template', 99);
 	add_filter('template_include', 'course_page_template', 90);
 	add_filter('template_include', 'landing_page_template', 90);
 
@@ -301,6 +302,14 @@ function create_admin_courses_scripts(){
 function store_page_template($page_template){
 	if(is_page('course-store')){  //Make this name dynamic?
 		$page_template = dirname(__FILE__).'/tpl/templates/store-page-template.php';
+	}
+	return $page_template;
+}
+
+
+function user_page_template($page_template){
+	if(is_page('course-account')){  //Make this name dynamic?
+		$page_template = dirname(__FILE__).'/tpl/templates/user-page-template.php';
 	}
 	return $page_template;
 }

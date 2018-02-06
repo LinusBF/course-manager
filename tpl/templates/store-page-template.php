@@ -59,6 +59,9 @@ get_header(); ?>
 							<a href="<?php echo CmCourseStoreHandler::getStoreURL(); ?>">
 								<?php echo TXT_CM_STORE_GO_TO_STORE; ?>
 							</a>
+							<a href="<?php echo CmUserManager::getUserPageURL(); ?>">
+								<?php echo TXT_CM_STORE_GO_TO_ANSWERS; ?>
+							</a>
 							<a class="pull-right switch_token" href="<?php echo CmCourseStoreHandler::getStoreURL()."?new_token=true"; ?>">
 								<?php echo TXT_CM_STORE_SWITCH_TOKEN; ?>
 							</a>
