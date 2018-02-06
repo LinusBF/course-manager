@@ -8,7 +8,7 @@
 //Check for cookie
 CmUserManager::updateSessionFromCookie();
 
-//Check if user is entitled to course
+//Check if user is set
 if(!isset($_SESSION['course_user'])){
 	wp_redirect(CmCourseStoreHandler::getStoreURL()."?no_session=true");
 }
