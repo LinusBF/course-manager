@@ -493,9 +493,10 @@ class CmUserManager {
 	public static function getPurchasedCourses($iUserId){
 		global $wpdb;
 
-		$sSQL = "SELECT course_id FROM ".DB_CM_USER_ENTITLEMENTS." WHERE user_id = %d";
+		$sSQL = "SELECT course_id FROM ".DB_CM_USER_ENTITLEMENTS." WHERE user_id = %d ORDER BY purchase_date DESC";
 		$sQuery = $wpdb->prepare($sSQL, $iUserId);
 		$aCourseIds = $wpdb->get_col($sQuery);
+		$aCourseIds = array_unique($aCourseIds);
 
 		$aCourses = array();
 
@@ -509,7 +510,7 @@ class CmUserManager {
 	public static function checkAccess($iUserId, $iCourseId) {
 		global $wpdb;
 
-		$sSQL = "SELECT purchase_date FROM ".DB_CM_USER_ENTITLEMENTS." WHERE user_id = %d AND course_id = %d";
+		$sSQL = "SELECT purchase_date FROM ".DB_CM_USER_ENTITLEMENTS." WHERE user_id = %d AND course_id = %d ORDER BY purchase_date DESC";
 		$sDate = $wpdb->get_var($wpdb->prepare($sSQL, $iUserId, $iCourseId));
 
 		//Customer has not purchased the course #TODO - Handle different than expired course
