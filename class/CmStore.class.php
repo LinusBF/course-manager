@@ -91,6 +91,11 @@ class CmStore {
 	}
 
 
+	public function storeActivationCheck(){
+		return (CmMailController::mailChimpActive() && CmPaymentHandler::stripeActive());
+	}
+
+
 	/**
 	 * @param bool $blForce - Force activation?
 	 *
@@ -98,17 +103,21 @@ class CmStore {
 	 */
 	public function activateStore($blForce = false){
 		if ($blForce){
+			if($this->storeActivationCheck()) {
+				$this->_oCourseManager->setOption( 'store_active', 1 );
 
-			$this->_oCourseManager->setOption('store_active', 1);
+				$aPostData = $this->_getStorePageArray( true, $this->_getStorePageId(), $this->_getStorePageData() );
 
-			$aPostData = $this->_getStorePageArray(true, $this->_getStorePageId(), $this->_getStorePageData());
+				wp_insert_post( $aPostData );
 
-			wp_insert_post($aPostData);
-
-			return true;
+				return true;
+			}
+			else{
+				return false;
+			}
 		}
 		else{
-			if(!$this->isStoreActive()){
+			if(!$this->isStoreActive() && $this->storeActivationCheck()){
 
 				$this->_oCourseManager->setOption('store_active', 1);
 
