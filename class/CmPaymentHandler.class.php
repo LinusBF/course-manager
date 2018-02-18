@@ -16,9 +16,29 @@ class CmPaymentHandler {
 		do_action('cm_payment_manager_init', $this);
 	}
 
+	private static function _isApiKeySet(){
+		$oCM = new CourseManager();
+		$aKeys = $oCM->getOptions()['stripe'];
+
+		return (!$aKeys['secret_key'] === -1 && !$aKeys['publishable_key'] === -1);
+	}
+
+	private static function _getApiKeys(){
+		if (!self::_isApiKeySet())
+			return false;
+
+		$oCM = new CourseManager();
+		return $oCM->getOptions()['stripe'];
+	}
+
+	public static function stripeActive(){
+		return self::_isApiKeySet();
+	}
+
 	public static function createCustomer($sToken, $sEmail){
 		$oCM = new CourseManager();
-		\Stripe\Stripe::setApiKey($oCM->getOptions()['stripe']['secret_key']);
+		//TODO - Add failure handling
+		\Stripe\Stripe::setApiKey(self::_getApiKeys()['secret_key']);
 
 		$customer = \Stripe\Customer::create(array(
 			'email' => $sEmail,
@@ -35,7 +55,8 @@ class CmPaymentHandler {
 		$iPrice = $oCourse->getCoursePrice() * ( 1 - ( $aCourseOptions['current_discount'] / 100 ) );
 		$iPrice = floor($iPrice) * 100;
 
-		\Stripe\Stripe::setApiKey($oCM->getOptions()['stripe']['secret_key']);
+		//TODO - Add failure handling
+		\Stripe\Stripe::setApiKey(self::_getApiKeys()['secret_key']);
 
 		$charge = \Stripe\Charge::create(array(
 			'customer' => $iCustomerId,
