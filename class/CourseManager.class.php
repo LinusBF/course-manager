@@ -108,6 +108,12 @@ class CourseManager
 		            "secret_key"      => -1,
 		            "publishable_key" => -1
 	            ),
+                'mail_chimp' => array(
+	                "api_key"      => -1,
+	                'list_id' => -1,
+	                'group_id' => -1,
+	                'template_id' => -1,
+                ),
             );
             
             $aCmOptions = $this->getWPOption($this->_sAdminOptionsName);
@@ -117,7 +123,6 @@ class CourseManager
                     $aCmAdminOptions[$sKey] = $mOption;
                 }
             }
-            
             update_option($this->_sAdminOptionsName, $aCmAdminOptions);
             $this->_aAdminOptions = $aCmAdminOptions;
         }
@@ -274,6 +279,44 @@ class CourseManager
 		$this->setOption('stripe', $stripe_settings, true);
 
 		CmCourseStoreHandler::activateStripe();
+	}
+
+
+	public function update_mailchimp(){
+		if( empty( $_POST['cm_action'] ))
+			return;
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		if($_POST['cm_action'] === 'mailchimp_settings') {
+			if ( ! wp_verify_nonce( $_POST['cm_mailchimp_nonce'], 'cm_mailchimp_nonce' ) ) {
+				return;
+			}
+
+			CmMailController::setApiKey($_POST['cm_mail_chimp_key']);
+		}
+		elseif($_POST['cm_action'] === 'mailchimp_list_settings') {
+			if ( ! wp_verify_nonce( $_POST['cm_mailchimp_list_nonce'], 'cm_mailchimp_list_nonce' ) ) {
+				return;
+			}
+
+			CmMailController::setList($_POST['cm_mc_list']);
+		}
+		elseif($_POST['cm_action'] === 'mailchimp_group_settings') {
+			if ( ! wp_verify_nonce( $_POST['cm_mailchimp_group_nonce'], 'cm_mailchimp_group_nonce' ) ) {
+				return;
+			}
+
+			CmMailController::setGroup($_POST['cm_mc_group']);
+		}
+		elseif($_POST['cm_action'] === 'mailchimp_template_settings') {
+			if ( ! wp_verify_nonce( $_POST['cm_mailchimp_template_nonce'], 'cm_mailchimp_template_nonce' ) ) {
+				return;
+			}
+
+			CmMailController::setTemplate($_POST['cm_mc_template']);
+		}
 	}
 
 

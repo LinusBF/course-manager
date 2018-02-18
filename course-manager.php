@@ -75,6 +75,8 @@ require_once 'class/CmCourseStoreHandler.class.php';
 require_once 'class/CmLandingPageTable.class.php';
 require_once 'class/CmUserManager.class.php';
 require_once 'class/CmPaymentHandler.class.php';
+require_once 'class/CmMailController.class.php';
+require_once 'class/CmMailChimpTables.class.php';
 require_once 'widget/cmLinks.class.php';
 
 
@@ -216,12 +218,14 @@ if (isset($oCourseManager)) {
 	add_action('admin_init', array($oCourseManager, 'export_download'));
 	add_action('admin_init', array($oCourseManager, 'import_upload'));
 	add_action('admin_init', array($oCourseManager, 'update_stripe'));
+	add_action('admin_init', array($oCourseManager, 'update_mailchimp'));
 
 	add_action( 'wp_enqueue_scripts', 'course_page_scripts', 85);
 
 	if ( is_admin() ) {
 		add_action('admin_enqueue_scripts', 'create_edit_course_scripts');
 		add_action('admin_enqueue_scripts', 'create_admin_courses_scripts');
+		add_action('admin_enqueue_scripts', 'create_admin_settings_scripts');
 		add_action('admin_enqueue_scripts', 'store_page_scripts');
 
 		//Load Admin CSS and Scripts
@@ -293,6 +297,16 @@ function create_admin_courses_scripts(){
 		);
 
 		wp_localize_script('cm_admin_courses_script', 'passed_options', $script_data);
+	}else{
+		return;
+	}
+}
+
+
+function create_admin_settings_scripts(){
+	if(isset($_GET['page']) && $_GET['page'] == 'cm_settings'){
+		wp_enqueue_script('cm_admin_settings_script', CM_URLPATH. 'js/admin_settings.js');
+
 	}else{
 		return;
 	}

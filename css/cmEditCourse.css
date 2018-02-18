@@ -141,3 +141,8 @@
 	font-weight: normal;
 	font-style: italic;
 }
+
+/* SETTINGS PAGE */
+.cm_setting_title{
+	padding-left: 7px;
+}
