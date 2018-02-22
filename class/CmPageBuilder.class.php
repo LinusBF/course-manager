@@ -172,7 +172,7 @@ class CmPageBuilder
 			//Handle youtube link
 			$sVideoId = explode("v=", $sContent)[1];
 			//Return iFrame element
-			return $sPostHeader."<iframe width='560' height='315' src='https://www.youtube.com/embed/$sVideoId' frameborder='0' allowfullscreen></iframe>".$sPostFooter;
+			return $sPostHeader."<iframe width='560' height='315' src='https://www.youtube.com/embed/$sVideoId?rel=0' frameborder='0' allowfullscreen></iframe>".$sPostFooter;
 
 		} elseif ($sType == "question"){
 			if (!is_array($sContent)){
