@@ -170,7 +170,12 @@ class CmPageBuilder
 
 		} elseif ($sType == "video"){
 			//Handle youtube link
-			$sVideoId = explode("v=", $sContent)[1];
+
+			if(strpos($sContent, "v=") !== false){
+				$sVideoId = explode("v=", $sContent)[1];
+			}else{
+				$sVideoId = $sContent;
+			}
 			//Return iFrame element
 			return $sPostHeader."<iframe width='560' height='315' src='https://www.youtube.com/embed/$sVideoId?rel=0' frameborder='0' allowfullscreen></iframe>".$sPostFooter;
 
