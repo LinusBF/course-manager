@@ -94,6 +94,10 @@ get_header(); ?>
 							$aCourses = $oStore->getCoursesForStore();
 						}
 
+						if(count($aCourses) == 0){
+							echo "<div class='cm_center w3-text-italic'><p>".TXT_CM_STORE_NO_COURSES."</p></div>";
+						}
+
 						foreach ($aCourses as $iKey => $oCourse):
 							$aCourseOptions = $oStoreHandler->getStoreOptionsForCourse($oCourse->getCourseID());
 							if(!$blMyCourses) {
