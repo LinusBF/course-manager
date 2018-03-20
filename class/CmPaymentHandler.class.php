@@ -20,7 +20,7 @@ class CmPaymentHandler {
 		$oCM = new CourseManager();
 		$aKeys = $oCM->getOptions()['stripe'];
 
-		return (!$aKeys['secret_key'] === -1 && !$aKeys['publishable_key'] === -1);
+		return (!($aKeys['secret_key'] === -1) && !($aKeys['publishable_key'] === -1));
 	}
 
 	private static function _getApiKeys(){
@@ -36,6 +36,9 @@ class CmPaymentHandler {
 	}
 
 	public static function createCustomer($sToken, $sEmail){
+		if(!self::stripeActive()){
+			return false;
+		}
 		$oCM = new CourseManager();
 		//TODO - Add failure handling
 		\Stripe\Stripe::setApiKey(self::_getApiKeys()['secret_key']);
@@ -49,6 +52,10 @@ class CmPaymentHandler {
 	}
 
 	public static function chargeCustomer($iCustomerId, $iCourseId){
+		if(!self::stripeActive()){
+			return false;
+		}
+
 		$oCM = new CourseManager();
 		$oCourse = CmCourse::getCourseByID($iCourseId);
 		$aCourseOptions = CmCourseStoreHandler::getStoreOptionsForCourse($oCourse->getCourseID());
@@ -74,6 +81,12 @@ class CmPaymentHandler {
 			"status_message" => "POST variables not set!",
 			"status_code" => -1
 		);
+
+
+		if(!self::stripeActive()){
+			$aRequestResponse['status_message'] = "API KEY NOT SET!";
+			return $aRequestResponse;
+		}
 
 		if(isset($_POST['stripeToken']) && isset($_POST['stripeEmail']) && isset($_GET['my_courses'])){
 
@@ -110,6 +123,8 @@ class CmPaymentHandler {
 					$charge = CmPaymentHandler::chargeCustomer( $customer->id, $_POST['course_id'] );
 				} catch ( \Stripe\Error\Card $e ) {
 					wp_redirect( CmCourseStoreHandler::getLandingPageURL( $_POST['course_id'] ) . "?card_declined=true" );
+				} catch ( \Stripe\Error\Authentication $e){
+					wp_redirect( CmCourseStoreHandler::getLandingPageURL( $_POST['course_id'] ) . "?api_key_fail=true" );
 				}
 
 				if ( $charge->status === "succeeded" && CmUserManager::acquireCourse( $CmUserId, $_POST['course_id'] ) ) {
