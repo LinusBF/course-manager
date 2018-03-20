@@ -252,7 +252,7 @@ class CmCoursePart
      */
     public function setCoursePartName($sName)
     {
-    	$this->_sCoursePartName = htmlspecialchars($sName, ENT_QUOTES, 'UTF-8');
+    	$this->_sCoursePartName = $sName;
 
     }
 

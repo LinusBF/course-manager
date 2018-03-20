@@ -148,7 +148,7 @@ class CmCourse
 	 */
 	public function setCourseDescription($sDesc)
 	{
-		$this->_sCourseDescription = htmlspecialchars($sDesc, ENT_QUOTES, 'UTF-8');
+		$this->_sCourseDescription = $sDesc;
 	}
 
 
@@ -295,7 +295,7 @@ class CmCourse
     	}
 
     	if($this->checkCourseName($sName,$iID)){
-    		$this->_sCourseName = htmlspecialchars($sName, ENT_QUOTES, 'UTF-8');
+    		$this->_sCourseName = $sName;
     		return true;
     	} else{
     		return false;

@@ -95,7 +95,7 @@ class CmPart
      */
     public function getTitle()
     {
-    	return htmlspecialchars($this->_sPartTitle, ENT_QUOTES, 'UTF-8');
+    	return stripslashes($this->_sPartTitle);
     }
 
 
@@ -108,7 +108,7 @@ class CmPart
      */
     public function setTitle($sTitle)
     {
-    	$this->_sPartTitle = htmlspecialchars($sTitle, ENT_QUOTES, 'UTF-8');
+    	$this->_sPartTitle = $sTitle;
     }
 
 
@@ -119,7 +119,7 @@ class CmPart
      */
     public function getContent()
     {
-    	return $this->_sContent;
+    	return stripslashes($this->_sContent);
     }
 
 
@@ -184,7 +184,7 @@ class CmPart
      */
     public function setType($sType)
     {
-    	$this->_sType = htmlspecialchars($sType, ENT_QUOTES, 'UTF-8');
+    	$this->_sType = $sType;
     }
 
 

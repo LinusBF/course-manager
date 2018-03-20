@@ -574,8 +574,8 @@ class CmUserManager {
 			return false;
 		}
 
-		$aQs = CmPart::parse_quest($sQnA->questions);
-		$aAs = CmPart::parse_quest($sQnA->answers);
+		$aQs = CmPart::parse_quest(stripslashes($sQnA->questions));
+		$aAs = CmPart::parse_quest(stripslashes(htmlspecialchars($sQnA->answers)));
 
 		$aQnA = array(
 			"Q" => $aQs,
