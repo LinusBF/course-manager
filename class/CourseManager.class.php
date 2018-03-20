@@ -113,6 +113,7 @@ class CourseManager
 	                'list_id' => -1,
 	                'group_id' => -1,
 	                'template_id' => -1,
+	                'campaign_id' => -1
                 ),
             );
             

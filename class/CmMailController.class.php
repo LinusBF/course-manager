@@ -119,7 +119,7 @@ class CmMailController{
 				curl_setopt($oCurl, CURLOPT_CUSTOMREQUEST, 'PATCH');
 				curl_setopt($oCurl, CURLOPT_HTTPHEADER, $aHeaders);
 				if ($aData)
-					curl_setopt($oCurl, CURLOPT_POSTFIELDS, $aData);
+					curl_setopt($oCurl, CURLOPT_POSTFIELDS, json_encode($aData));
 				break;
 			default:
 				if ($aData)
@@ -145,20 +145,16 @@ class CmMailController{
 
 
 	/**
-	 * @param int $iListId
+	 * @param string $sCampaignId
 	 *
 	 * @return bool
 	 */
-	private static function _getCampaignByListID($iListId){
-		$aCampaigns = self::_makeApiCall("/campaigns", "GET", array("count" => 999))->campaigns;
-
-		foreach ($aCampaigns as $campaign){
-			if($campaign->recipients->list_id === $iListId){
-				return $campaign;
-			}
+	private static function _getCampaignByID($sCampaignId){
+		$mResult = json_decode(self::_makeApiCall( "/campaigns/" . $sCampaignId, "GET"));
+		if(!is_object($mResult)){
+			return false;
 		}
-
-		return false;
+		return $mResult;
 	}
 
 	/*
@@ -282,17 +278,18 @@ class CmMailController{
 	private static function _setListCall($iListID){
 		$oCM = new CourseManager();
 
-		$chimp_settings            = $oCM->getOptions()['mail_chimp'];
+		$chimp_settings = $oCM->getOptions()['mail_chimp'];
 		$iOldId = $chimp_settings['list_id'];
 		$chimp_settings['list_id'] = $iListID;
 		$chimp_settings['group_id'] = -1;
+		$iCampaignId = $chimp_settings['campaign_id'];
 
 		$oCM->setOption( 'mail_chimp', $chimp_settings, true );
 
 		// TODO - Create Campaign for token delivery with API Calls
-		if($iOldId !== -1){
+		if($iOldId !== -1 && $iCampaignId !== -1){
 			// Modify existing campaign
-			$oCampaign = self::_getCampaignByListID($iOldId);
+			$oCampaign = self::_getCampaignByID($iCampaignId);
 			$aCampaignData = array(
 				"recipients" => array(
 					"list_id" => $iListID
@@ -309,7 +306,7 @@ class CmMailController{
 				),
 				"settings" => array(
 					"subject_line" => "Your Course Token",
-					"title" => "Thank you for your purchase",
+					"title" => "Receipt (Course Manager)",
 					"reply_to" => "purchasetest@linusbf.com",
 					"from_name" => "Course Manager"
 				),
@@ -474,9 +471,22 @@ class CmMailController{
 
 		$oCM->setOption( 'mail_chimp', $chimp_settings, true );
 
-		// TODO - Create Campaign for offers with API Calls
+		$iCampaign_id = $chimp_settings['campaign_id'];
+		if($iCampaign_id !== -1){
+			$oCampaign = self::_getCampaignByID($iCampaign_id);
+			if($oCampaign === false){
+				return -1;
+			}
+			$aSettings = array("settings" => array(
+				"template_id" => $iTemplateID,
+			));
 
-		return null;
+			$mResult = self::_makeApiCall("/campaigns/".$oCampaign->id, "PATCH", $aSettings);
+
+			return json_decode($mResult);
+		}
+
+		return -1;
 	}
 
 	/**
@@ -490,6 +500,31 @@ class CmMailController{
 		} else{
 			return false;
 		}
+	}
+
+
+	public static function getTokenMailTemplate($iEventID, $sCourseToken){
+		$oCM = new CourseManager();
+
+		$chimp_settings = $oCM->getOptions()['mail_chimp'];
+		$iCampaignId = $chimp_settings['campaign_id'];
+		if($iCampaignId !== -1){
+			$oCampaign = self::_getCampaignByID($iCampaignId);
+			if(!is_object($oCampaign)){
+				return false;
+			}
+			$mResult = json_decode(self::_makeApiCall( "/campaigns/" . $iCampaignId . "/content", "GET"));
+			if(!is_object($mResult)){
+				return false;
+			}
+			$sHTML = $mResult->archive_html;
+			// Add token
+			$sHTML = str_replace("{course_token}", $sCourseToken, $sHTML);
+			$sHTML = str_replace("[UNIQID]", strval($iEventID), $sHTML);
+
+			return $sHTML;
+		}
+		return false;
 	}
 
 }
