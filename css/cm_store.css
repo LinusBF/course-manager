@@ -1,6 +1,7 @@
 #store_container{
 	margin: auto;
 	padding: 10px 50px;
+	min-height: 750px;
 }
 
 #auth_container{

@@ -6,6 +6,7 @@
 .landing_page_main{
 	padding-top: 15px;
 	padding-bottom: 15px;
+	min-height: 750px;
 }
 
 .buy_course_btn{
