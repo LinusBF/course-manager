@@ -38,3 +38,19 @@
 
 .cm_footer{
 }
+
+.cm_answer_button_container{
+	width: auto;
+	margin-left: 5px;
+	margin-top: -15px;
+}
+
+.cm_hidden{
+	display: none !important;
+}
+
+.cm_answer_loading{
+	width: 60px;
+	margin-bottom: 0;
+	margin-left: 25px;
+}
