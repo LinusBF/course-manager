@@ -61,20 +61,25 @@ class LandingPageTable extends WP_List_Table{
 
 		//$this->process_bulk_action();
 
-		$iPerPage = $this->get_items_per_page("courses_per_page", 10);
-		$iCurrPage = $this->get_pagenum();
-		$iTotalItems = $this->record_count();
+		$iPerPage = 999;
+
+		$this->items = $this->fetch_table_data(1, $iPerPage);
+
+		$iTotalItems = count($this->items);
 
 		$this->set_pagination_args([
 			'total_items' => $iTotalItems,
 			'per_page' => $iPerPage
 		]);
-
-		$this->items = $this->fetch_table_data($iCurrPage, $iPerPage);
 	}
 
-	private function fetch_table_data($page = 1, $per_page = 10) {
+	private function fetch_table_data($page = 1, $per_page = 999) {
 		global $wpdb;
+
+		$filter_query = "SELECT meta_value
+						FROM ".DB_CM_STORE_META."
+						WHERE meta_key = 'landing_page'";
+		$filter_values = $wpdb->get_col($filter_query);
 
 		$wpdb_table = $wpdb->prefix . 'posts';
 		$orderby = ( isset( $_GET['orderby'] ) ) ? esc_sql( $_GET['orderby'] ) : 'ID';
@@ -89,7 +94,16 @@ class LandingPageTable extends WP_List_Table{
 
 		$results = $wpdb->get_results($wpdb->prepare($query, $orderby, $order, $per_page, ($page - 1)*$per_page));
 
-		return $results;
+		$filtered_result = array();
+		$options = CmCourseStoreHandler::getStoreOptionsForCourse($_GET['course']);
+
+		foreach ($results as $result){
+			if (!in_array($result->ID, $filter_values) || $result->ID == $options['landing_page']){
+				array_push($filtered_result, $result);
+			}
+		}
+
+		return $filtered_result;
 	}
 
 	public function print_landing_page_table(){
