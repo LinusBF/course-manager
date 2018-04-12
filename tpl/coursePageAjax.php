@@ -14,11 +14,11 @@ function cm_answer_question(){
 		if($blResult){
 			echo wp_json_encode(array("status" => "Success", "data" => $blResult));
 		} else{
-			echo wp_json_encode(array("status" => "Failure", "data" => null));
+			echo wp_json_encode(array("status" => "Failure", "data" => null, 'msg' => $blResult));
 		}
 
 	} else{
-		echo wp_json_encode(array("status" => "Failure", "data" => null));
+		echo wp_json_encode(array("status" => "Failure", "data" => null, "msg" => "POST params not set or incorrect"));
 	}
 	wp_die();
 }
@@ -31,11 +31,11 @@ function cm_get_answers(){
 		if($aAnswers !== false) {
 			echo wp_json_encode( array( "status" => "Success", "data" => $aAnswers ) );
 		} else{
-			echo wp_json_encode(array("status" => "Failure", "data" => null));
+			echo wp_json_encode(array("status" => "Failure", "data" => null, "msg" => "The user hasn't answered"));
 		}
 
 	} else{
-		echo wp_json_encode(array("status" => "Failure", "data" => null));
+		echo wp_json_encode(array("status" => "Failure", "data" => null, "msg" => "POST params not set or incorrect"));
 	}
 	wp_die();
 }
@@ -51,7 +51,7 @@ function cm_get_part_id(){
 		echo wp_json_encode(array("status" => "Success", "data" => $oPart->getPartID()));
 
 	} else{
-		echo wp_json_encode(array("status" => "Failure", "data" => null));
+		echo wp_json_encode(array("status" => "Failure", "data" => null, "msg" => "POST params not set or incorrect"));
 	}
 	wp_die();
 }
