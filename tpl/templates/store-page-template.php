@@ -100,11 +100,10 @@ get_header(); ?>
 
 						foreach ($aCourses as $iKey => $oCourse):
 							$aCourseOptions = $oStoreHandler->getStoreOptionsForCourse($oCourse->getCourseID());
-							if(!$blMyCourses) {
-								$iPrice    = $oCourse->getCoursePrice() * ( 1 - ( $aCourseOptions['current_discount'] / 100 ) );
-								$iPrice    = floor( $iPrice );
-								$sCurrency = $oCourseManager->getOptions()['currency'];
-							}
+							$iPrice    = $oCourse->getCoursePrice() * ( 1 - ( $aCourseOptions['current_discount'] / 100 ) );
+							$iPrice    = floor( $iPrice );
+							$sCurrency = $oCourseManager->getOptions()['currency'];
+							//TODO - Handle expired courses. Maybe continue loop if user don't have access???
 					?>
 						<div id="<?php echo $oCourse->getCourseURLName();?>" class="course_container flip-container w3-card-2"<?php
 						if (($iKey + 1) % 4 == 0){
