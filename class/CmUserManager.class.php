@@ -81,7 +81,7 @@ class CmUserManager {
 			);
 		}
 
-		//Checking if cm_user_data table exists
+		//Checking if cm_user_meta table exists
 		$sCmUserMetaTable = $wpdb->prefix.'cm_user_meta';
 
 		$sNameInDb = $wpdb->get_var(
@@ -89,7 +89,7 @@ class CmUserManager {
 		);
 
 		if ($sNameInDb != $sCmUserMetaTable) {
-			//Creating cm_user_data table
+			//Creating cm_user_meta table
 			dbDelta(
 				"CREATE TABLE ".$sCmUserMetaTable." (
         			meta_id INT NOT NULL AUTO_INCREMENT,
@@ -118,7 +118,7 @@ class CmUserManager {
         			user_id INT NOT NULL,
         			questions LONGTEXT DEFAULT NULL,
 					answers LONGTEXT DEFAULT NULL,
-					answered_at DATETIME NOT NULL CURRENT_TIMESTAMP,
+					answered_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 					FOREIGN KEY (cm_part_id) REFERENCES ".$sCmPartTableName."(ID) ON DELETE SET NULL,
 					FOREIGN KEY (user_id) REFERENCES ".$sCmUserManagerTable."(ID) ON DELETE CASCADE,
 					PRIMARY KEY (ID)
