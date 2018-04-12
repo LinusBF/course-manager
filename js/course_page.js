@@ -40,28 +40,37 @@ jQuery(document).ready(function($) {
 			jQuery.post(course_qa.ajaxurl, data, function (response) {
 				response = JSON.parse(response);
 				if(response['status'] === "Success") {
-					let parent = null;
-
 					response['data']['A'].forEach(function (elem, index) {
 						let qName = "cm_CP_" + indexes['c_part'] + "_P_" + indexes['part'] + "_q_" + index;
 						let qObject = $('input[name=' + qName + ']');
-						if(parent == null){
-							parent = qObject.parents('.cm_part_divider');
-						}
 						qObject.val(elem);
 					});
 
-					let load_cont = parent.children(".cm_answer_button_container");
-					load_cont.children(".cm_answer_questions").removeClass("cm_hidden");
-					load_cont.children(".cm_answer_loading").addClass("cm_hidden");
-
-					jQuery(document.body).trigger('post-load');
 				} else{
 					console.log("Failed at getting answers");
+					//TODO - Give feedback to user
 				}
+
+				toggleLoad(indexes, false);
+
+				jQuery(document.body).trigger('post-load');
 			});
 		});
 
+	}
+
+	function toggleLoad(indexes, onOff) {
+		let part = $("#cm_CP_" + indexes['c_part'] + "_P_" + indexes['part']);
+		let parent = part.parents('.cm_part_divider');
+		let load_cont = parent.children(".cm_answer_button_container");
+
+		if(onOff){
+			load_cont.children(".cm_answer_questions").addClass("cm_hidden");
+			load_cont.children(".cm_answer_loading").removeClass("cm_hidden");
+		} else{
+			load_cont.children(".cm_answer_loading").addClass("cm_hidden");
+			load_cont.children(".cm_answer_questions").removeClass("cm_hidden");
+		}
 	}
 
 	$(".cm_answer_questions").on('click', function(e) {
@@ -100,8 +109,8 @@ jQuery(document).ready(function($) {
 				}
 			});
 		});
-		$(e.target).addClass('cm_hidden');
-		$(e.target).siblings('.cm_answer_loading').removeClass('cm_hidden');
+
+		toggleLoad(indexes, true);
 	});
 
 	$('.cm_page_quest').each(function (index) {
