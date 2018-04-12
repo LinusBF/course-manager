@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Course Manager\n"
 "POT-Creation-Date: 2018-04-12 15:22+0200\n"
-"PO-Revision-Date: 2018-04-12 16:16+0200\n"
+"PO-Revision-Date: 2018-04-12 18:07+0200\n"
 "Last-Translator: \n"
 "Language-Team: Linus Bein Fahlander\n"
 "Language: sv\n"
@@ -61,7 +61,7 @@ msgstr "Inget i papperskorgen"
 
 #: class/CourseManager.class.php:705
 msgid "courses"
-msgstr "kurser"
+msgstr "courses"
 
 #: includes/language.define.php:20
 msgid "Course Manager"
