@@ -87,6 +87,38 @@
 				</form>
 			</div><!-- .inside -->
 			<?php endif; ?>
+		</div>
+	</div>
+
+	<!-- MANDRILL -->
+	<div class="metabox-holder">
+		<div class="postbox">
+			<h2 class="cm_setting_title"><span><?php _e( 'Mandrill Settings' ); ?></span></h2>
+			<div class="inside">
+				<p><?php _e( 'Enter your API key to enable sending emails with Mandrill.' ); ?></p>
+				<form method="post">
+					<p><input type="hidden" name="cm_action" value="mandrill_settings" /></p>
+					<table class="form-table">
+						<tr>
+							<th scope="row"><label for="cm_mandrill_key"><?php _e('API key') ?></label></th>
+							<td>
+								<input name="cm_mandrill_key" type="text" id="mandrill_key"
+								       value="<?php echo ($aSettings['mandrill']['api_key'] !== -1 ? $aSettings['mandrill']['api_key'] : TXT_CM_ADMIN_SETTINGS_NOT_SET) ?>"
+								       class="regular-text" />
+							</td>
+						</tr>
+					</table>
+					<?php /*if($aSettings['mail_chimp']['api_key'] !== -1 && !CmMailController::checkApiKey()): */?><!--
+						<div class="notice inline notice-warning notice-alt">
+							<p><?php /*echo TXT_CM_CHIMP_INCORRECT_KEY; */?></p>
+						</div>
+					--><?php /*endif;*/?>
+					<p>
+						<?php wp_nonce_field( 'cm_mandrill_nonce', 'cm_mandrill_nonce' ); ?>
+						<?php submit_button( __( 'Update key' ), 'secondary', 'submit', false ); ?>
+					</p>
+				</form>
+			</div><!-- .inside -->
 			<?php if($aSettings['mail_chimp']['api_key'] !== -1 && $aSettings['mail_chimp']['list_id'] !== -1): ?>
 				<div id="cm_mc_templates" class="cm_mc_list inside">
 					<h3><span><?php _e('Email Template') ?></span></h3>
@@ -99,22 +131,6 @@
 						<p>
 							<?php wp_nonce_field( 'cm_mailchimp_template_nonce', 'cm_mailchimp_template_nonce' ); ?>
 							<?php submit_button( __( 'Select template' ), 'secondary', 'submit', false ); ?>
-						</p>
-					</form>
-				</div><!-- .inside -->
-			<?php endif; ?>
-			<?php if($aSettings['mail_chimp']['list_id'] !== -1): ?>
-				<div id="cm_mc_groups" class="cm_mc_list inside">
-					<h3><span><?php _e('Groups (Optional)') ?></span></h3>
-					<form method="post">
-						<p><input type="hidden" name="cm_action" value="mailchimp_group_settings" /></p>
-						<?php
-							$oListTable = new MailChimpTable("group");
-							$oListTable->print_table();
-						?>
-						<p>
-							<?php wp_nonce_field( 'cm_mailchimp_group_nonce', 'cm_mailchimp_group_nonce' ); ?>
-							<?php submit_button( __( 'Select group' ), 'secondary', 'submit', false ); ?>
 						</p>
 					</form>
 				</div><!-- .inside -->

@@ -219,6 +219,7 @@ if (isset($oCourseManager)) {
 	add_action('admin_init', array($oCourseManager, 'import_upload'));
 	add_action('admin_init', array($oCourseManager, 'update_stripe'));
 	add_action('admin_init', array($oCourseManager, 'update_mailchimp'));
+	add_action('admin_init', array($oCourseManager, 'update_mandrill'));
 
 	add_action( 'wp_enqueue_scripts', 'course_page_scripts', 85);
 

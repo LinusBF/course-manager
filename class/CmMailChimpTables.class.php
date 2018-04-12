@@ -42,7 +42,7 @@ class MailChimpTable extends WP_List_Table{
 	}
 
 	public function get_pagenum() {
-		$pagenum = isset( $_REQUEST[$this->sType.'_paged'] ) ? absint( $_REQUEST[$this->sType.'_paged'] ) : 0;
+		$pagenum = isset( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : 0;
 
 		if ( isset( $this->_pagination_args['total_pages'] ) && $pagenum > $this->_pagination_args['total_pages'] )
 			$pagenum = $this->_pagination_args['total_pages'];

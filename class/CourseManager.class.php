@@ -115,6 +115,10 @@ class CourseManager
 	                'template_id' => -1,
 	                'campaign_id' => -1
                 ),
+                'mandrill' => array(
+	                "api_key"      => -1,
+	                'template_id' => -1,
+                ),
             );
             
             $aCmOptions = $this->getWPOption($this->_sAdminOptionsName);
@@ -318,6 +322,22 @@ class CourseManager
 
 			CmMailController::setTemplate($_POST['cm_mc_template']);
 		}
+	}
+
+
+	public function update_mandrill(){
+		if( empty( $_POST['cm_action'] ) || 'mandrill_settings' != $_POST['cm_action'] )
+			return;
+		if( ! wp_verify_nonce( $_POST['cm_mandrill_nonce'], 'cm_mandrill_nonce' ) )
+			return;
+		if( ! current_user_can( 'manage_options' ) )
+			return;
+
+		$mandrill_settings = array(
+			"api_key"      => $_POST['cm_mandrill_key'],
+		);
+
+		$this->setOption('mandrill', $mandrill_settings, true);
 	}
 
 

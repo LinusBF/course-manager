@@ -87,6 +87,18 @@ function genStoreSettingsForm($iCourseId){
 			$oLandingPageTable->print_landing_page_table();
 		?>
 
+		<?php
+		$oCM = new CourseManager();
+
+		$aSettings = $oCM->getOptions();
+
+		if($aSettings['mail_chimp']['list_id'] !== -1){
+			$oListTable = new MailChimpTable("group");
+			$oListTable->print_table();
+		}
+
+		?>
+
 		<div class='submit'>
 			<input type='submit' name='submit' id='cm_submit' class='button button-primary' value='<?php echo TXT_CM_EDIT_SAVE?>'>
 		</div>
