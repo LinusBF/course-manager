@@ -104,7 +104,7 @@ class CmStore {
 	public function activateStore($blForce = false){
 		if ($blForce){
 			if($this->storeActivationCheck()) {
-				$this->_oCourseManager->setOption( 'store_active', 1 );
+				$this->_oCourseManager->setOption( 'store_active', true );
 
 				$aPostData = $this->_getStorePageArray( true, $this->_getStorePageId(), $this->_getStorePageData() );
 
@@ -119,7 +119,7 @@ class CmStore {
 		else{
 			if(!$this->isStoreActive() && $this->storeActivationCheck()){
 
-				$this->_oCourseManager->setOption('store_active', 1);
+				$this->_oCourseManager->setOption('store_active', true);
 
 				$aPostData = $this->_getStorePageArray(true, $this->_getStorePageId(), $this->_getStorePageData());
 
@@ -143,12 +143,12 @@ class CmStore {
 		if ($iPageId > 0){
 			wp_delete_post($iPageId, true);
 
-			$this->_oCourseManager->setOption('store_active', 0);
+			$this->_oCourseManager->setOption('store_active', false);
 
 			return true;
 
 		} else{
-			$this->_oCourseManager->setOption('store_active', 0);
+			$this->_oCourseManager->setOption('store_active', false);
 			return false;
 		}
 	}
