@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Course Manager\n"
-"POT-Creation-Date: 2017-01-14 16:07+0100\n"
-"PO-Revision-Date: 2017-01-14 16:12+0100\n"
+"POT-Creation-Date: 2018-04-12 15:22+0200\n"
+"PO-Revision-Date: 2018-04-12 15:57+0200\n"
 "Last-Translator: \n"
 "Language-Team: Linus Bein Fahlander\n"
 "Language: sv\n"
@@ -15,66 +15,126 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: includes/language.define.php:19
+#: class/CourseManager.class.php:665
+msgid "Please upload a valid .json file"
+msgstr "Var vänlig och ladda upp en giltig JSON fil"
+
+#: class/CourseManager.class.php:669
+msgid "Please upload a file to import"
+msgstr "Vänligen ladda upp en fil som ska importeras"
+
+#: class/CourseManager.class.php:685
+msgid "Course Pages"
+msgstr "Kurssidor"
+
+#: class/CourseManager.class.php:686
+msgid "Course Page"
+msgstr "Kurssida"
+
+#: class/CourseManager.class.php:687 class/CourseManager.class.php:688
+msgid "Add New Course page"
+msgstr "Lägg till en ny kurssida"
+
+#: class/CourseManager.class.php:689
+msgid "Edit Course page"
+msgstr "Redigera kurssida"
+
+#: class/CourseManager.class.php:690
+msgid "New Course page"
+msgstr "Ny kurssida"
+
+#: class/CourseManager.class.php:691
+msgid "View Course page"
+msgstr "Visa kurssida"
+
+#: class/CourseManager.class.php:692
+msgid "Search Course page"
+msgstr "Sök kurssida"
+
+#: class/CourseManager.class.php:693
+msgid "No course pages have been added yet"
+msgstr "Inga kurssidor har lagts till ännu"
+
+#: class/CourseManager.class.php:694
+msgid "Nothing found in Trash"
+msgstr "Inget i papperskorgen"
+
+#: class/CourseManager.class.php:705
+msgid "courses"
+msgstr "kurser"
+
+#: includes/language.define.php:20
 msgid "Course Manager"
 msgstr "Kurshanterare"
 
-#: includes/language.define.php:20
+#: includes/language.define.php:21
 msgid "Yes"
 msgstr "Ja"
 
-#: includes/language.define.php:21
+#: includes/language.define.php:22
 msgid "No"
 msgstr "Nej"
 
-#: includes/language.define.php:22
+#: includes/language.define.php:23
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: includes/language.define.php:23
+#: includes/language.define.php:24
 msgid "Save"
 msgstr "Spara"
 
-#: includes/language.define.php:24
+#: includes/language.define.php:25
 msgid "Settings"
 msgstr "Inställningar"
 
-#: includes/language.define.php:25
+#: includes/language.define.php:26
 msgid "Add New"
 msgstr "Skapa ny"
 
-#: includes/language.define.php:26
+#: includes/language.define.php:27
 msgid "Delete"
 msgstr "Radera"
 
-#: includes/language.define.php:27
+#: includes/language.define.php:28
 msgid "Generate pages"
 msgstr "Generera Sidor"
 
-#: includes/language.define.php:28
+#: includes/language.define.php:29
+msgid "Store settings"
+msgstr "Butik inställningar"
+
+#: includes/language.define.php:30
 msgid "Active"
 msgstr "Aktiv"
 
-#: includes/language.define.php:29
+#: includes/language.define.php:31
 msgid "Not active"
 msgstr "Inaktiv"
 
-#: includes/language.define.php:30
+#: includes/language.define.php:32
 msgid "Activate"
 msgstr "Aktivera"
 
-#: includes/language.define.php:31
+#: includes/language.define.php:33
 msgid "Deactivate"
 msgstr "Avaktivera"
 
 #: includes/language.define.php:34
+msgid "Choose"
+msgstr "Välj"
+
+#: includes/language.define.php:35
+msgid "ID"
+msgstr "ID"
+
+#: includes/language.define.php:39
 msgid ""
 "Your PHP version is too low, please update it before using Course Manager"
 msgstr ""
 "Din PHP version är för gammal, var snäll och uppdatera den innan du använder "
 "Kurshanteraren"
 
-#: includes/language.define.php:35
+#: includes/language.define.php:40
 msgid ""
 "Your Wordpress version is too low, please it update before using Course "
 "Manager"
@@ -82,12 +142,12 @@ msgstr ""
 "Din Wordpress version är för gammal, var snäll och uppdatera den innan du "
 "använder Kurshanteraren"
 
-#: includes/language.define.php:36
+#: includes/language.define.php:41
 msgid ""
 "The name for the course is already in use, please edit that one instead."
 msgstr "Namnet för kursen används redan, vänligen redigera den istället."
 
-#: includes/language.define.php:37
+#: includes/language.define.php:42
 msgid ""
 "The database query failed, please try again. If the problem persists please "
 "contact the site administrator."
@@ -95,157 +155,480 @@ msgstr ""
 "Databasfrågan misslyckades, vänligen försök igen. Kontakta administratören "
 "om problemet kvarstår."
 
-#: includes/language.define.php:40 includes/language.define.php:46
+#: includes/language.define.php:46 includes/language.define.php:54
 msgid "Courses"
 msgstr "Kurser"
 
-#: includes/language.define.php:41 includes/language.define.php:53
+#: includes/language.define.php:47 includes/language.define.php:61
 msgid "Tags"
 msgstr "Taggar"
 
-#: includes/language.define.php:42
+#: includes/language.define.php:48
 msgid "About"
 msgstr "Om"
 
-#: includes/language.define.php:45
+#: includes/language.define.php:49 includes/language.define.php:121
+msgid "Store"
+msgstr "Butik"
+
+#: includes/language.define.php:53
 msgid "Course"
 msgstr "Kurs"
 
-#: includes/language.define.php:47
+#: includes/language.define.php:55
 msgid "You have no courses yet"
 msgstr "Du har inga kurser ännu"
 
-#: includes/language.define.php:48
+#: includes/language.define.php:56
 msgid "days"
 msgstr "dagar"
 
-#: includes/language.define.php:49
+#: includes/language.define.php:57
 msgid "Course Name"
 msgstr "Kursnamn"
 
-#: includes/language.define.php:50
+#: includes/language.define.php:58
 msgid "Span"
 msgstr "Tid"
 
-#: includes/language.define.php:51 includes/language.define.php:69
+#: includes/language.define.php:59 includes/language.define.php:91
 msgid "Parts"
 msgstr "Del"
 
-#: includes/language.define.php:52
+#: includes/language.define.php:60
 msgid "Status"
 msgstr "Status"
 
-#: includes/language.define.php:59
-msgid "You're editing "
-msgstr "Du redigerar "
-
-#: includes/language.define.php:60
-msgid "You're creating a new course"
-msgstr "Du skapar en ny kurs"
-
-#: includes/language.define.php:61
-msgid "Course name"
-msgstr "Kursnamn"
-
 #: includes/language.define.php:62
-msgid "Course span (days)"
-msgstr "Kurstid (dagar)"
+msgid "Are you sure you want to delete this course and all its content?"
+msgstr "Är du säker på att du vill radera kursen och allt den innehåller?"
 
 #: includes/language.define.php:63
-msgid "Save Course"
-msgstr "Spara Kurs"
+msgid ""
+"Course could not be activated. Have you generated pages for it and set the "
+"store settings for it?"
+msgstr ""
+"Kursen kunde inte aktiveras. Har du genererat sidor och satt butiks "
+"inställningar för den?"
 
-#: includes/language.define.php:64
-msgid "Course parts"
-msgstr "Kursdelar"
+#: includes/language.define.php:67
+msgid "Not Set"
+msgstr "Inte inställd"
 
-#: includes/language.define.php:65
-msgid "Type"
-msgstr "Typ"
-
-#: includes/language.define.php:66
+#: includes/language.define.php:68 includes/language.define.php:88
 msgid "Name"
 msgstr "Namn"
 
-#: includes/language.define.php:67
+#: includes/language.define.php:69
+msgid "Select a list to connect your costumers to"
+msgstr "Välj en lista för att ansluta dina kunder till"
+
+#: includes/language.define.php:70
+msgid "Select a group that the customers that want offers are put in"
+msgstr "Välj en grupp som de kunder som vill ha erbjudanden läggs in i"
+
+#: includes/language.define.php:71
+msgid "Select a template that the purchase email will use"
+msgstr "Välj en mall som kvittot ska använda"
+
+#: includes/language.define.php:72
+msgid "The current API key does not work"
+msgstr "Den nuvarande API-nyckeln fungerar inte"
+
+#: includes/language.define.php:79
+msgid "You're editing "
+msgstr "Du redigerar "
+
+#: includes/language.define.php:80
+msgid "You're creating a new course"
+msgstr "Du skapar en ny kurs"
+
+#: includes/language.define.php:81
+msgid "Course name"
+msgstr "Kursnamn"
+
+#: includes/language.define.php:82
+msgid "Course description"
+msgstr "Kursbeskrivning"
+
+#: includes/language.define.php:83
+msgid "Course price (kr)"
+msgstr "Kurspris (kr)"
+
+#: includes/language.define.php:84
+msgid "Course span (days)"
+msgstr "Kurstid (dagar)"
+
+#: includes/language.define.php:85
+msgid "Save Course"
+msgstr "Spara Kurs"
+
+#: includes/language.define.php:86
+msgid "Course parts"
+msgstr "Kursdelar"
+
+#: includes/language.define.php:87
+msgid "Type"
+msgstr "Typ"
+
+#: includes/language.define.php:89
 msgid "Index"
 msgstr "Index"
 
-#: includes/language.define.php:68
+#: includes/language.define.php:90
 msgid "Add New Part"
 msgstr "Lägg till ny del"
 
-#: includes/language.define.php:70
+#: includes/language.define.php:92
 msgid "Title"
 msgstr "Titel"
 
-#: includes/language.define.php:71
+#: includes/language.define.php:93
 msgid "Video Link"
 msgstr "Video-länk"
 
-#: includes/language.define.php:72
-msgid "Image Link"
-msgstr "Bildlänk"
+#: includes/language.define.php:94
+msgid "Image"
+msgstr "Bild"
 
-#: includes/language.define.php:73
+#: includes/language.define.php:95
 msgid "Download Link"
 msgstr "Nedladdningslänk"
 
-#: includes/language.define.php:74
+#: includes/language.define.php:96
 msgid "Questions"
 msgstr "Frågor"
 
-#: includes/language.define.php:75
+#: includes/language.define.php:97
 msgid "Question"
 msgstr "Fråga"
 
-#: includes/language.define.php:76
+#: includes/language.define.php:98
 msgid "The Course have successfully been saved"
 msgstr "Din kurs har sparats"
 
-#: includes/language.define.php:77
+#: includes/language.define.php:99
 msgid "Something went wrong. Your Course updates/creation have not been saved"
 msgstr "Någonting gick fel. Dina kursuppdateringar/skapande har inte sparats"
 
-#: includes/language.define.php:78
+#: includes/language.define.php:100
 msgid "The course pages have successfully been generated"
 msgstr "Kurssidorna har genererats!"
 
-#: includes/language.define.php:79
-msgid "ERROR: Some course pages were not generated correctly!"
-msgstr "FEL: Några kurssidor kunde inte genereras!"
+#: includes/language.define.php:101
+msgid "ERROR: The course page could not be generated. Is the course active?"
+msgstr "FEL: Kurssidorna kunde inte genereras. Är kursen aktiv?"
 
-#: includes/language.define.php:80
+#: includes/language.define.php:102
 msgid "New course part"
 msgstr "Ny kursdel"
 
-#: includes/language.define.php:81
+#: includes/language.define.php:103
 msgid "New part"
 msgstr "Ny del"
 
-#: includes/language.define.php:82
+#: includes/language.define.php:104
 msgid "New part content"
 msgstr "Ny del innehåll"
 
-#: includes/language.define.php:83
+#: includes/language.define.php:105
 msgid "link_to_item"
 msgstr "link_to_item"
 
-#: includes/language.define.php:84
+#: includes/language.define.php:106
 msgid "{Question 1 text},"
 msgstr "{Fråga 1 text}"
 
-#: includes/language.define.php:85
+#: includes/language.define.php:107
 msgid "Add New Question"
 msgstr "Lägg till ny fråga"
 
-#: includes/language.define.php:86
+#: includes/language.define.php:108
 msgid "You need to save the course first to add new course parts"
 msgstr "Du måste först spara kursen för att kunna lägga till kursdelar"
 
-#: includes/language.define.php:90
+#: includes/language.define.php:112
 msgid "Content type not supported yet"
 msgstr "Innehållstyp stöds inte ännu"
+
+#: includes/language.define.php:113
+msgid "Save answers"
+msgstr "Spara svar"
+
+#: includes/language.define.php:117
+msgid "Set what courses should appear in the store"
+msgstr "Ange vilka kurser som ska visas i butiken"
+
+#: includes/language.define.php:118
+msgid "You have no active courses, activate them in the Courses menu."
+msgstr "Du har inga aktiva kurser, aktivera dem under \"Kurser\"."
+
+#: includes/language.define.php:119
+msgid "Activate the store"
+msgstr "Aktivera kursen"
+
+#: includes/language.define.php:120
+msgid "Deactivate the store"
+msgstr "Avaktivera kursen"
+
+#: includes/language.define.php:122
+msgid "course-store"
+msgstr "course-store"
+
+#: includes/language.define.php:123
+msgid ""
+"You have activated the store, check your menus to make sure that it has been "
+"added where you like."
+msgstr ""
+"Du har aktiverat butiken, kontrollera dina menyer för att se till att den "
+"har lagts till där du vill."
+
+#: includes/language.define.php:124
+msgid "You have deactivated the store."
+msgstr "Du har avaktiverat butiken"
+
+#: includes/language.define.php:125
+msgid "Save Changes"
+msgstr "Spara ändringar"
+
+#: includes/language.define.php:126
+msgid "The store options for the course have successfully been saved"
+msgstr "Butiksalternativen för kursen har sparats"
+
+#: includes/language.define.php:127
+msgid "Something went wrong. Your updates/creation have not been saved"
+msgstr "Något gick fel. Dina ändringar har inte sparats!"
+
+#: includes/language.define.php:128
+msgid "Choose Image"
+msgstr "Välj bild"
+
+#: includes/language.define.php:129
+msgid "Select an image to use"
+msgstr "Välj en bild att använda"
+
+#: includes/language.define.php:130
+msgid "Course store image"
+msgstr "Bild i butiken"
+
+#: includes/language.define.php:131
+msgid "Course discount"
+msgstr "Kursrabbat"
+
+#: includes/language.define.php:132
+msgid "Buy for"
+msgstr "Köp för"
+
+#: includes/language.define.php:133
+msgid "Learn more and <br> Buy the course"
+msgstr "Ta reda på mer och <br> Köp kursen"
+
+#: includes/language.define.php:134
+msgid "Learn more and <br> start the course for free!"
+msgstr "Ta reda på mer och <br> börja kursen gratis!"
+
+#: includes/language.define.php:135
+msgid "Free!"
+msgstr "Gratis!"
+
+#: includes/language.define.php:136
+msgid "Free <br> Enter your email to start!"
+msgstr "Gratis <br> Ange din email för att börja!"
+
+#: includes/language.define.php:137
+msgid "Click to see more info"
+msgstr "Klicka för mer information"
+
+#: includes/language.define.php:138
+msgid "Choose a landing page"
+msgstr "Välj en landingsida"
+
+#: includes/language.define.php:139
+msgid "Page Title"
+msgstr "Sidotitel"
+
+#: includes/language.define.php:140
+msgid "Choice"
+msgstr "Val"
+
+#: includes/language.define.php:141
+msgid "Use token"
+msgstr "Använd personlig kod"
+
+#: includes/language.define.php:142
+msgid "Go to your courses"
+msgstr "Gå till dina kurser"
+
+#: includes/language.define.php:143
+msgid "Go to the store"
+msgstr "Gå till butiken"
+
+#: includes/language.define.php:144
+msgid "Your answers"
+msgstr "Dina kurssvar"
+
+#: includes/language.define.php:145
+msgid "Go to course"
+msgstr "Gå till kursen"
+
+#: includes/language.define.php:146
+msgid "Use another token?"
+msgstr "Använd en annan personlig kod?"
+
+#: includes/language.define.php:147
+msgid "Buy course"
+msgstr "Köp kurs"
+
+#: includes/language.define.php:148
+msgid "Pay with card"
+msgstr "Betala med kort"
+
+#: includes/language.define.php:149
+msgid "Thank you for your purchase, click on the course to start it!"
+msgstr "Tack för ditt köp, klicka på kursen för att starta den!"
+
+#: includes/language.define.php:150
+msgid "Your card was declined, please try with another one or contact support."
+msgstr ""
+"Ditt kort blev nekat, var vänlig pröva med ett annat kort eller kontakta "
+"kundtjänst"
+
+#: includes/language.define.php:151
+msgid "There are currently no courses available :("
+msgstr "Det finns just nu inga kurser tillgängliga"
+
+#: includes/language.define.php:155
+msgid "Get Course"
+msgstr "Få kursen"
+
+#: includes/language.define.php:156
+msgid "Enter email"
+msgstr "Skriv in email"
+
+#: includes/language.define.php:157
+msgid "Send me offers for other courses"
+msgstr "Skicka mig erbjudanden för andra kurser"
+
+#: includes/language.define.php:161
+msgid "course-account"
+msgstr "course-account"
+
+#: includes/language.define.php:162
+msgid "Account"
+msgstr "Konto"
+
+#: includes/language.define.php:163
+msgid "To question"
+msgstr "Till frågan"
+
+#: tpl/adminSettings.php:13
+msgid "Stripe Settings"
+msgstr "Stripe Inställningar"
+
+#: tpl/adminSettings.php:15
+msgid "Enter your public and secret stripe keys to enable payment."
+msgstr ""
+"Ange din offentliga och hemliga Stripe nyckel för att möjliggöra betalning."
+
+#: tpl/adminSettings.php:20
+msgid "Public key"
+msgstr "Offentlig nyckel"
+
+#: tpl/adminSettings.php:28
+msgid "Secret key"
+msgstr "Hemlig nyckel"
+
+#: tpl/adminSettings.php:38
+msgid "Update keys"
+msgstr "Uppdatera nycklar"
+
+#: tpl/adminSettings.php:48
+msgid "MailChimp Settings"
+msgstr "MailChimp Inställningar"
+
+#: tpl/adminSettings.php:50
+msgid "Enter your API key to enable email lists with MailChimp."
+msgstr "Ange din API-nyckel för att aktivera email-listor med MailChimp."
+
+#: tpl/adminSettings.php:55 tpl/adminSettings.php:103
+msgid "API key"
+msgstr "API nyckel"
+
+#: tpl/adminSettings.php:70 tpl/adminSettings.php:118
+msgid "Update key"
+msgstr "Uppdatera nyckel"
+
+#: tpl/adminSettings.php:76
+msgid "Lists"
+msgstr "Listor"
+
+#: tpl/adminSettings.php:85
+msgid "Select list"
+msgstr "Välj lista"
+
+#: tpl/adminSettings.php:96
+msgid "Mandrill Settings"
+msgstr "Mandrill inställningar"
+
+#: tpl/adminSettings.php:98
+msgid "Enter your API key to enable sending emails with Mandrill."
+msgstr "Ange din API-nyckel för att kunna skicka email med Mandrill."
+
+#: tpl/adminSettings.php:124
+msgid "Email Template"
+msgstr "Email Mall"
+
+#: tpl/adminSettings.php:133
+msgid "Select template"
+msgstr "Välj mall"
+
+#: tpl/adminSettings.php:144
+msgid "Export Settings"
+msgstr "Exportera Inställningar"
+
+#: tpl/adminSettings.php:146
+msgid ""
+"Export the plugin settings for this site as a .json file. This allows you to "
+"easily import the configuration into another site."
+msgstr ""
+"Exportera plugin-inställningarna för den här webbplatsen som en .json-fil. "
+"Detta gör att du enkelt kan importera konfigurationen till en annan "
+"webbplats."
+
+#: tpl/adminSettings.php:151
+msgid "Export"
+msgstr "Exportera"
+
+#: tpl/adminSettings.php:158
+msgid "Import Settings"
+msgstr "Importera Inställningar"
+
+#: tpl/adminSettings.php:160
+msgid ""
+"Import the plugin settings from a .json file. This file can be obtained by "
+"exporting the settings on another site using the form above."
+msgstr ""
+"Importera plugin-inställningarna från en .json-fil. Den här filen kan "
+"erhållas genom att exportera inställningarna på en annan sida med formuläret "
+"ovan."
+
+#: tpl/adminSettings.php:168
+msgid "Import"
+msgstr "Importera"
+
+#: tpl/templates/store-page-template.php:51
+msgid "Thank you for your purchase"
+msgstr "Tack för ditt köp!"
+
+#: tpl/templates/store-page-template.php:51
+msgid "Purchase failed"
+msgstr "Köpet misslyckades"
+
+#~ msgid "Image Link"
+#~ msgstr "Bildlänk"
+
+#~ msgid "ERROR: Some course pages were not generated correctly!"
+#~ msgstr "FEL: Några kurssidor kunde inte genereras!"
 
 #~ msgid "Type: "
 #~ msgstr "Typ: "
