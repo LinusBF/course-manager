@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Course Manager\n"
 "POT-Creation-Date: 2018-04-12 15:22+0200\n"
-"PO-Revision-Date: 2018-04-12 15:57+0200\n"
+"PO-Revision-Date: 2018-04-12 16:16+0200\n"
 "Last-Translator: \n"
 "Language-Team: Linus Bein Fahlander\n"
 "Language: sv\n"
@@ -365,11 +365,11 @@ msgstr "Du har inga aktiva kurser, aktivera dem under \"Kurser\"."
 
 #: includes/language.define.php:119
 msgid "Activate the store"
-msgstr "Aktivera kursen"
+msgstr "Aktivera butiken"
 
 #: includes/language.define.php:120
 msgid "Deactivate the store"
-msgstr "Avaktivera kursen"
+msgstr "Avaktivera butiken"
 
 #: includes/language.define.php:122
 msgid "course-store"
