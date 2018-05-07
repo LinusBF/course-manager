@@ -16,12 +16,12 @@ class MailChimpTable extends WP_List_Table{
 	private $sType = null;
 	private $iCurrentId = null;
 
-	public function __construct($sItemType = "list", $args = array() ) {
+	public function __construct($sItemType = "list", $iCourseId = -1, $args = array() ) {
 		parent::__construct($args);
 		$this->sType = $sItemType;
 		switch ($this->sType){
 			case "group":
-				$this->iCurrentId = CmMailController::getGroupId();
+				$this->iCurrentId = CmMailController::getGroupId($iCourseId);
 				break;
 			case "template":
 				$this->iCurrentId = CmMailController::getTemplateId();
@@ -119,7 +119,7 @@ class MailChimpTable extends WP_List_Table{
 	public function print_table(){
 		?>
 		<div class="wrap">
-			<h4>
+			<h3>
 			<?php
 				switch ($this->sType){
 					case "group":
@@ -132,7 +132,7 @@ class MailChimpTable extends WP_List_Table{
 						echo TXT_CM_CHIMP_TABLE_LISTS_DESC;
 				}
 			?>
-			</h4>
+			</h3>
 			<div id="poststuff">
 				<div id="post-body" class="metabox-holder columns-2">
 					<div id="post-body-content">

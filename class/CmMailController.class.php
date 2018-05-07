@@ -43,9 +43,8 @@ class CmMailController{
 	 *
 	 * @return bool
 	 */
-	private static function _isGroupSet(){
-		$oCM = new CourseManager();
-		$iGroupId = $oCM->getOptions()['mail_chimp']['group_id'];
+	private static function _isGroupSet($iCourseId){
+		$iGroupId = CmCourseStoreHandler::getStoreOptionsForCourse($iCourseId)['cm_mc_group'];
 
 		return ($iGroupId !== -1);
 	}
@@ -205,7 +204,7 @@ class CmMailController{
 		$chimp_settings            = $oCM->getOptions()['mail_chimp'];
 		$chimp_settings['api_key'] = $sApiKey;
 		$chimp_settings['list_id'] = -1;
-		$chimp_settings['group_id'] = -1;
+		CmCourseStoreHandler::resetCourseMailGroups();
 
 		$oCM->setOption( 'mail_chimp', $chimp_settings, true );
 
@@ -281,8 +280,9 @@ class CmMailController{
 		$chimp_settings = $oCM->getOptions()['mail_chimp'];
 		$iOldId = $chimp_settings['list_id'];
 		$chimp_settings['list_id'] = $iListID;
-		$chimp_settings['group_id'] = -1;
 		$iCampaignId = $chimp_settings['campaign_id'];
+
+		CmCourseStoreHandler::resetCourseMailGroups();
 
 		$oCM->setOption( 'mail_chimp', $chimp_settings, true );
 
@@ -373,39 +373,26 @@ class CmMailController{
 
 
 	/**
+	 * @param int $iCourseId
+	 *
 	 * @return int
 	 */
-	public static function getGroupId() {
-		return self::_getApiParams()['group_id'];
+	public static function getGroupId($iCourseId) {
+		return CmCourseStoreHandler::getStoreOptionsForCourse($iCourseId)['cm_mc_group'];
 	}
-
 
 	/**
 	 * @param int $iGroupID
 	 *
-	 * @return null
-	 */
-	private static function _setGroupCall($iGroupID){
-		$oCM = new CourseManager();
-
-		$chimp_settings            = $oCM->getOptions()['mail_chimp'];
-		$chimp_settings['group_id'] = $iGroupID;
-
-		$oCM->setOption( 'mail_chimp', $chimp_settings, true );
-
-		// TODO - Create Campaign for offers with API Calls
-
-		return null;
-	}
-
-	/**
-	 * @param int $iGroupID
+	 * @param int $iCourseId
 	 *
 	 * @return bool|null
 	 */
-	public static function setGroup($iGroupID){
+	public static function setGroup($iGroupID, $iCourseId){
 		if(self::_isApiKeySet() && self::_isListSet()){
-			return self::_setGroupCall($iGroupID);
+			$oStoreHandler = new CmCourseStoreHandler();
+			$oStoreHandler->setStoreOptions($iCourseId, array("cm_mc_group" => $iGroupID));
+			return true;
 		} else{
 			return false;
 		}

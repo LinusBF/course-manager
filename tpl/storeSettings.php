@@ -93,7 +93,7 @@ function genStoreSettingsForm($iCourseId){
 		$aSettings = $oCM->getOptions();
 
 		if($aSettings['mail_chimp']['list_id'] !== -1){
-			$oListTable = new MailChimpTable("group");
+			$oListTable = new MailChimpTable("group", $iCourseId);
 			$oListTable->print_table();
 		}
 

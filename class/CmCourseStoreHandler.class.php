@@ -32,6 +32,13 @@ class CmCourseStoreHandler {
 			$aStoreOptions[$oOption->meta_key] = $oOption->meta_value;
 		}
 
+		$aDefaultOptions = self::getDefaultOptions();
+		foreach ($aDefaultOptions as $sKey => $aDefaultOption){
+			if(!key_exists($sKey, $aStoreOptions)){
+				$aStoreOptions[$sKey] = $aDefaultOption;
+			}
+		}
+
 		return $aStoreOptions;
 	}
 
@@ -131,7 +138,8 @@ class CmCourseStoreHandler {
 			'store_description' => (isset($iCourseId) ? CmCourse::getCourseByID($iCourseId)->getCourseDescription() : ''),
 			'current_discount' => '0',
 			'settings_modified' => '0',
-			'landing_page' => '0'
+			'landing_page' => '0',
+			'cm_mc_group' => '-1'
 		);
 	}
 
@@ -169,6 +177,10 @@ class CmCourseStoreHandler {
 		\Stripe\Stripe::setApiKey($aOptions['stripe']['secret_key']);
 
 		return true;
+	}
+
+	public static function resetCourseMailGroups(){
+		//TODO - Remove all connections to mail groups from all courses
 	}
 
 }

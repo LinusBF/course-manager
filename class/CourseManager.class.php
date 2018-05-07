@@ -111,7 +111,6 @@ class CourseManager
                 'mail_chimp' => array(
 	                "api_key"      => -1,
 	                'list_id' => -1,
-	                'group_id' => -1,
 	                'template_id' => -1,
 	                'campaign_id' => -1
                 ),
