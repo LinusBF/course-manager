@@ -41,10 +41,12 @@ class CmMailController{
 	/**
 	 * Checks if a Group ID has been set to store customer emails in (OPTIONAL for MailChimp integration with Course Manager)
 	 *
+	 * @param $iCourseId
+	 *
 	 * @return bool
 	 */
-	private static function _isGroupSet($iCourseId){
-		$iGroupId = CmCourseStoreHandler::getStoreOptionsForCourse($iCourseId)['cm_mc_group'];
+	private static function _isGroupCategorySet($iCourseId){
+		$iGroupId = CmCourseStoreHandler::getStoreOptionsForCourse($iCourseId)['mc_group_category']['category_id'];
 
 		return ($iGroupId !== -1);
 	}
@@ -112,7 +114,11 @@ class CmMailController{
 					curl_setopt($oCurl, CURLOPT_POSTFIELDS, json_encode($aData));
 				break;
 			case "PUT":
-				curl_setopt($oCurl, CURLOPT_PUT, 1);
+				curl_setopt($oCurl, CURLOPT_CUSTOMREQUEST, "PUT");
+				if ($aData)
+					array_push($aHeaders,"Content-Length: ".strlen(json_encode($aData)));
+					curl_setopt($oCurl, CURLOPT_HTTPHEADER, $aHeaders);
+					curl_setopt($oCurl, CURLOPT_POSTFIELDS, json_encode($aData));
 				break;
 			case "PATCH":
 				curl_setopt($oCurl, CURLOPT_CUSTOMREQUEST, 'PATCH');
@@ -270,6 +276,44 @@ class CmMailController{
 
 
 	/**
+	 * @return mixed
+	 */
+	public static function getListMembers(){
+		$sURL = "/lists/".self::getListId()."/members";
+		$mResult = json_decode(self::_makeApiCall($sURL, "GET"));
+		if (isset($mResult->total_items) && $mResult->total_items > 10){
+			$mResult = json_decode(self::_makeApiCall($sURL."?count=".$mResult->total_items, "GET"));
+		}
+		if (!isset($mResult->members)){
+			return false;
+		}
+
+		return $mResult->members;
+	}
+
+
+	/**
+	 * @param $sEmail
+	 *
+	 * @return bool|object
+	 */
+	public static function getMemberByEmail($sEmail){
+		$aMembers = self::getListMembers();
+		if (!is_array($aMembers)){
+			return false;
+		}
+
+		foreach ($aMembers as $member){
+			if ($member->email_address == $sEmail){
+				return $member;
+			}
+		}
+
+		return false;
+	}
+
+
+	/**
 	 * @param int $iListID
 	 *
 	 * @return null
@@ -285,6 +329,7 @@ class CmMailController{
 		CmCourseStoreHandler::resetCourseMailGroups();
 
 		$oCM->setOption( 'mail_chimp', $chimp_settings, true );
+		/* MAYBE NOT NEEDED WHEN MANDRILL IS USED
 
 		// TODO - Create Campaign for token delivery with API Calls
 		if($iOldId !== -1 && $iCampaignId !== -1){
@@ -315,7 +360,7 @@ class CmMailController{
 			$mResult = self::_makeApiCall("/campaigns", "POST", $aCampaignData);
 		}
 
-		return json_decode($mResult);
+		return json_decode($mResult);*/
 	}
 
 
@@ -377,25 +422,186 @@ class CmMailController{
 	 *
 	 * @return int
 	 */
-	public static function getGroupId($iCourseId) {
-		return CmCourseStoreHandler::getStoreOptionsForCourse($iCourseId)['cm_mc_group'];
+	public static function getGroupCatId($iCourseId) {
+		return CmCourseStoreHandler::getStoreOptionsForCourse($iCourseId)['mc_group_category']['category_id'];
+	}
+
+
+	/**
+	 * @param int $iCourseId
+	 *
+	 * @param bool $blBothIds
+	 * @param bool $blSubscribed
+	 *
+	 * @return array|int
+	 */
+	public static function getGroupId($iCourseId, $blBothIds = true, $blSubscribed = false) {
+		if(!self::areGroupsSet($iCourseId)) {
+			$iGroupCatId = CmCourseStoreHandler::getStoreOptionsForCourse( $iCourseId )['mc_group_category']['category_id'];
+			$aGroupIds   = self::getCourseGroups( $iGroupCatId );
+		} else{
+			$aGroupIds = CmCourseStoreHandler::getStoreOptionsForCourse($iCourseId)['mc_group_category'];
+		}
+		if($blBothIds){
+			return array("newsletter_id" => $aGroupIds['newsletter_id'], "buyer_id" => $aGroupIds['buyer_id']);
+		}
+		else{
+			return ($blSubscribed ? $aGroupIds['newsletter_id'] : $aGroupIds['buyer_id']);
+		}
 	}
 
 	/**
-	 * @param int $iGroupID
+	 * @param int $iGroupCategoryId
 	 *
 	 * @param int $iCourseId
 	 *
 	 * @return bool|null
 	 */
-	public static function setGroup($iGroupID, $iCourseId){
+	public static function setGroup($iGroupCategoryId, $iCourseId){
 		if(self::_isApiKeySet() && self::_isListSet()){
+
+			$aCreatedGroups = self::areGroupsCreated($iGroupCategoryId);
+			if(!$aCreatedGroups['buyer_exists'] || !$aCreatedGroups['newsletter_exists']){
+				$aGroupIds = self::setCourseGroups($iGroupCategoryId, $aCreatedGroups);
+			} else{
+				$aGroupIds = self::getGroupId($iCourseId);
+			}
+
 			$oStoreHandler = new CmCourseStoreHandler();
-			$oStoreHandler->setStoreOptions($iCourseId, array("cm_mc_group" => $iGroupID));
+			$aStoreOptions = array(
+				"mc_group_category" => array(
+					"category_id" => $iGroupCategoryId,
+					"buyer_id" => $aGroupIds['buyer_id'],
+					"newsletter_id" => $aGroupIds['newsletter_id']
+				),
+			);
+
+			$oStoreHandler->setStoreOptions($iCourseId, $aStoreOptions);
 			return true;
 		} else{
 			return false;
 		}
+	}
+
+
+	/**
+	 * @param $iCourseId
+	 *
+	 * @return bool
+	 *
+	 */
+	public static function areGroupsSet($iCourseId){
+		$aMailchimpSettings = CmCourseStoreHandler::getStoreOptionsForCourse($iCourseId)['mc_group_category'];
+
+		return ($aMailchimpSettings['buyer_id'] !== -1 && $aMailchimpSettings['newsletter_id'] !== -1);
+	}
+
+
+	/**
+	 * @param $iGroupCategoryId
+	 *
+	 * @return array
+	 */
+	public static function areGroupsCreated($iGroupCategoryId){
+		$oCM = new CourseManager();
+		$aMailchimpSettings = $oCM->getOptions()['mail_chimp'];
+		$blBuyerExists = false;
+		$blNewsletterExists = false;
+
+		$sURL = "/lists/".$aMailchimpSettings['list_id']."/interest-categories/".$iGroupCategoryId."/interests";
+		$mResults = json_decode(self::_makeApiCall($sURL, "GET"));
+
+		$aInterests = $mResults->interests;
+		foreach ($aInterests as $interest){
+			if($interest->name == $aMailchimpSettings['buyer_group_title']){
+				$blBuyerExists = true;
+			} elseif ($interest->name == $aMailchimpSettings['newsletter_group_title']){
+				$blNewsletterExists = true;
+			}
+		}
+
+		return array("buyer_exists" => $blBuyerExists, "newsletter_exists" => $blNewsletterExists);
+	}
+
+
+	/**
+	 * @param $iGroupCategoryId
+	 *
+	 * @return array
+	 */
+	public static function getCourseGroups($iGroupCategoryId){
+		$oCM = new CourseManager();
+		$aMailchimpSettings = $oCM->getOptions()['mail_chimp'];
+		$sBuyerId = "";
+		$sNewsletterId = "";
+
+		$sURL = "/lists/".$aMailchimpSettings['list_id']."/interest-categories/".$iGroupCategoryId."/interests";
+
+		$mResults = json_decode(self::_makeApiCall($sURL, "GET"));
+		$aInterests = $mResults->interests;
+		foreach ($aInterests as $interest){
+			if($interest->name == $aMailchimpSettings['buyer_group_title']){
+				$sBuyerId = $interest->id;
+			} elseif ($interest->name == $aMailchimpSettings['newsletter_group_title']){
+				$sNewsletterId = $interest->id;
+			}
+		}
+
+		return array("newsletter_id" => $sNewsletterId, "buyer_id" => $sBuyerId);
+	}
+
+
+	/**
+	 * @param $iGroupCategoryId
+	 *
+	 * @param array $aCreatedGroups
+	 *
+	 * @return array
+	 */
+	public static function setCourseGroups($iGroupCategoryId, $aCreatedGroups = null){
+		$oCM = new CourseManager();
+		$aMailchimpSettings = $oCM->getOptions()['mail_chimp'];
+
+		$sURL = "/lists/".$aMailchimpSettings['list_id']."/interest-categories/".$iGroupCategoryId."/interests";
+		if($aCreatedGroups == null){
+			$aCreatedGroups = self::areGroupsCreated($iGroupCategoryId);
+		}
+		$mResultsNewsletter = null;
+		$mResultsBuyer = null;
+
+		if(!$aCreatedGroups['buyer_exists']) {
+			$aPayloadBuyer = array( 'name' => $aMailchimpSettings['buyer_group_title'] );
+			$mResultsBuyer = json_decode(self::_makeApiCall( $sURL, "POST", $aPayloadBuyer ));
+		}
+
+		if(!$aCreatedGroups['newsletter_exists']) {
+			$aPayloadNewsletter = array( 'name' => $aMailchimpSettings['newsletter_group_title'] );
+			$mResultsNewsletter = json_decode(self::_makeApiCall( $sURL, "POST", $aPayloadNewsletter ));
+		}
+
+		return array("newsletter_id" => $mResultsNewsletter->id, "buyer_id" => $mResultsBuyer->id);
+	}
+
+
+	/**
+	 * @param $iCourseId
+	 * @param $sUserEmail
+	 * @param bool $blSubscribed
+	 *
+	 * @return array|mixed|object
+	 */
+	public static function addUserToCourseGroup($iCourseId, $sUserEmail, $blSubscribed = false){
+		$sGroupId = self::getGroupId($iCourseId, false, $blSubscribed);
+		$sListId = self::getListId();
+		$aPayload = array(
+			"email_address" => $sUserEmail,
+			"status_if_new" => 'subscribed',
+			'interests' => [$sGroupId => true],
+		);
+		$sUserHash = md5(strtolower($sUserEmail));
+		$mResult = self::_makeApiCall("/lists/".$sListId."/members/".$sUserHash, "PUT", $aPayload);
+
+		return json_decode($mResult);
 	}
 
 

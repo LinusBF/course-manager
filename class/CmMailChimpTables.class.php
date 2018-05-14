@@ -21,7 +21,7 @@ class MailChimpTable extends WP_List_Table{
 		$this->sType = $sItemType;
 		switch ($this->sType){
 			case "group":
-				$this->iCurrentId = CmMailController::getGroupId($iCourseId);
+				$this->iCurrentId = CmMailController::getGroupCatId($iCourseId);
 				break;
 			case "template":
 				$this->iCurrentId = CmMailController::getTemplateId();
@@ -63,9 +63,15 @@ class MailChimpTable extends WP_List_Table{
 		$current = ($this->iCurrentId == $item->id ? 'checked': '');
 
 		$sElemId = $this->sType."_".$item->id;
-		return sprintf(
-			"<input class='cm_mc_{$this->sType}_rb' type='radio' name='cm_mc_{$this->sType}' id='{$sElemId}' value='{$item->id}' {$current} />"
-		);
+		if($this->sType !== "group") {
+			return sprintf(
+				"<input class='cm_mc_{$this->sType}_rb' type='radio' name='cm_mc_{$this->sType}' id='{$sElemId}' value='{$item->id}' {$current} />"
+			);
+		} else{
+			return sprintf(
+				"<input class='cm_mc_{$this->sType}_rb' type='radio' name='mc_group_category' id='{$sElemId}' value='{$item->id}' {$current} />"
+			);
+		}
 	}
 
 	public static function record_count($sType)

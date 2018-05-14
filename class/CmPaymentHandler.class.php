@@ -116,7 +116,9 @@ class CmPaymentHandler {
 				}
 
 				if ( isset( $_POST['subscribe'] ) && $_POST['subscribe'] === "on" ) {
-					CmUserManager::subscribeUser( $CmUserId );
+					CmUserManager::subscribeUserToCourse($CmUserId, $_POST['course_id'], true);
+				} else{
+					CmUserManager::subscribeUserToCourse($CmUserId, $_POST['course_id']);
 				}
 
 				try {
@@ -127,7 +129,7 @@ class CmPaymentHandler {
 					wp_redirect( CmCourseStoreHandler::getLandingPageURL( $_POST['course_id'] ) . "?api_key_fail=true" );
 				}
 
-				if ( $charge->status === "succeeded" && CmUserManager::acquireCourse( $CmUserId, $_POST['course_id'] ) ) {
+				if ( isset($charge) && $charge->status === "succeeded" && CmUserManager::acquireCourse( $CmUserId, $_POST['course_id'] ) ) {
 					$aRequestResponse['purchase_status'] = true;
 					$aRequestResponse['status_message'] = "Purchase successful!";
 					$aRequestResponse['status_code'] = 1;

@@ -276,13 +276,23 @@ class CmUserManager {
 	}
 
 
-	public static function subscribeUser($iUserId){
-		//TODO - Add user email to Mailchimp
+	public static function subscribeUserToCourse($iUserId, $iCourseId, $blSubscribed = false){
+		$sUserEmail = self::getUserById($iUserId)["email"];
+		$mResult = CmMailController::addUserToCourseGroup($iCourseId, $sUserEmail, $blSubscribed);
+		if($blSubscribed){
+			CmUserManager::updateUserMeta($iUserId, array("subscribed" => "true"));
+		}
+		return $mResult;
+	}
+
+
+	/* DEPRECATED - Using subscribeUserToCourse for now. Might activate to make use of separate newsletter list.
+	public static function subscribeUserToMailList($iUserId){
 
 		CmUserManager::updateUserMeta($iUserId, array("subscribed" => "true"));
 
 		return true;
-	}
+	}*/
 
 
 	/**
@@ -454,14 +464,15 @@ class CmUserManager {
 			}
 
 			if ( ! $aRequestResponse['already_purchased'] ) {
-				if ( isset( $_POST['subscribe'] ) && $_POST['subscribe'] === "on" ) {
-					CmUserManager::subscribeUser( $CmUserId );
-				}
-
 				if ( CmUserManager::acquireCourse( $CmUserId, $_POST['course_id'] ) ) {
 					$aRequestResponse['purchase_status'] = true;
 					$aRequestResponse['status_message']  = "The course is yours!";
 					$aRequestResponse['status_code']     = 1;
+					if ( isset( $_POST['subscribe'] ) && $_POST['subscribe'] === "on" ) {
+						CmUserManager::subscribeUserToCourse( $CmUserId, $_POST['course_id'], true);
+					} else{
+						CmUserManager::subscribeUserToCourse( $CmUserId, $_POST['course_id']);
+					}
 				} else {
 					$aRequestResponse['purchase_status'] = false;
 					$aRequestResponse['status_message']  = "Acquisition of course failed";

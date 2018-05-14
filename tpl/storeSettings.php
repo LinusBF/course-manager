@@ -116,12 +116,21 @@ function saveOptions(){
 	$aOptions = $oStoreHandler->getStoreOptionsForCourse($_POST['course']);
 
 	foreach (array_keys($aOptions) as $sKey){
+		if($sKey == "mc_group_category"){
+			$aOptions[$sKey]['category_id'] = $_POST[$sKey];
+			continue;
+		}
+
 		if(isset($_POST[$sKey])){
 			$aOptions[$sKey] = $_POST[$sKey];
 		}
 	}
 
 	$blSetCheck = $oStoreHandler->setStoreOptions($_POST['course'], $aOptions);
+
+	if(isset($_POST['mc_group_category'])){
+		CmMailController::setGroup($_POST['mc_group_category'], $_POST['course']);
+	}
 
 	if($blSetCheck && $_POST['landing_page'] != $_POST['old_landing_page']){
 		configLandingPage($_POST['old_landing_page'], false);
