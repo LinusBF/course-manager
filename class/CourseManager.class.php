@@ -91,14 +91,16 @@ class CourseManager
     }
 
 
-    /**
-     * Get and updates settings
-     * 
-     * @return array
-     */
-    public function getOptions()
+	/**
+	 * Get and updates settings
+	 *
+	 * @param bool $blForceRefresh
+	 *
+	 * @return array
+	 */
+    public function getOptions($blForceRefresh = false)
     {
-        if ($this->_aAdminOptions === null) {
+        if ($this->_aAdminOptions === null || $blForceRefresh) {
             $aCmAdminOptions = array(
                 'edit_access_role' => 'administrator',
 	            'store_active' => false,
@@ -112,7 +114,9 @@ class CourseManager
 	                "api_key"      => -1,
 	                'list_id' => -1,
 	                'template_id' => -1,
-	                'campaign_id' => -1
+	                'campaign_id' => -1,
+	                'buyer_group_title' => 'Buyer',
+	                'newsletter_group_title' => 'Newsletter',
                 ),
                 'mandrill' => array(
 	                "api_key"      => -1,
@@ -124,7 +128,15 @@ class CourseManager
             
             if (!empty($aCmOptions)) {
                 foreach ($aCmOptions as $sKey => $mOption) {
-                    $aCmAdminOptions[$sKey] = $mOption;
+                    if(!is_array($aCmAdminOptions[$sKey])){
+                    	$aCmAdminOptions[$sKey] = $mOption;
+                    } else{
+                    	if(is_array($mOption)) {
+		                    foreach ($mOption as $arrKey => $arrItem){
+			                    $aCmAdminOptions[$sKey][$arrKey] = $arrItem;
+		                    }
+                    	}
+					}
                 }
             }
             update_option($this->_sAdminOptionsName, $aCmAdminOptions);
@@ -306,13 +318,6 @@ class CourseManager
 			}
 
 			CmMailController::setList($_POST['cm_mc_list']);
-		}
-		elseif($_POST['cm_action'] === 'mailchimp_group_settings') {
-			if ( ! wp_verify_nonce( $_POST['cm_mailchimp_group_nonce'], 'cm_mailchimp_group_nonce' ) ) {
-				return;
-			}
-
-			CmMailController::setGroup($_POST['cm_mc_group']);
 		}
 		elseif($_POST['cm_action'] === 'mailchimp_template_settings') {
 			if ( ! wp_verify_nonce( $_POST['cm_mailchimp_template_nonce'], 'cm_mailchimp_template_nonce' ) ) {

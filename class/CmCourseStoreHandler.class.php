@@ -29,13 +29,24 @@ class CmCourseStoreHandler {
 
 		$aStoreOptions = array();
 		foreach ($aResults as $oOption){
-			$aStoreOptions[$oOption->meta_key] = $oOption->meta_value;
+			$aStoreOptions[$oOption->meta_key] = maybe_unserialize($oOption->meta_value);
 		}
 
 		$aDefaultOptions = self::getDefaultOptions();
 		foreach ($aDefaultOptions as $sKey => $aDefaultOption){
-			if(!key_exists($sKey, $aStoreOptions)){
+			if(!key_exists($sKey, $aStoreOptions) || $aStoreOptions[$sKey] == null){
 				$aStoreOptions[$sKey] = $aDefaultOption;
+			}
+			else if(is_array($aDefaultOption)){
+				if(is_array($aStoreOptions[$sKey])){
+					foreach ($aDefaultOption as $arrKey => $arrItem){
+						if(!key_exists($arrKey, $aStoreOptions[$sKey]) || $aStoreOptions[$sKey][$arrKey] == null){
+							$aStoreOptions[$sKey][$arrKey] = $aDefaultOption[$arrKey];
+						}
+					}
+				} else{
+					$aStoreOptions[$sKey] = $aDefaultOption;
+				}
 			}
 		}
 
@@ -101,7 +112,7 @@ class CmCourseStoreHandler {
 				$sSQL = "INSERT INTO ".DB_CM_STORE_META."(meta_value, meta_key, course_id) VALUES(%s, %s, %d)";
 			}
 
-			$sQuery = $wpdb->prepare($sSQL, $mOption, $sKey, $iCourseId);
+			$sQuery = $wpdb->prepare($sSQL, maybe_serialize($mOption), $sKey, $iCourseId);
 
 
 			if($wpdb->query($sQuery) === false){
@@ -139,7 +150,11 @@ class CmCourseStoreHandler {
 			'current_discount' => '0',
 			'settings_modified' => '0',
 			'landing_page' => '0',
-			'cm_mc_group' => '-1'
+			'mc_group_category' => array(
+				"category_id" => -1,
+				"buyer_id" => -1,
+				"newsletter_id" => -1
+			)
 		);
 	}
 
