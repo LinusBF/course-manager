@@ -120,7 +120,11 @@ class CourseManager
                 ),
                 'mandrill' => array(
 	                "api_key"      => -1,
-	                'template_id' => -1,
+	                'template_slug' => -1,
+	                'domain' => 'vopviktopererad.se',
+	                'subject_line' => TXT_CM_MC_SUBJECT,
+	                'from_email' => 'support',
+	                'from_name' => TXT_CM_MC_FROM_NAME
                 ),
             );
             
@@ -319,29 +323,37 @@ class CourseManager
 
 			CmMailController::setList($_POST['cm_mc_list']);
 		}
-		elseif($_POST['cm_action'] === 'mailchimp_template_settings') {
-			if ( ! wp_verify_nonce( $_POST['cm_mailchimp_template_nonce'], 'cm_mailchimp_template_nonce' ) ) {
-				return;
-			}
-
-			CmMailController::setTemplate($_POST['cm_mc_template']);
-		}
 	}
 
 
 	public function update_mandrill(){
-		if( empty( $_POST['cm_action'] ) || 'mandrill_settings' != $_POST['cm_action'] )
+		if( empty( $_POST['cm_action'] ))
 			return;
-		if( ! wp_verify_nonce( $_POST['cm_mandrill_nonce'], 'cm_mandrill_nonce' ) )
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
-		if( ! current_user_can( 'manage_options' ) )
-			return;
+		}
 
-		$mandrill_settings = array(
-			"api_key"      => $_POST['cm_mandrill_key'],
-		);
+		if($_POST['cm_action'] === 'mandrill_settings') {
+			if ( ! wp_verify_nonce( $_POST['cm_mandrill_nonce'], 'cm_mandrill_nonce' ) ) {
+				return;
+			}
+			if ( ! current_user_can( 'manage_options' ) ) {
+				return;
+			}
 
-		$this->setOption('mandrill', $mandrill_settings, true);
+			$mandrill_settings = array(
+				"api_key" => $_POST['cm_mandrill_key'],
+			);
+
+			$this->setOption( 'mandrill', $mandrill_settings, true );
+		}
+		elseif($_POST['cm_action'] === 'mandrill_template_settings') {
+			if ( ! wp_verify_nonce( $_POST['cm_mandrill_template_nonce'], 'cm_mandrill_template_nonce' ) ) {
+				return;
+			}
+
+			CmMandrillController::setTemplateSlug($_POST['cm_md_template']);
+		}
 	}
 
 

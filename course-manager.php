@@ -76,7 +76,9 @@ require_once 'class/CmLandingPageTable.class.php';
 require_once 'class/CmUserManager.class.php';
 require_once 'class/CmPaymentHandler.class.php';
 require_once 'class/CmMailController.class.php';
+require_once 'class/CmMandrillController.php';
 require_once 'class/CmMailChimpTables.class.php';
+require_once 'class/CmMandrillTable.php';
 require_once 'widget/cmLinks.class.php';
 
 

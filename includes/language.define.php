@@ -163,4 +163,8 @@ define('TXT_CM_USER_PAGE_TITLE', __('Account', 'course-manager'));
 define('TXT_CM_USER_PAGE_BACK_TO_COURSE', __('To question', 'course-manager'));
 define('TXT_CM_USER_Q_NOT_ANSWERED', __('You haven\'t answered these questions yet', 'course-manager'));
 
+// --- Mailchimp --- \\
+define('TXT_CM_MC_SUBJECT', __('Thank you for your purchase!', 'course-manager'));
+define('TXT_CM_MC_FROM_NAME', __('Course Manager', 'course-manager'));
+
 ?>

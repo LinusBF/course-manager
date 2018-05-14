@@ -206,6 +206,12 @@ class CmUserManager {
 	}
 
 
+	private static function _getUserToken( $iUserId ) {
+		$aUser = self::getUserById($iUserId);
+		return $aUser['user_token'];
+	}
+
+
 	/**
 	 * @param int $iUserPageId
 	 *
@@ -278,11 +284,13 @@ class CmUserManager {
 
 	public static function subscribeUserToCourse($iUserId, $iCourseId, $blSubscribed = false){
 		$sUserEmail = self::getUserById($iUserId)["email"];
-		$mResult = CmMailController::addUserToCourseGroup($iCourseId, $sUserEmail, $blSubscribed);
+		$mMailchimpResult = CmMailController::addUserToCourseGroup($iCourseId, $sUserEmail, $blSubscribed);
 		if($blSubscribed){
 			CmUserManager::updateUserMeta($iUserId, array("subscribed" => "true"));
 		}
-		return $mResult;
+		$oMandrill = new CmMandrillController();
+		$mMandrillResult = $oMandrill->sendTokenToUser($iUserId, $iCourseId, self::_getUserToken($iUserId));
+		return array("mailchimp_result" => $mMailchimpResult, "mandrill_result" => $mMandrillResult);
 	}
 
 

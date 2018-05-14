@@ -119,17 +119,17 @@
 					</p>
 				</form>
 			</div><!-- .inside -->
-			<?php if($aSettings['mail_chimp']['api_key'] !== -1 && $aSettings['mail_chimp']['list_id'] !== -1): ?>
-				<div id="cm_mc_templates" class="cm_mc_list inside">
+			<?php if($aSettings['mandrill']['api_key'] !== -1): ?>
+				<div id="cm_md_templates" class="cm_md_list inside">
 					<h3><span><?php _e('Email Template') ?></span></h3>
 					<form method="post">
-						<p><input type="hidden" name="cm_action" value="mailchimp_template_settings" /></p>
+						<p><input type="hidden" name="cm_action" value="mandrill_template_settings" /></p>
 						<?php
-						$oListTable = new MailChimpTable("template");
+						$oListTable = new MandrillTable();
 						$oListTable->print_table();
 						?>
 						<p>
-							<?php wp_nonce_field( 'cm_mailchimp_template_nonce', 'cm_mailchimp_template_nonce' ); ?>
+							<?php wp_nonce_field( 'cm_mandrill_template_nonce', 'cm_mandrill_template_nonce' ); ?>
 							<?php submit_button( __( 'Select template' ), 'secondary', 'submit', false ); ?>
 						</p>
 					</form>
