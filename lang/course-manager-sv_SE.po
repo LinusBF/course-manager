@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Course Manager\n"
-"POT-Creation-Date: 2018-04-12 15:22+0200\n"
-"PO-Revision-Date: 2018-04-12 18:07+0200\n"
+"POT-Creation-Date: 2018-06-01 17:29+0200\n"
+"PO-Revision-Date: 2018-06-01 17:30+0200\n"
 "Last-Translator: \n"
 "Language-Team: Linus Bein Fahlander\n"
 "Language: sv\n"
@@ -15,55 +15,55 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: class/CourseManager.class.php:665
+#: class/CourseManager.class.php:681
 msgid "Please upload a valid .json file"
 msgstr "Var vänlig och ladda upp en giltig JSON fil"
 
-#: class/CourseManager.class.php:669
+#: class/CourseManager.class.php:685
 msgid "Please upload a file to import"
 msgstr "Vänligen ladda upp en fil som ska importeras"
 
-#: class/CourseManager.class.php:685
+#: class/CourseManager.class.php:701
 msgid "Course Pages"
 msgstr "Kurssidor"
 
-#: class/CourseManager.class.php:686
+#: class/CourseManager.class.php:702
 msgid "Course Page"
 msgstr "Kurssida"
 
-#: class/CourseManager.class.php:687 class/CourseManager.class.php:688
+#: class/CourseManager.class.php:703 class/CourseManager.class.php:704
 msgid "Add New Course page"
 msgstr "Lägg till en ny kurssida"
 
-#: class/CourseManager.class.php:689
+#: class/CourseManager.class.php:705
 msgid "Edit Course page"
 msgstr "Redigera kurssida"
 
-#: class/CourseManager.class.php:690
+#: class/CourseManager.class.php:706
 msgid "New Course page"
 msgstr "Ny kurssida"
 
-#: class/CourseManager.class.php:691
+#: class/CourseManager.class.php:707
 msgid "View Course page"
 msgstr "Visa kurssida"
 
-#: class/CourseManager.class.php:692
+#: class/CourseManager.class.php:708
 msgid "Search Course page"
 msgstr "Sök kurssida"
 
-#: class/CourseManager.class.php:693
+#: class/CourseManager.class.php:709
 msgid "No course pages have been added yet"
 msgstr "Inga kurssidor har lagts till ännu"
 
-#: class/CourseManager.class.php:694
+#: class/CourseManager.class.php:710
 msgid "Nothing found in Trash"
 msgstr "Inget i papperskorgen"
 
-#: class/CourseManager.class.php:705
+#: class/CourseManager.class.php:721
 msgid "courses"
 msgstr "courses"
 
-#: includes/language.define.php:20
+#: includes/language.define.php:20 includes/language.define.php:168
 msgid "Course Manager"
 msgstr "Kurshanterare"
 
@@ -520,6 +520,14 @@ msgstr "Konto"
 #: includes/language.define.php:163
 msgid "To question"
 msgstr "Till frågan"
+
+#: includes/language.define.php:164
+msgid "You haven't answered these questions yet"
+msgstr "Du har inte svarat på dessa frågor ännu"
+
+#: includes/language.define.php:167
+msgid "Thank you for your purchase!"
+msgstr "Tack för ditt köp!"
 
 #: tpl/adminSettings.php:13
 msgid "Stripe Settings"

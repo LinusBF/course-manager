@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Course Manager\n"
-"POT-Creation-Date: 2018-04-12 15:58+0200\n"
+"POT-Creation-Date: 2018-06-01 17:29+0200\n"
 "PO-Revision-Date: 2016-07-07 17:15+0200\n"
 "Last-Translator: \n"
 "Language-Team: Linus Bein Fahlander\n"
@@ -16,55 +16,55 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: class/CourseManager.class.php:665
+#: class/CourseManager.class.php:681
 msgid "Please upload a valid .json file"
 msgstr ""
 
-#: class/CourseManager.class.php:669
+#: class/CourseManager.class.php:685
 msgid "Please upload a file to import"
 msgstr ""
 
-#: class/CourseManager.class.php:685
+#: class/CourseManager.class.php:701
 msgid "Course Pages"
 msgstr ""
 
-#: class/CourseManager.class.php:686
+#: class/CourseManager.class.php:702
 msgid "Course Page"
 msgstr ""
 
-#: class/CourseManager.class.php:687 class/CourseManager.class.php:688
+#: class/CourseManager.class.php:703 class/CourseManager.class.php:704
 msgid "Add New Course page"
 msgstr ""
 
-#: class/CourseManager.class.php:689
+#: class/CourseManager.class.php:705
 msgid "Edit Course page"
 msgstr ""
 
-#: class/CourseManager.class.php:690
+#: class/CourseManager.class.php:706
 msgid "New Course page"
 msgstr ""
 
-#: class/CourseManager.class.php:691
+#: class/CourseManager.class.php:707
 msgid "View Course page"
 msgstr ""
 
-#: class/CourseManager.class.php:692
+#: class/CourseManager.class.php:708
 msgid "Search Course page"
 msgstr ""
 
-#: class/CourseManager.class.php:693
+#: class/CourseManager.class.php:709
 msgid "No course pages have been added yet"
 msgstr ""
 
-#: class/CourseManager.class.php:694
+#: class/CourseManager.class.php:710
 msgid "Nothing found in Trash"
 msgstr ""
 
-#: class/CourseManager.class.php:705
+#: class/CourseManager.class.php:721
 msgid "courses"
 msgstr ""
 
-#: includes/language.define.php:20
+#: includes/language.define.php:20 includes/language.define.php:168
 msgid "Course Manager"
 msgstr ""
 
@@ -498,6 +498,14 @@ msgstr ""
 
 #: includes/language.define.php:163
 msgid "To question"
+msgstr ""
+
+#: includes/language.define.php:164
+msgid "You haven't answered these questions yet"
+msgstr ""
+
+#: includes/language.define.php:167
+msgid "Thank you for your purchase!"
 msgstr ""
 
 #: tpl/adminSettings.php:13
