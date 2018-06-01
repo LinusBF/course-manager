@@ -131,10 +131,6 @@ class CmMailController{
 					$sURL = sprintf("%s?%s", $sURL, http_build_query($aData));
 		}
 
-		//ONLY FOR LOCALHOST, REMOVE FOR LIVE VERSION
-		curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 0);
-		curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, 0);
-
 		//Specific cURL settings for mail chimp requests
 		curl_setopt($oCurl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 		curl_setopt($oCurl, CURLOPT_USERPWD, "course_manager:" . $aApiParams['api_key']);
