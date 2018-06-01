@@ -91,29 +91,58 @@ class CourseManager
     }
 
 
-    /**
-     * Get and updates settings
-     * 
-     * @return array
-     */
-    public function getOptions()
+	/**
+	 * Get and updates settings
+	 *
+	 * @param bool $blForceRefresh
+	 *
+	 * @return array
+	 */
+    public function getOptions($blForceRefresh = false)
     {
-        if ($this->_aAdminOptions === null) {
+        if ($this->_aAdminOptions === null || $blForceRefresh) {
             $aCmAdminOptions = array(
                 'edit_access_role' => 'administrator',
 	            'store_active' => false,
 	            'courses_in_store' => array(),
-	            'currency' => 'kr'
+	            'currency' => 'sek',
+	            'stripe' => array(
+		            "secret_key"      => -1,
+		            "publishable_key" => -1
+	            ),
+                'mail_chimp' => array(
+	                "api_key"      => -1,
+	                'list_id' => -1,
+	                'template_id' => -1,
+	                'campaign_id' => -1,
+	                'buyer_group_title' => 'Buyer',
+	                'newsletter_group_title' => 'Newsletter',
+                ),
+                'mandrill' => array(
+	                "api_key"      => -1,
+	                'template_slug' => -1,
+	                'domain' => 'vopviktopererad.se',
+	                'subject_line' => TXT_CM_MC_SUBJECT,
+	                'from_email' => 'support',
+	                'from_name' => TXT_CM_MC_FROM_NAME
+                ),
             );
             
             $aCmOptions = $this->getWPOption($this->_sAdminOptionsName);
             
             if (!empty($aCmOptions)) {
                 foreach ($aCmOptions as $sKey => $mOption) {
-                    $aCmAdminOptions[$sKey] = $mOption;
+                    if(!is_array($aCmAdminOptions[$sKey])){
+                    	$aCmAdminOptions[$sKey] = $mOption;
+                    } else{
+                    	if(is_array($mOption)) {
+		                    foreach ($mOption as $arrKey => $arrItem){
+			                    $aCmAdminOptions[$sKey][$arrKey] = $arrItem;
+		                    }
+                    	}
+					}
                 }
             }
-            
             update_option($this->_sAdminOptionsName, $aCmAdminOptions);
             $this->_aAdminOptions = $aCmAdminOptions;
         }
@@ -254,6 +283,80 @@ class CourseManager
     }
 
 
+	public function update_stripe(){
+		if( empty( $_POST['cm_action'] ) || 'stripe_settings' != $_POST['cm_action'] )
+			return;
+		if( ! wp_verify_nonce( $_POST['cm_stripe_nonce'], 'cm_stripe_nonce' ) )
+			return;
+		if( ! current_user_can( 'manage_options' ) )
+			return;
+
+		$stripe_settings = array(
+			"secret_key"      => $_POST['cm_stripe_secret'],
+			"publishable_key" => $_POST['cm_stripe_public']
+		);
+
+		$this->setOption('stripe', $stripe_settings, true);
+
+		CmCourseStoreHandler::activateStripe();
+	}
+
+
+	public function update_mailchimp(){
+		if( empty( $_POST['cm_action'] ))
+			return;
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		if($_POST['cm_action'] === 'mailchimp_settings') {
+			if ( ! wp_verify_nonce( $_POST['cm_mailchimp_nonce'], 'cm_mailchimp_nonce' ) ) {
+				return;
+			}
+
+			CmMailController::setApiKey($_POST['cm_mail_chimp_key']);
+		}
+		elseif($_POST['cm_action'] === 'mailchimp_list_settings') {
+			if ( ! wp_verify_nonce( $_POST['cm_mailchimp_list_nonce'], 'cm_mailchimp_list_nonce' ) ) {
+				return;
+			}
+
+			CmMailController::setList($_POST['cm_mc_list']);
+		}
+	}
+
+
+	public function update_mandrill(){
+		if( empty( $_POST['cm_action'] ))
+			return;
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		if($_POST['cm_action'] === 'mandrill_settings') {
+			if ( ! wp_verify_nonce( $_POST['cm_mandrill_nonce'], 'cm_mandrill_nonce' ) ) {
+				return;
+			}
+			if ( ! current_user_can( 'manage_options' ) ) {
+				return;
+			}
+
+			$mandrill_settings = array(
+				"api_key" => $_POST['cm_mandrill_key'],
+			);
+
+			$this->setOption( 'mandrill', $mandrill_settings, true );
+		}
+		elseif($_POST['cm_action'] === 'mandrill_template_settings') {
+			if ( ! wp_verify_nonce( $_POST['cm_mandrill_template_nonce'], 'cm_mandrill_template_nonce' ) ) {
+				return;
+			}
+
+			CmMandrillController::setTemplateSlug($_POST['cm_md_template']);
+		}
+	}
+
+
 	/**
 	 * See "Flushing Rewrite on Activation" https://codex.wordpress.org/Function_Reference/register_post_type
 	 */
@@ -359,6 +462,8 @@ class CourseManager
         	);
         }
 
+        /*  NOT CURRENTLY USED
+
         //Checking if cm_tags table exists
         $sCmTagTableName = $wpdb->prefix.'cm_tags';
 
@@ -396,6 +501,8 @@ class CourseManager
 				) $sCharsetCollate;"
         	);
         }
+
+        */
 
         add_option("cm_db_version", $this->_sCmDBVersion);
     }
@@ -450,6 +557,137 @@ class CourseManager
     public function deactivate()
     {
         #TODO
+	    $oStore = new CmStore();
+
+	    $oStore->deactivateStore();
+    }
+
+
+    /**
+     * Export current instance of Course Manager plugin state
+     */
+    public function export(){
+        $aCourses = CmCourse::getAllCourses(true);
+	    $oStore = new CmStore();
+		$aPluginData = array();
+
+	    $aCourseData = array("type" => "courses", "item" => array());
+	    foreach ($aCourses as $oCourse){
+	    	array_push($aCourseData['item'], json_decode($oCourse->exportToJSON()));
+	    }
+	    array_push($aPluginData, $aCourseData);
+	    array_push($aPluginData, array("type" => "store", "item" => json_decode($oStore->exportToJSON())));
+	    array_push($aPluginData, array("type" => "options", "item" => $this->getOptions()));
+	    array_push($aPluginData, array("type" => "db_version", "item" => $this->_sCmDBVersion));
+
+	    return json_encode($aPluginData);
+    }
+
+
+    public function export_download(){
+	    if( empty( $_POST['cm_action'] ) || 'export_settings' != $_POST['cm_action'] )
+		    return;
+	    if( ! wp_verify_nonce( $_POST['cm_export_nonce'], 'cm_export_nonce' ) )
+		    return;
+	    if( ! current_user_can( 'manage_options' ) )
+		    return;
+
+	    ignore_user_abort( true );
+	    nocache_headers();
+	    header( 'Content-Type: application/json; charset=utf-8' );
+	    header( 'Content-Disposition: attachment; filename=course-manager-export-' . date( 'm-d-Y' ) . '.json' );
+	    header( "Expires: 0" );
+
+	    echo $this->export();
+	    exit;
+    }
+
+
+	/**
+	 * Import current instance of Course Manager plugin state. Needs to be updated to deal with bad/damaged JSON
+	 *
+	 * @param string $sImportData - The exported data in JSON format
+	 *
+	 * @return bool True if successfully imported, false if something went wrong (probably wrong JSON structure)
+	 */
+    public function import($sImportData){
+		$aPluginData = json_decode($sImportData);
+	    $blImportCheck = true;
+
+	    if ($aPluginData[0]->type != "courses" && $aPluginData[1]->type!= "store"
+	        && $aPluginData[2]->type != "options" && $aPluginData[3]->type != "db_version"){
+	    	return false;
+	    }
+
+	    foreach ($aPluginData[0]->item as $aCourseData){
+	    	if ($aCourseData->item != "Course")
+	    		continue;
+
+		    $oCourse = CmCourse::create();
+		    $oCourse->setCourseName($aCourseData->name);
+		    $oCourse->setCourseDescription($aCourseData->description);
+		    $oCourse->setCoursePrice($aCourseData->price);
+		    $oCourse->setCourseSpan($aCourseData->span);
+		    $oCourse->setCourseStatus(false);
+
+		    $iInsertID = $oCourse->save();
+
+		    $aCourseParts = array();
+
+		    foreach ($aCourseData->parts as $aCoursePartData){
+			    $aParts = array();
+
+				$oCoursePart = CmCoursePart::createWParams($aCoursePartData->index, $iInsertID, $aCoursePartData->name);
+			    $iCPIndex = $oCoursePart->save();
+
+			    foreach ($aCoursePartData->parts as $aPartData){
+			    	$oPart = CmPart::createWParams($aPartData->title, $aPartData->content, $aPartData->index, $aPartData->type, $iCPIndex);
+
+			    	array_push($aParts, $oPart);
+			    }
+
+			    $oCoursePart->setParts($aParts);
+
+			    array_push($aCourseParts, $oCoursePart);
+		    }
+
+		    $oCourse->setCourseParts($aCourseParts);
+
+		    if(!$oCourse->save(true)){
+			    $blImportCheck = false;
+		    }
+	    }
+
+	    foreach ($aPluginData[1]->item as $aStore_meta){
+	    	//TODO - Have to store the relations between the old Course IDs and the created ones.
+	    }
+
+	    $oOldOptions = $aPluginData[2]->item;
+	    CourseManager::setOption('edit_access_role',$oOldOptions->edit_access_role,true);
+	    CourseManager::setOption('currency',$oOldOptions->currency,true);
+
+	    return $blImportCheck;
+    }
+
+    public function import_upload(){
+	    if( empty( $_POST['cm_action'] ) || 'import_settings' != $_POST['cm_action'] )
+		    return;
+	    if( ! wp_verify_nonce( $_POST['cm_import_nonce'], 'cm_import_nonce' ) )
+		    return;
+	    if( ! current_user_can( 'manage_options' ) )
+		    return;
+	    $extension = end( explode( '.', $_FILES['import_file']['name'] ) );
+	    if( $extension != 'json' ) {
+		    wp_die( __( 'Please upload a valid .json file' ) );
+	    }
+	    $import_file = $_FILES['import_file']['tmp_name'];
+	    if( empty( $import_file ) ) {
+		    wp_die( __( 'Please upload a file to import' ) );
+	    }
+
+	    $sData = file_get_contents( $import_file );
+
+	    $this->import($sData);
     }
 
 

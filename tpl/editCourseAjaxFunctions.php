@@ -13,7 +13,7 @@ function cm_add_new_coursePart(){
 		$newCoursePart->printListItemRep();
 
 	} else{
-		json_encode("Failure");
+		echo wp_json_encode("Failure");
 	}
 	wp_die();
 }
@@ -32,7 +32,7 @@ function cm_add_new_part(){
 		$newPart->printListItemRep();
 
 	} else{
-		json_encode("Failure");
+		echo wp_json_encode("Failure");
 	}
 	wp_die();
 }
@@ -80,7 +80,7 @@ function cm_change_part_type(){
 		$newPart->print_content($_POST['cm_part_prefix']);
 
 	} else{
-		json_encode("Failure");
+		echo wp_json_encode("Failure");
 	}
 	wp_die();
 }
@@ -100,7 +100,7 @@ function cm_add_question(){
 		</li>
 		<?php
 	} else{
-		json_encode("Failure");
+		echo wp_json_encode("Failure");
 	}
 	wp_die();
 }

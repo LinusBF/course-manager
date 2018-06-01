@@ -7,7 +7,7 @@ Author: Linus Bein Fahlander
 Version: 0.2
 Author URI:
 */
-
+/*
 function cmLinks_init() {
 	register_widget(cmLinks);
 }
@@ -183,3 +183,4 @@ function cmLinks_Get_Excerpts(){
 	return $cl_Excerpts;
 }
 ?>
+*/

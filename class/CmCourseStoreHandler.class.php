@@ -18,7 +18,7 @@ class CmCourseStoreHandler {
 	 *
 	 * @return array
 	 */
-	public function getStoreOptionsForCourse( $iCourseId ) {
+	public static function getStoreOptionsForCourse( $iCourseId ) {
 		global $wpdb;
 
 		$sSQL = "SELECT meta_key, meta_value FROM ".DB_CM_STORE_META." WHERE course_id = %d";
@@ -29,7 +29,25 @@ class CmCourseStoreHandler {
 
 		$aStoreOptions = array();
 		foreach ($aResults as $oOption){
-			$aStoreOptions[$oOption->meta_key] = $oOption->meta_value;
+			$aStoreOptions[$oOption->meta_key] = maybe_unserialize($oOption->meta_value);
+		}
+
+		$aDefaultOptions = self::getDefaultOptions();
+		foreach ($aDefaultOptions as $sKey => $aDefaultOption){
+			if(!key_exists($sKey, $aStoreOptions) || $aStoreOptions[$sKey] == null){
+				$aStoreOptions[$sKey] = $aDefaultOption;
+			}
+			else if(is_array($aDefaultOption)){
+				if(is_array($aStoreOptions[$sKey])){
+					foreach ($aDefaultOption as $arrKey => $arrItem){
+						if(!key_exists($arrKey, $aStoreOptions[$sKey]) || $aStoreOptions[$sKey][$arrKey] == null){
+							$aStoreOptions[$sKey][$arrKey] = $aDefaultOption[$arrKey];
+						}
+					}
+				} else{
+					$aStoreOptions[$sKey] = $aDefaultOption;
+				}
+			}
 		}
 
 		return $aStoreOptions;
@@ -94,7 +112,7 @@ class CmCourseStoreHandler {
 				$sSQL = "INSERT INTO ".DB_CM_STORE_META."(meta_value, meta_key, course_id) VALUES(%s, %s, %d)";
 			}
 
-			$sQuery = $wpdb->prepare($sSQL, $mOption, $sKey, $iCourseId);
+			$sQuery = $wpdb->prepare($sSQL, maybe_serialize($mOption), $sKey, $iCourseId);
 
 
 			if($wpdb->query($sQuery) === false){
@@ -130,8 +148,54 @@ class CmCourseStoreHandler {
 			'store_image' => '',
 			'store_description' => (isset($iCourseId) ? CmCourse::getCourseByID($iCourseId)->getCourseDescription() : ''),
 			'current_discount' => '0',
-			'settings_modified' => '0'
+			'settings_modified' => '0',
+			'landing_page' => '0',
+			'mc_group_category' => array(
+				"category_id" => -1,
+				"buyer_id" => -1,
+				"newsletter_id" => -1
+			)
 		);
+	}
+
+
+	public static function getStoreURL(){
+		$store = get_posts(array('name' => TXT_CM_STORE_PAGE_NAME, 'post_type' => 'page'))[0];
+		return get_permalink($store->ID);
+	}
+
+
+	/**
+	 * @param $iCourseID
+	 *
+	 * @return false|string
+	 */
+	public static function getLandingPageURL($iCourseID){
+		global $wpdb;
+
+		$sSQL = "SELECT meta_value FROM ".DB_CM_STORE_META." WHERE course_id = %d AND meta_key = 'landing_page'";
+
+		$sQuery = $wpdb->prepare($sSQL, $iCourseID);
+		$iPageID = $wpdb->get_var($sQuery);
+
+		return get_permalink($iPageID);
+	}
+
+	public static function activateStripe(){
+		$oCM = new CourseManager();
+		$aOptions = $oCM->getOptions();
+
+		if($aOptions['stripe']['secret_key'] === -1 || $aOptions['stripe']['publishable_key'] === -1){
+			return false;
+		}
+
+		\Stripe\Stripe::setApiKey($aOptions['stripe']['secret_key']);
+
+		return true;
+	}
+
+	public static function resetCourseMailGroups(){
+		//TODO - Remove all connections to mail groups from all courses
 	}
 
 }

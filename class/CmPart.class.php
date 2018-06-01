@@ -95,7 +95,7 @@ class CmPart
      */
     public function getTitle()
     {
-    	return htmlspecialchars($this->_sPartTitle, ENT_QUOTES, 'UTF-8');
+    	return stripslashes($this->_sPartTitle);
     }
 
 
@@ -108,7 +108,7 @@ class CmPart
      */
     public function setTitle($sTitle)
     {
-    	$this->_sPartTitle = htmlspecialchars($sTitle, ENT_QUOTES, 'UTF-8');
+    	$this->_sPartTitle = $sTitle;
     }
 
 
@@ -119,7 +119,7 @@ class CmPart
      */
     public function getContent()
     {
-    	return $this->_sContent;
+    	return stripslashes($this->_sContent);
     }
 
 
@@ -184,7 +184,7 @@ class CmPart
      */
     public function setType($sType)
     {
-    	$this->_sType = htmlspecialchars($sType, ENT_QUOTES, 'UTF-8');
+    	$this->_sType = $sType;
     }
 
 
@@ -364,9 +364,6 @@ class CmPart
 			return true;
 
 		} else{
-			//Debug
-			var_dump($this);
-
 			return false;
 		}
 	}
@@ -397,15 +394,17 @@ class CmPart
 
 			$sSQL = "INSERT INTO ".$this->_getDbTableName()."(coursePartID,title,content,type,partIndex)
 		    VALUES(%d,%s,%s,%s,%d)";
-
+			$sQuery = $wpdb->prepare($sSQL,$iCPID,$sTitle,$sContent,$sType,$iPIndex);
 		} else{
 
 			$sSQL = "UPDATE ".$this->_getDbTableName()."
 		   	SET coursePartID = %d, title = %s, content = %s, type = %s, partIndex = %d
-		    WHERE ID = ".$this->_iPartID;
+		    WHERE ID = %d";
+
+			$sQuery = $wpdb->prepare($sSQL,$iCPID,$sTitle,$sContent,$sType,$iPIndex, $this->_iPartID);
 		}
 
-		$sQuery = $wpdb->prepare($sSQL,$iCPID,$sTitle,$sContent,$sType,$iPIndex);
+
 
 		if ($wpdb->query($sQuery) !== false) {
 			return true;
@@ -462,7 +461,7 @@ class CmPart
 	 *
 	 * @param string || Array $content
 	 *
-	 * @return array if $toDB is not set - string if $toDB is set
+	 * @return string|array array if $toDB is not set - string if $toDB is set
 	 *
 	 */
     public static function parse_quest($content){
@@ -611,7 +610,7 @@ class CmPart
 						<?php echo TXT_CM_EDIT_PART_INDEX.": "; ?>
 					</label>
 					<input class="cm_P_index" name="<?php echo $sNamePrefix."_index"; ?>" type="number"
-						   min="1" max="<?php echo ($this->getCoursePartID() != -1 ? $this->getParentCoursePart()->getNrParts(): 20); ?>"
+						   min="1" max="<?php echo ($this->getCoursePartID() != -1 ? $this->getParentCoursePart()->getNrParts(): ($this->getIndex() + 1)); ?>"
 						   value="<?php echo ($this->getIndex() + 1); ?>">
 				</li>
 				<li>
@@ -643,6 +642,22 @@ class CmPart
     	</li>
     	<?php
     }
+
+
+	/**
+	 *
+	 */
+	public function toJSON() {
+		$aJSONPart = array(
+			"ID"          => $this->getPartID(),
+			"title"        => $this->getTitle(),
+			"content" => $this->getContent(),
+			"type"       => $this->getType(),
+			"index"        => $this->getIndex(),
+		);
+
+		return json_encode($aJSONPart);
+	}
 
 
     /**

@@ -82,26 +82,31 @@ class CmCourse
     }
 
 
-    /**
-     * Constructor with all parameters to make a new Course in the db.
-     *
-     * @param CmCoursePart[] $aCourseParts
-     *
-     * @return CmCourse|bool instance
-     */
-    public static function createCompleteCourse($sName, $sDesc, $iPrice, $blActive, $iSpan,$aCourseParts)
+	/**
+	 * Constructor with all parameters to make a new Course in the db.
+	 *
+	 * @param $sName
+	 * @param $sDesc
+	 * @param $iPrice
+	 * @param $blActive
+	 * @param $iSpan
+	 * @param CmCoursePart[] $aCourseParts
+	 *
+	 * @return bool|CmCourse instance
+	 */
+    public static function createCompleteCourse($sName, $sDesc, $iPrice, $blActive, $iSpan, $aCourseParts)
     {
     	$instance = new self();
     	if (!$instance->checkCourseName($sName)) {
     		return false;
     	}
-    	$instance->_sCourseName = $sName;
-		$instance->_sCourseDescription = $sDesc;
-		$instance->_iCoursePrice = $iPrice;
-    	$instance->_blCourseActive = $blActive;
-    	$instance->_iCourseSpan = $iSpan;
-    	$instance->_aCourseParts = $aCourseParts;
-    	$instance->_iNrOfCourseParts = count($aCourseParts);
+    	$instance->setCourseName($sName);
+		$instance->setCourseDescription($sDesc);
+		$instance->setCoursePrice($iPrice);
+    	$instance->setCourseStatus($blActive);
+    	$instance->setCourseSpan($iSpan);
+    	$instance->setCourseParts($aCourseParts);
+    	$instance->setNrCourseParts(count($aCourseParts));
     	return $instance;
     }
 
@@ -143,7 +148,7 @@ class CmCourse
 	 */
 	public function setCourseDescription($sDesc)
 	{
-		$this->_sCourseDescription = htmlspecialchars($sDesc, ENT_QUOTES, 'UTF-8');
+		$this->_sCourseDescription = $sDesc;
 	}
 
 
@@ -154,7 +159,7 @@ class CmCourse
 	 */
 	public function getCoursePrice()
 	{
-		return $this->_iCoursePrice;
+		return intval($this->_iCoursePrice);
 	}
 
 
@@ -263,6 +268,16 @@ class CmCourse
     	return htmlspecialchars($this->_sCourseName, ENT_QUOTES, 'UTF-8');
     }
 
+    /**
+     * Returns the Course name sanitized.
+     *
+     * @return string
+     */
+    public function getCourseURLName()
+    {
+    	return sanitize_title(htmlspecialchars($this->_sCourseName, ENT_QUOTES, 'UTF-8'));
+    }
+
 
     /**
      * Sets the Course name.
@@ -280,7 +295,7 @@ class CmCourse
     	}
 
     	if($this->checkCourseName($sName,$iID)){
-    		$this->_sCourseName = htmlspecialchars($sName, ENT_QUOTES, 'UTF-8');
+    		$this->_sCourseName = $sName;
     		return true;
     	} else{
     		return false;
@@ -455,7 +470,7 @@ class CmCourse
 				return true;
 
     		} else{
-    			return (isset($blSaveCheck['insertId']) ? $blSaveCheck['insertId'] : true);
+    			return (isset($blSaveCheck['insertId']) ? $blSaveCheck['insertId'] : $blSaveCheck['result']);
 			}
 
     	} else{
@@ -489,20 +504,20 @@ class CmCourse
 		    	$sSQL = "INSERT INTO ".$this->_getDbTableName()."(name,description,price,active,span)
 		    	VALUES(%s,%s,%d,%d,%d)";
 
+			    $sQuery = $wpdb->prepare($sSQL,$sName,$sDesc,$iPrice,$iActive,$iSpan);
 	    	} else{
 
 	    		if($this->checkCourseName($sName,$this->_iCourseID)){
 
 		    		$sSQL = "UPDATE ".$this->_getDbTableName()."
 		    		SET name = %s, description = %s, price = %d, active = %d, span = %d
-			    	WHERE ID = ".$this->_iCourseID;
+			    	WHERE ID = %d";
 
+				    $sQuery = $wpdb->prepare($sSQL,$sName,$sDesc,$iPrice,$iActive,$iSpan,$this->_iCourseID);
 			    } else{
 			    	return array('result' => false, 'reason' => TXT_CM_ERROR_NAME_CHECK);
 			    }
 	    	}
-
-		    $sQuery = $wpdb->prepare($sSQL,$sName,$sDesc,$iPrice,$iActive,$iSpan);
 
 		    if ($wpdb->query($sQuery) !== false) {
 
@@ -861,6 +876,46 @@ class CmCourse
 
 
 	/**
+	 * @param $iLandingPageID - Post ID of the landing page of the course
+	 *
+	 * @return CmCourse
+	 */
+	public static function getCourseByLandingPage($iLandingPageID){
+		global $wpdb;
+
+		$sSQL = "SELECT course_id FROM ".DB_CM_STORE_META." WHERE meta_key = 'landing_page' AND meta_value = %d";
+
+		$sQuery = $wpdb->prepare($sSQL, $iLandingPageID);
+		$iCourseID = $wpdb->get_var($sQuery);
+
+		return CmCourse::getCourseByID($iCourseID, true);
+	}
+
+
+	/**
+	 * @param $iPageID - Post ID of the page of the course part
+	 * @param bool $blJustID - Should the function only return the ID of the course?
+	 *
+	 * @return CmCourse|int
+	 */
+	public static function getCourseByPageID($iPageID, $blJustID = false){
+		global $wpdb;
+
+		$sSQL = "SELECT post_excerpt FROM ".$wpdb->prefix."posts"." WHERE ID = %d";
+
+		$sQuery = $wpdb->prepare($sSQL, $iPageID);
+		$iCourseExcerpt = $wpdb->get_var($sQuery);
+
+		if($blJustID){
+			return intval(substr($iCourseExcerpt, 0, 1));
+		}
+		else{
+			return CmCourse::getCourseByID(intval(substr($iCourseExcerpt, 0, 1)), true);
+		}
+	}
+
+
+	/**
 	 * Checks to see if the given name is used for any other Course.
 	 *
 	 * @param string $sName
@@ -920,6 +975,29 @@ class CmCourse
     }
 
 
+	/**
+	 *
+	 */
+	public function exportToJSON(){
+    	$aJSONCourse = array(
+    		"ID" => $this->getCourseID(),
+		    "type" => "Course",
+		    "name" => $this->getCourseName(),
+		    "description" => $this->getCourseDescription(),
+		    "price" => $this->getCoursePrice(),
+		    "span" => $this->getCourseSpan(),
+	    );
+
+		$aCourseParts = array();
+		foreach ($this->getCourseParts() as $oCoursePart){
+			array_push($aCourseParts, json_decode($oCoursePart->toJSON()));
+		}
+		$aJSONCourse["parts"] = $aCourseParts;
+
+		return json_encode($aJSONCourse);
+    }
+
+
     /**
      * Prints the <ul> element representing this Course | For tpl/courseForm.php
 	 *
@@ -930,8 +1008,7 @@ class CmCourse
     	?>
     	<ul class='cm_coursePartList'>
     	<?php
-    		for ($i=0; $i < $this->getNrCourseParts(); $i++) {
-	    		$oCoursePart = $this->_getCoursePartByIndex($i);
+    		foreach($this->getCourseParts() as $oCoursePart) {
 	    		$oCoursePart->printListItemRep();
 	    	}
     	?>

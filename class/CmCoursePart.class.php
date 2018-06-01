@@ -64,6 +64,25 @@ class CmCoursePart
 
 
 	/**
+	 * Constructor with params
+	 *
+	 * @param $iIndex
+	 * @param $iCourseID
+	 * @param $sCoursePartName
+	 *
+	 * @return CmCoursePart instance
+	 */
+	public static function createWParams($iIndex, $iCourseID, $sCoursePartName)
+	{
+		$instance = new self();
+		$instance->setCourseIndex($iIndex);
+		$instance->setCourseID($iCourseID);
+		$instance->setCoursePartName($sCoursePartName);
+		return $instance;
+	}
+
+
+	/**
      * Constructor with CmParts and a Course index.
      *
      * @param array - $aParts - array of CmParts | int - $iIndex - This index in a Course
@@ -233,7 +252,7 @@ class CmCoursePart
      */
     public function setCoursePartName($sName)
     {
-    	$this->_sCoursePartName = htmlspecialchars($sName, ENT_QUOTES, 'UTF-8');
+    	$this->_sCoursePartName = $sName;
 
     }
 
@@ -300,7 +319,7 @@ class CmCoursePart
 
     	if ($blVarSet) {
     		$blSaveCheck = $this->_saveToDB();
-    		if($blSaveCheck === false){
+    		if(!$blSaveCheck['result']){
     			return false;
     		}
 
@@ -319,15 +338,12 @@ class CmCoursePart
 					}
 
 					if (count($aSavedParts) < $this->getNrParts()) {
-						echo "Not all Parts were saved!";
 						return false;
 					}
 				}
-    		} else{
-    			return $blSaveCheck;
-			}
+    		}
 
-    		return true;
+		    return (isset($blSaveCheck['insertId']) ? $blSaveCheck['insertId'] : $blSaveCheck['result']);
 
     	} else{
 			echo "Vars are not set for DB!";
@@ -339,7 +355,7 @@ class CmCoursePart
     /**
      * Saves the course to the database.
      *
-     * @return boolean | TRUE if successfully saved to DB - FALSE if something went wrong
+     * @return array | [result] - TRUE if successfully saved to DB - FALSE if something went wrong | [reason] string with error msg
      */
     protected function _saveToDB()
     {
@@ -354,23 +370,32 @@ class CmCoursePart
 		    $sSQL = "INSERT INTO ".$this->_getDbTableName()."(courseID,name,courseIndex)
 		    VALUES(%d,%s,%d)";
 
+		    $sQuery = $wpdb->prepare($sSQL,$icID,$sName,$iCIndex);
 	    } else{
 
 		  	$sSQL = "UPDATE ".$this->_getDbTableName()."
 		   	SET courseID = %d, name = %s, courseIndex = %d
-		    WHERE ID = ".$this->getCoursePartID();
+		    WHERE ID = %d";
+
+		    $sQuery = $wpdb->prepare($sSQL,$icID,$sName,$iCIndex,$this->getCoursePartID());
 	    }
 
-		$sQuery = $wpdb->prepare($sSQL,$icID,$sName,$iCIndex);
+
 
 	    if ($wpdb->query($sQuery) !== false) {
 	    	if(!isset($this->_iCoursePartID)){
-	    		return $wpdb->insert_id;
+			    $iInsertId = $wpdb->insert_id;
 			} else{
-				return true;
+				return array('result' => true);
 			}
+
+		    if(isset($iInsertId)){
+			    return array('result' => true, 'insertId' => $iInsertId);
+		    } else{
+			    return array('result' => true);
+		    }
 	    } else{
-	    	return false;
+	    	return array('result' => false);
 	    }
     }
 
@@ -588,6 +613,26 @@ class CmCoursePart
     		
     	return $sStringToRet;
     }
+
+
+	/**
+	 *
+	 */
+	public function toJSON() {
+		$aJSONCoursePart = array(
+			"ID"          => $this->getCoursePartID(),
+			"name"        => $this->getCoursePartName(),
+			"index"       => $this->getCourseIndex(),
+		);
+
+		$aParts = array();
+		foreach ($this->getParts() as $oPart){
+			array_push($aParts, json_decode($oPart->toJSON()));
+		}
+		$aJSONCoursePart["parts"] = $aParts;
+
+		return json_encode($aJSONCoursePart);
+	}
 
 
     /**

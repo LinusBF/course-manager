@@ -56,11 +56,39 @@ class CmPageBuilder
 		$aPageIds = array();
 		$aCoursePartIds = array();
 
-		foreach ($aCourseParts as $oCoursePart){
+		$aUri = explode("wp-admin", $_SERVER["REQUEST_URI"]);
+
+		foreach ($aCourseParts as $iIndex => $oCoursePart){
 			array_push($aCoursePartIds, $oCoursePart->getCoursePartID());
 			$iPostId = $this->_checkCoursePartPost($oCoursePart->getCoursePartID());
 
-			array_push($aPageIds, $this->_genCoursePage($iCourseId, $sCourseName, $oCoursePart, $blCourseStatus, $iPostId));
+			//Data for the links to the previous and next course part
+			if ($iIndex === 0){
+				$aPrevPartData = null;
+			} else{
+				$aPrevPartData = array(
+					'title' => $aCourseParts[$iIndex - 1]->getCoursePartName(),
+					'link' => reset($aUri) . 'courses/' .
+					          CmPageBuilder::getPartUrlName($sCourseName . '-' . $aCourseParts[$iIndex - 1]->getCoursePartName())
+				);
+			}
+
+			if ($iIndex === count($aCourseParts) - 1){
+				$aNextPartData = null;
+			} else{
+				$aNextPartData = array(
+					'title' => $aCourseParts[$iIndex + 1]->getCoursePartName(),
+					'link' => reset($aUri) . 'courses/' .
+					          CmPageBuilder::getPartUrlName($sCourseName . '-' . $aCourseParts[$iIndex + 1]->getCoursePartName())
+				);
+			}
+
+			$aSurroundingPartsData = array(
+				'prev' => $aPrevPartData,
+				'next' => $aNextPartData
+			);
+
+			array_push($aPageIds, $this->_genCoursePage($iCourseId, $sCourseName, $oCoursePart, $aSurroundingPartsData, $blCourseStatus, $iPostId));
 		}
 
 		//Cleanup deleted CmCourseParts
@@ -74,11 +102,13 @@ class CmPageBuilder
 	 * @param int $iCourseId
 	 * @param string $sCourseName
 	 * @param CmCoursePart $oCoursePart
+	 * @param $aSurroundingParts
 	 * @param bool $blCourseStatus
 	 * @param int $iPostID Function will update page instead of creating if not 0
+	 *
 	 * @return int|WP_Error
 	 */
-	protected function _genCoursePage($iCourseId, $sCourseName, $oCoursePart, $blCourseStatus, $iPostID = 0){
+	protected function _genCoursePage($iCourseId, $sCourseName, $oCoursePart, $aSurroundingParts, $blCourseStatus, $iPostID = 0){
 		$iCpIndex = $oCoursePart->getCourseIndex();
 		$iCpId = $oCoursePart->getCoursePartID();
 		$sCpTitle = $oCoursePart->getCoursePartName();
@@ -88,6 +118,9 @@ class CmPageBuilder
 
 		$sPageContent = "<div id='$sPageElementId' class='cm_page_wrap'>";
 
+		$sPageContent .= $this->_getCourseNavBar($aSurroundingParts);
+		$sPageContent .= "<div class='cm_parts_wrap'>";
+
 		foreach ($oCoursePart->getParts() as $oPart){
 			$sDivId = "cm_part_divider_".$oPart->getIndex();
 
@@ -96,6 +129,8 @@ class CmPageBuilder
 			$sPageContent .= "</div>";
 		}
 
+		$sPageContent .= "</div>";
+		$sPageContent .= $this->_getCourseNavBar($aSurroundingParts, 1);
 		$sPageContent .= "</div>";
 
 		$aPostData = $this->_getPostDataArray($sPageTitle, $sPageContent, $iCourseId, $iCpId, $sPageName, $blCourseStatus, $iPostID);
@@ -135,9 +170,14 @@ class CmPageBuilder
 
 		} elseif ($sType == "video"){
 			//Handle youtube link
-			$sVideoId = explode("v=", $sContent)[1];
+
+			if(strpos($sContent, "v=") !== false){
+				$sVideoId = explode("v=", $sContent)[1];
+			}else{
+				$sVideoId = $sContent;
+			}
 			//Return iFrame element
-			return $sPostHeader."<iframe width='560' height='315' src='https://www.youtube.com/embed/$sVideoId' frameborder='0' allowfullscreen></iframe>".$sPostFooter;
+			return $sPostHeader."<iframe width='560' height='315' src='https://www.youtube.com/embed/$sVideoId?rel=0' frameborder='0' allowfullscreen></iframe>".$sPostFooter;
 
 		} elseif ($sType == "question"){
 			if (!is_array($sContent)){
@@ -156,18 +196,51 @@ class CmPageBuilder
 			}
 
 			$sHtmlString .= "</ul>";
-			$sHtmlString .= "<a class='w3-btn w3-teal' href='#'>".TXT_CM_PAGE_SAVE_ANSWERS."</a>"; //TODO - Expand save button
+			$sHtmlString .= "<div class='cm_answer_button_container'>
+								<a class='w3-btn w3-teal cm_answer_questions' href='#'>".TXT_CM_PAGE_SAVE_ANSWERS."</a><img class='cm_answer_loading cm_hidden' src='".CM_URLPATH."gfx/cm_loading.gif"."'>
+							</div>"; //TODO - Expand save button
 
 			return $sPostHeader.$sHtmlString.$sPostFooter;
 
 		} elseif ($sType == "download"){
 			$sFileTypeClass = "cm_dl_".substr($sContent, strrpos($sContent, ".") + 1);
 
-			return $sPostHeader."<a id='$sPartAttrId' class='cm_page_dl $sFileTypeClass' href='$sContent' download>$sTitle</a>".$sPostFooter;
+			return $sPostHeader."<a id='$sPartAttrId' class='cm_page_dl $sFileTypeClass' target='_blank' href='$sContent'>$sTitle</a>".$sPostFooter;
 
 		}
 
 		return TXT_CM_PAGE_TYPE_NOT_SUPPORTED;
+	}
+
+
+	/**
+	 * @param $aSurroundingParts
+	 * @param int $iPos - Position of the nav bar, top = 0, bottom = 1
+	 *
+	 * @return string
+	 */
+	protected function _getCourseNavBar($aSurroundingParts, $iPos = 0){
+		$sPartLinks = "";
+
+		if(isset($aSurroundingParts['prev']) || isset($aSurroundingParts['next'])) {
+			$sPartLinks = "<div class='cm_course_links " . (!$iPos ? 'cm_course_nav_top' : 'cm_course_nav_bot') . "'>";
+
+			if ( isset( $aSurroundingParts['prev'] ) ) {
+				$sPartLinks .= "<a id='cm_prev_part_link' class='cm_part_nav_link' 
+									href='" . $aSurroundingParts['prev']['link'] . "'><< "
+				               . $aSurroundingParts['prev']['title'] . "</a>";
+			}
+
+			if ( isset( $aSurroundingParts['next'] ) ) {
+				$sPartLinks .= "<a id='cm_next_part_link' class='cm_part_nav_link cm_part_nav_bot' 
+									href='" . $aSurroundingParts['next']['link'] . "'>"
+				               . $aSurroundingParts['next']['title'] . " >></a>";
+			}
+
+			$sPartLinks .= "</div>";
+		}
+
+		return $sPartLinks;
 	}
 
 
@@ -185,7 +258,7 @@ class CmPageBuilder
 	{
 		$aPostData = array(
 			'ID' => $iPostID,
-			'post_excerpt' => 'cm_course',
+			'post_excerpt' => $iCourseId.','.$iCoursePartId,
 			'post_type' => 'cm_course_page',
 			'post_status' => ($blCourseStatus ? 'publish' : 'draft'),
 			'comment_status' => 'closed',
@@ -335,6 +408,37 @@ class CmPageBuilder
 		}
 
 		return false;
+	}
+
+
+	/**
+	 * @param $iCoursePartId
+	 *
+	 * @return bool|string
+	 *
+	 */
+	public static function getCoursePageName( $iCoursePartId ) {
+		global $wpdb;
+
+		$sQuery = $wpdb->prepare("SELECT post_id FROM ".$wpdb->postmeta." WHERE meta_key = 'cm_course_part_id' AND meta_value = %d", $iCoursePartId);
+
+		$iPostId = $wpdb->get_row($sQuery);
+
+		if (isset($iPostId)){
+			$sNameQuery = $wpdb->prepare("SELECT post_name FROM ".$wpdb->posts." WHERE ID = %d", (int) $iPostId->post_id);
+			$sPageName = $wpdb->get_row($sNameQuery);
+
+			if (isset($sPageName)){
+				return $sPageName->post_name;
+			}
+		}
+
+		return false;
+	}
+
+
+	public static function getPartUrlName($sPartName){
+		return sanitize_title($sPartName);
 	}
 
 }

@@ -25,16 +25,21 @@
  */
 
 function genStoreSettingsForm($iCourseId){
-	$oStoreHandler = new CmCourseStoreHandler();
 
-	$aOptions = $oStoreHandler->getStoreOptionsForCourse($iCourseId);
+	$aOptions = CmCourseStoreHandler::getStoreOptionsForCourse($iCourseId);
+
+	$oLandingPageTable = new LandingPageTable();
+
+	$sExplodedUrl = explode("?", $_SERVER["REQUEST_URI"]);
+	$sFormAction = reset($sExplodedUrl) . "?page=cm_courses";
 
 	?>
-	<form id = "cm_course_setting_form" method='post' action='<?php echo reset(explode("?", $_SERVER["REQUEST_URI"])) . "?page=cm_courses"; ?>'>
+	<form id = "cm_course_setting_form" method='post' action='<?php echo $sFormAction; ?>'>
 		<input type='hidden' name='action' value='set_settings'>
-		<input type='hidden' name='_wpnonce' value='<?php echo wp_create_nonce('cm_store_settings_set'); ?>'>
+		<input type='hidden' name='_wpnonce_cm' value='<?php echo wp_create_nonce('cm_store_settings_set'); ?>'>
 		<input type='hidden' name='course' value="<?php echo $iCourseId; ?>">
 		<input type="hidden" name="settings_modified" value="1">
+		<input type="hidden" name="old_landing_page" value="<?php echo $aOptions['landing_page']; ?>">
 
 		<table id='cm_edit_course' class='form-table'>
 			<tbody>
@@ -51,7 +56,7 @@ function genStoreSettingsForm($iCourseId){
 						<div class='image-preview-wrapper'>
 							<img id='image-preview' src='<?php echo wp_get_attachment_url( $aOptions['store_image'] ); ?>' height='100'>
 						</div>
-						<input id="upload_image_button" type="button" class="button" value="<?php echo TXT_CM_STORE_ADD_IMAGE; ?>" />
+						<input id="upload_image_button" type="button" class="button add_media" value="<?php echo TXT_CM_STORE_ADD_IMAGE; ?>" />
 						<input type='hidden' name='store_image' id='image_attachment_id' value='<?php echo $aOptions['store_image']; ?>'>
 					</td>
 				</tr>
@@ -78,11 +83,26 @@ function genStoreSettingsForm($iCourseId){
 			</tbody>
 		</table>
 
+		<?php
+			$oLandingPageTable->print_landing_page_table();
+		?>
+
+		<?php
+		$oCM = new CourseManager();
+
+		$aSettings = $oCM->getOptions();
+
+		if($aSettings['mail_chimp']['list_id'] !== -1){
+			$oListTable = new MailChimpTable("group", $iCourseId);
+			$oListTable->print_table();
+		}
+
+		?>
+
 		<div class='submit'>
 			<input type='submit' name='submit' id='cm_submit' class='button button-primary' value='<?php echo TXT_CM_EDIT_SAVE?>'>
 		</div>
 	</form>
-
 <?php
 }
 
@@ -96,12 +116,43 @@ function saveOptions(){
 	$aOptions = $oStoreHandler->getStoreOptionsForCourse($_POST['course']);
 
 	foreach (array_keys($aOptions) as $sKey){
+		if($sKey == "mc_group_category"){
+			$aOptions[$sKey]['category_id'] = $_POST[$sKey];
+			continue;
+		}
+
 		if(isset($_POST[$sKey])){
 			$aOptions[$sKey] = $_POST[$sKey];
 		}
 	}
 
-	return $oStoreHandler->setStoreOptions($_POST['course'], $aOptions);
+	$blSetCheck = $oStoreHandler->setStoreOptions($_POST['course'], $aOptions);
+
+	if(isset($_POST['mc_group_category'])){
+		CmMailController::setGroup($_POST['mc_group_category'], $_POST['course']);
+	}
+
+	if($blSetCheck && $_POST['landing_page'] != $_POST['old_landing_page']){
+		configLandingPage($_POST['old_landing_page'], false);
+		configLandingPage($_POST['landing_page'], true);
+	}
+
+	return $blSetCheck;
+}
+
+function configLandingPage($iPageID, $blActive){
+	global $wpdb;
+
+	$wpdb_table = $wpdb->prefix . 'posts';
+	$wpdb_data = array(
+		'post_excerpt' => ($blActive ? 'landing_page' : ''),
+	);
+	$wpdb_where = array(
+		'ID' => $iPageID,
+		'post_type' => 'page',
+	);
+
+	return $wpdb->update($wpdb_table, $wpdb_data, $wpdb_where);
 }
 
 ?>

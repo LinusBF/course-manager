@@ -19,6 +19,11 @@
 	display: inline-block;
 }
 
+#cm_edit_course_desc{
+	width: 350px;
+	height: 150px;
+}
+
 .cm_part{
 	width: 80%;
 	padding: 15px;
@@ -135,4 +140,9 @@
 #cm_save_b4_add{
 	font-weight: normal;
 	font-style: italic;
+}
+
+/* SETTINGS PAGE */
+.cm_setting_title{
+	padding-left: 7px;
 }

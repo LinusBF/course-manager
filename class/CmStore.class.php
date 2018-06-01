@@ -91,6 +91,11 @@ class CmStore {
 	}
 
 
+	public function storeActivationCheck(){
+		return (CmMailController::mailChimpActive() && CmPaymentHandler::stripeActive());
+	}
+
+
 	/**
 	 * @param bool $blForce - Force activation?
 	 *
@@ -98,19 +103,23 @@ class CmStore {
 	 */
 	public function activateStore($blForce = false){
 		if ($blForce){
+			if($this->storeActivationCheck()) {
+				$this->_oCourseManager->setOption( 'store_active', true );
 
-			$this->_oCourseManager->setOption('store_active', 'true');
+				$aPostData = $this->_getStorePageArray( true, $this->_getStorePageId(), $this->_getStorePageData() );
 
-			$aPostData = $this->_getStorePageArray(true, $this->_getStorePageId(), $this->_getStorePageData());
+				wp_insert_post( $aPostData );
 
-			wp_insert_post($aPostData);
-
-			return true;
+				return true;
+			}
+			else{
+				return false;
+			}
 		}
 		else{
-			if(!$this->isStoreActive()){
+			if(!$this->isStoreActive() && $this->storeActivationCheck()){
 
-				$this->_oCourseManager->setOption('store_active', 'true');
+				$this->_oCourseManager->setOption('store_active', true);
 
 				$aPostData = $this->_getStorePageArray(true, $this->_getStorePageId(), $this->_getStorePageData());
 
@@ -134,9 +143,12 @@ class CmStore {
 		if ($iPageId > 0){
 			wp_delete_post($iPageId, true);
 
+			$this->_oCourseManager->setOption('store_active', false);
+
 			return true;
 
 		} else{
+			$this->_oCourseManager->setOption('store_active', false);
 			return false;
 		}
 	}
@@ -174,13 +186,44 @@ class CmStore {
 
 
 	/**
+	 *  Returns the store data in JSON-format
+	 */
+	public function exportToJSON(){
+		return json_encode($this->_getAllStoreData());
+	}
+
+
+	/**
+	 *  Returns an array containing all of the rows in the store_meta table
+	 */
+	private function _getAllStoreData(){
+		global $wpdb;
+
+		$sSQL = "SELECT * FROM ".DB_CM_STORE_META;
+
+		$aResults = $wpdb->get_results($sSQL);
+
+		return $aResults;
+	}
+
+
+	/**
 	 * @return int - ID of the page, 0 if not found
 	 */
 	protected function _getStorePageId(){
-		$oStorePage = get_page_by_title(wp_strip_all_tags(TXT_CM_STORE_PAGE_TITLE));
+		global $wpdb;
 
-		if (isset($oStorePage)){
-			return $oStorePage->ID;
+		$sSQL = "
+			SELECT ID
+			FROM $wpdb->posts
+			WHERE post_type = %s
+			AND post_excerpt = %s
+		";
+
+		$sStorePageId = $wpdb->get_row($wpdb->prepare($sSQL, "page", "cm_store"));
+
+		if (isset($sStorePageId)){
+			return intval($sStorePageId->ID);
 		} else {
 			return 0;
 		}
@@ -191,7 +234,7 @@ class CmStore {
 	 * @return string
 	 */
 	protected function _getStorePageData(){
-		return "<p>Look at all these chicken!</p>";
+		return "";
 	}
 
 

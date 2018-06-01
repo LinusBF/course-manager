@@ -10,11 +10,12 @@ jQuery(document).ready(function ($) {
 		event.preventDefault();
 		// If the media frame already exists, reopen it.
 		if (file_frame) {
+			/* DEPRECATED AS IT MADE EVENT.TARGET RETURN THE FIRST ELEMENT THAT WAS OPENED. - Linus
 			// Set the post ID to what we want
 			file_frame.uploader.uploader.param('post_id', set_to_post_id);
 			// Open frame
 			file_frame.open();
-			return;
+			return;*/
 		} else {
 			// Set the wp.media post id so the uploader grabs the ID we want when initialised
 			wp.media.model.settings.post.id = set_to_post_id;
@@ -30,10 +31,10 @@ jQuery(document).ready(function ($) {
 		// When an image is selected, run a callback.
 		file_frame.on('select', function () {
 			// We set multiple to false so only get one image from the uploader
-			attachment = file_frame.state().get('selection').first().toJSON();
+			var attachment = file_frame.state().get('selection').first().toJSON();
 			// Do something with attachment.id and/or attachment.url here
-			$('#image-preview').attr('src', attachment.url).css('width', 'auto');
-			$('#image_attachment_id').val(attachment.id);
+			$(event.target).parent().find('#image-preview').attr('src', attachment.url).css('width', 'auto');
+			$(event.target).parent().find('#image_attachment_id').val(attachment.id);
 			// Restore the main post ID
 			wp.media.model.settings.post.id = wp_media_post_id;
 		});

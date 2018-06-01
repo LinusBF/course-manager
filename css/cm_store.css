@@ -1,6 +1,23 @@
 #store_container{
 	margin: auto;
 	padding: 10px 50px;
+	min-height: 750px;
+}
+
+#auth_container{
+	margin-bottom: 15px;
+	padding-bottom: 5px;
+	border-bottom: 1px #eaeaea solid;
+	justify-content: space-between;
+	display: flex;
+}
+
+#cm_token_input{
+	width: 15%;
+	margin-right: 20px;
+	height: 30px;
+	padding-left: 5px;
+	display: inline-block;
 }
 
 .course_container{
@@ -11,8 +28,22 @@
 	margin-bottom: 15px;
 }
 
+.course_container_front{
+	width: inherit;
+	height: inherit;
+}
+
+.course_container_back{
+	width: inherit;
+	height: inherit;
+}
+
 #row_last_course::after{
 	clear: left;
+}
+
+.cm_center{
+	text-align: center;
 }
 
 .course_image_container{
@@ -30,8 +61,9 @@
 }
 
 .course_text{
-	margin-top: 15px;
-	text-align: center;
+	position: relative;
+	padding: 0 10px;
+	height: 100%;
 }
 
 .course_description{
@@ -42,6 +74,32 @@
 .course_name{
 	font-weight: bold;
 	font-size: 14pt;
+	padding: 5px 0 0 10px;
 }
 
+.cm_flip_link{
+	margin-top: 10px;
+}
 
+.course_back_content{
+	width: 100%;
+	height: 100%;
+	position: relative;
+	padding: 10px;
+}
+
+.close_course {
+	position: absolute;
+	top: 10px;
+	right: 15px;
+	transition: all 200ms;
+	font-size: 30px;
+	font-weight: bold;
+	text-decoration: none;
+	color: #333;
+	z-index: 25;
+}
+
+.close_course:hover {
+	color: #009688;
+}
