@@ -56,39 +56,17 @@ class CmPageBuilder
 		$aPageIds = array();
 		$aCoursePartIds = array();
 
-		$aUri = explode("wp-admin", $_SERVER["REQUEST_URI"]);
-
 		foreach ($aCourseParts as $iIndex => $oCoursePart){
 			array_push($aCoursePartIds, $oCoursePart->getCoursePartID());
 			$iPostId = $this->_checkCoursePartPost($oCoursePart->getCoursePartID());
 
 			//Data for the links to the previous and next course part
-			if ($iIndex === 0){
-				$aPrevPartData = null;
-			} else{
-				$aPrevPartData = array(
-					'title' => $aCourseParts[$iIndex - 1]->getCoursePartName(),
-					'link' => reset($aUri) . 'courses/' .
-					          CmPageBuilder::getPartUrlName($sCourseName . '-' . $aCourseParts[$iIndex - 1]->getCoursePartName())
-				);
-			}
-
-			if ($iIndex === count($aCourseParts) - 1){
-				$aNextPartData = null;
-			} else{
-				$aNextPartData = array(
-					'title' => $aCourseParts[$iIndex + 1]->getCoursePartName(),
-					'link' => reset($aUri) . 'courses/' .
-					          CmPageBuilder::getPartUrlName($sCourseName . '-' . $aCourseParts[$iIndex + 1]->getCoursePartName())
-				);
-			}
-
-			$aSurroundingPartsData = array(
-				'prev' => $aPrevPartData,
-				'next' => $aNextPartData
+			$aSurroundingPartsIds = array(
+				'prev' => ($iIndex === 0 ? null: $iIndex - 1),
+				'next' => ($iIndex === count($aCourseParts) - 1 ? null: $iIndex + 1),
 			);
 
-			array_push($aPageIds, $this->_genCoursePage($iCourseId, $sCourseName, $oCoursePart, $aSurroundingPartsData, $blCourseStatus, $iPostId));
+			array_push($aPageIds, $this->_genCoursePage($iCourseId, $sCourseName, $oCoursePart, $aCourseParts, $aSurroundingPartsIds, $blCourseStatus, $iPostId));
 		}
 
 		//Cleanup deleted CmCourseParts
@@ -102,13 +80,14 @@ class CmPageBuilder
 	 * @param int $iCourseId
 	 * @param string $sCourseName
 	 * @param CmCoursePart $oCoursePart
-	 * @param $aSurroundingParts
+	 * @param CmCoursePart[] $aCourseParts
+	 * @param $aSurroundingPartsIds
 	 * @param bool $blCourseStatus
 	 * @param int $iPostID Function will update page instead of creating if not 0
 	 *
 	 * @return int|WP_Error
 	 */
-	protected function _genCoursePage($iCourseId, $sCourseName, $oCoursePart, $aSurroundingParts, $blCourseStatus, $iPostID = 0){
+	protected function _genCoursePage($iCourseId, $sCourseName, $oCoursePart, $aCourseParts, $aSurroundingPartsIds, $blCourseStatus, $iPostID = 0){
 		$iCpIndex = $oCoursePart->getCourseIndex();
 		$iCpId = $oCoursePart->getCoursePartID();
 		$sCpTitle = $oCoursePart->getCoursePartName();
@@ -118,19 +97,31 @@ class CmPageBuilder
 
 		$sPageContent = "<div id='$sPageElementId' class='cm_page_wrap'>";
 
-		$sPageContent .= $this->_getCourseNavBar($aSurroundingParts);
-		$sPageContent .= "<div class='cm_parts_wrap'>";
+		$sPageContent .= "<section class='row'>";
+		$sPageContent .= "<div class='cm_page_title_container col-sm-12'>
+							<p class='cm_title_course'>$sCourseName</p>
+							<h1 class='cm_title_part'>$sCpTitle</h1>
+						  </div>";
+		$sPageContent .= "</section>";
+
+		$sPageContent .= "<section class='row'>";
+		$sPageContent .= "<div class='cm_parts_wrap col-sm-8'>
+							<div class='cm_parts_wrap_inner'>";
 
 		foreach ($oCoursePart->getParts() as $oPart){
 			$sDivId = "cm_part_divider_".$oPart->getIndex();
 
-			$sPageContent .= "<div id='$sDivId' class='cm_part_divider'>";
+			$sPageContent .= "<section class='row'>
+								<div id='$sDivId' class='cm_part_divider'>";
 			$sPageContent .= $this->_handlePartContent($oPart);
-			$sPageContent .= "</div>";
+			$sPageContent .= "</div>
+							</section>";
 		}
 
-		$sPageContent .= "</div>";
-		$sPageContent .= $this->_getCourseNavBar($aSurroundingParts, 1);
+		$sPageContent .= "</div>
+						</div>";
+		$sPageContent .= $this->_getCourseNavBar($sCourseName, $aCourseParts, $aSurroundingPartsIds);
+		$sPageContent .= "</section>";
 		$sPageContent .= "</div>";
 
 		$aPostData = $this->_getPostDataArray($sPageTitle, $sPageContent, $iCourseId, $iCpId, $sPageName, $blCourseStatus, $iPostID);
@@ -159,11 +150,14 @@ class CmPageBuilder
 		$sPostFooter = "";
 
 		if (isset($sTitle) && $sTitle != ""){
-			$sPostHeader = "<h3 class='cm_page_title'>$sTitle</h3>";
+			$sPostHeader .= "<h3 class='cm_part_title'>$sTitle</h3>";
 		}
 
+		$sPostHeader .= "<div class='cm_part_content'>";
+		$sPostFooter .= "</div>";
+
 		if ($sType == "text"){
-			return $sPostHeader."<p id='$sPartAttrId' class='cm_page_text'>$sContent</p>".$sPostFooter;
+			return $sPostHeader."<div id='$sPartAttrId' class='cm_page_text'>$sContent</div>".$sPostFooter;
 
 		} elseif ($sType == "image"){
 			return $sPostHeader."<img id='$sPartAttrId' class='cm_page_image' src='".wp_get_attachment_url($sContent)."' />".$sPostFooter;
@@ -197,7 +191,7 @@ class CmPageBuilder
 
 			$sHtmlString .= "</ul>";
 			$sHtmlString .= "<div class='cm_answer_button_container'>
-								<a class='w3-btn w3-teal cm_answer_questions' href='#'>".TXT_CM_PAGE_SAVE_ANSWERS."</a><img class='cm_answer_loading cm_hidden' src='".CM_URLPATH."gfx/cm_loading.gif"."'>
+								<a class='w3-btn cm_btn cm_answer_questions' href='#'>".TXT_CM_PAGE_SAVE_ANSWERS."</a><img class='cm_answer_loading cm_hidden' src='".CM_URLPATH."gfx/cm_loading.gif"."'>
 							</div>"; //TODO - Expand save button
 
 			return $sPostHeader.$sHtmlString.$sPostFooter;
@@ -214,33 +208,59 @@ class CmPageBuilder
 
 
 	/**
-	 * @param $aSurroundingParts
-	 * @param int $iPos - Position of the nav bar, top = 0, bottom = 1
+	 * @param string $sCourseTitle
+	 * @param CmCoursePart[] $aCourseParts
+	 * @param array $aSurIds - Surrounding coursePart ids
 	 *
 	 * @return string
 	 */
-	protected function _getCourseNavBar($aSurroundingParts, $iPos = 0){
-		$sPartLinks = "";
+	protected function _getCourseNavBar($sCourseTitle, $aCourseParts, $aSurIds){
+		$sNavContent = "<div class='cm_nav_bar col-sm-4' style='z-index: 0;'>
+						<div class='cm_nav_container'>";
 
-		if(isset($aSurroundingParts['prev']) || isset($aSurroundingParts['next'])) {
-			$sPartLinks = "<div class='cm_course_links " . (!$iPos ? 'cm_course_nav_top' : 'cm_course_nav_bot') . "'>";
+		$sNavContent .= "<section class='row'>";
+		$sNavContent .= "<div class='cm_nav_title col-sm-12'><p>$sCourseTitle</p></div>";
+		$sNavContent .= "</section>";
 
-			if ( isset( $aSurroundingParts['prev'] ) ) {
-				$sPartLinks .= "<a id='cm_prev_part_link' class='cm_part_nav_link' 
-									href='" . $aSurroundingParts['prev']['link'] . "'><< "
-				               . $aSurroundingParts['prev']['title'] . "</a>";
+		$aLinkInfo = $this->getCoursePartLinks($sCourseTitle, $aCourseParts);
+
+		$sNavContent .= "<section class='row'>";
+
+		if( isset($aSurIds['prev']) || isset($aSurIds['next'])) {
+			$sNavContent .= "<div class='cm_course_links col-sm-12'>";
+
+			if ( isset( $aSurIds['prev'] ) ) {
+				$sNavContent .= "<a id='cm_prev_part_link' class='cm_part_nav_btn sf-button sf-button-rounded accent btn btn-secondary' 
+									href='" . $aLinkInfo[$aSurIds['prev']]['link'] . "'>"
+				               . TXT_CM_PAGE_PREV_PART . "</a>";
 			}
 
-			if ( isset( $aSurroundingParts['next'] ) ) {
-				$sPartLinks .= "<a id='cm_next_part_link' class='cm_part_nav_link cm_part_nav_bot' 
-									href='" . $aSurroundingParts['next']['link'] . "'>"
-				               . $aSurroundingParts['next']['title'] . " >></a>";
+			if ( isset( $aSurIds['next'] ) ) {
+				$sNavContent .= "<a id='cm_next_part_link' class='cm_part_nav_btn sf-button sf-button-rounded accent btn btn-secondary' 
+									href='" . $aLinkInfo[$aSurIds['next']]['link'] . "'>"
+				               . TXT_CM_PAGE_NEXT_PART . "</a>";
 			}
 
-			$sPartLinks .= "</div>";
+			$sNavContent .= "</div>";
 		}
 
-		return $sPartLinks;
+		$sNavContent .= "</section>";
+		$sNavContent .= "<section class='cm_nav_parts row'>";
+
+		foreach ($aLinkInfo as $aLink){
+			$sNavContent .= "<div class='cm_nav_part col-sm-12'>";
+			$sIsCurrent = ((!isset($aSurIds['prev']) && $aLink['index'] === 0) || $aLink['index'] === $aSurIds['prev'] + 1 ? " cm_current" : "");
+			$sLinkElement = "<a id='$sIsCurrent' class='cm_nav_part_link' href='".$aLink['link']."'>".$aLink['title']."</a>";
+			$sNavContent .= $sLinkElement;
+			$sNavContent .= "</div>";
+		}
+
+		$sNavContent .= "</section>";
+
+		$sNavContent .= "</div>
+					</div>";
+
+		return $sNavContent;
 	}
 
 
@@ -436,9 +456,37 @@ class CmPageBuilder
 		return false;
 	}
 
+	/**
+	 * @param string $sCourseName
+	 * @param CmCoursePart[] $aCourseParts
+	 *
+	 * @return array
+	 */
+	private function getCoursePartLinks($sCourseName, $aCourseParts){
+		$aLinks = array();
+		foreach ($aCourseParts as $iIndex => $oCoursePart){
+			array_push($aLinks, array(
+				'id' => $oCoursePart->getCoursePartID(),
+				'index' => $oCoursePart->getCourseIndex(),
+				'title' => $oCoursePart->getCoursePartName(),
+				'link' => CmPageBuilder::getCoursePartUrlName($sCourseName, $oCoursePart)
+			));
+		}
 
-	public static function getPartUrlName($sPartName){
-		return sanitize_title($sPartName);
+		return $aLinks;
+	}
+
+
+	/**
+	 * @param string $sCourseName
+	 * @param CmCoursePart $oCoursePart
+	 *
+	 * @return string
+	 */
+	public static function getCoursePartUrlName($sCourseName, $oCoursePart){
+		$aUri = explode("wp-admin", $_SERVER["REQUEST_URI"]);
+		$sLinkBase = sanitize_title($sCourseName . '-' . $oCoursePart->getCoursePartName());
+		return reset($aUri) . 'courses/' . $sLinkBase;
 	}
 
 }

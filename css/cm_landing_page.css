@@ -1,6 +1,11 @@
 .get_course_wrapper{
 	margin: auto;
-	width: 350px;
+	height: 60px;
+	text-align: center;
+	display:flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #ff7300;
 }
 
 .landing_page_main{
@@ -21,6 +26,15 @@
 	padding-right: 0px !important;
 }
 
+.cm_btn{
+	background-color: #00bcb1 !important;
+	font-weight: bold;
+}
+
+.cm_btn:hover{
+	color: #FFFFFF;
+}
+
 .stripe-button-el{
 	background: transparent !important;
 	box-shadow: none !important;
@@ -29,7 +43,7 @@
 
 .stripe-button-el span{
 	color: #fff!important;
-	background: #009688 none !important;
+	background: #00bcb1 none !important;
 	border-radius: 0 !important;
 	text-shadow: none !important;
 	width: 100% !important;

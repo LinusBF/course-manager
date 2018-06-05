@@ -1,0 +1,13 @@
+@media (max-width: 770px) {
+	.cm_nav_part{
+		display: block;
+		overflow: scroll;
+	}
+}
+
+@media (max-height: 550px){
+	.cm_nav_parts{
+		display: block;
+		overflow: scroll;
+	}
+}

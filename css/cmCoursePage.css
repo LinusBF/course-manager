@@ -1,27 +1,73 @@
+.cm_page_title_container{
+	display: flex;
+	align-content: center;
+	flex-direction: column;
+	margin: 75px 0px;
+}
+
+.cm_page_title_container>p{
+	color: #ff6600;
+}
+
+.cm_page_title_container>h1{
+	color: #ff6600;
+}
+
+.cm_title_course{
+	text-align: center;
+	font-size: 12pt;
+	font-weight: bold;
+}
+
+.cm_title_part{
+	text-align: center;
+}
+
 .cm_parts_wrap{
-	border-top: 1px solid rgba(204, 204, 204, 0.44);
-	border-bottom: 1px solid rgba(204, 204, 204, 0.44);
+	display: flex;
+	flex-basis: 66.666666667%;
 	padding-top: 10px;
 	padding-bottom: 10px;
 }
 
-.cm_course_links{
+.cm_nav_bar{
+	display: flex;
+	flex-basis: 33.333333%;
+	align-content: center;
+	justify-content: center;
+	padding: 25px 15px;
+	background-color: #e8e4d9;
+}
+
+.cm_nav_container{
+	display: flex;
+	align-content: center;
+	justify-content: space-between;
+	flex-direction: column;
 	width: 100%;
-	height: 35px;
-
+	height: 100%;
+	padding: 15px;
 }
 
-.cm_part_nav_link{
-	padding: 5px 10px 0 10px;
-	color: #ad2723;
+.cm_nav_title{
+	text-align: center;
+	color: #ff6600;
 }
 
-.cm_course_nav_top{
-	margin-top: 15px;
+.cm_nav_title>p{
+	font-weight: bold;
 }
 
-.cm_course_nav_bot{
+.cm_course_links{
+	display: flex;
+	align-content: center;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 100%;
+}
 
+.cm_part_nav_btn{
+	text-align: center;
 }
 
 #cm_prev_part_link{
@@ -32,17 +78,56 @@
 	float: right;
 }
 
-.cm_page_image{
-	max-width: 650px;
+.cm_nav_parts{
+	display: flex;
+	align-content: center;
+	justify-content: space-between;
+	flex-direction: column;
+	height: 85%;
+}
+
+.cm_nav_part{
+	padding: 14px 20px;
+	background-color: #f7f7f7;
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+.cm_nav_part_link{
+	text-align: center;
+}
+
+.cm_part_content{
+	display:flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	text-align: center;
+}
+
+.cm_part_title{
+	text-align: center;
+}
+
+.cm_page_text{
+	width: 100%;
+	text-align: left;
+}
+
+.cm_part_content>img{
+	max-width: 550px;
 }
 
 .cm_footer{
 }
 
+.cm_page_quest{
+	width: 100%;
+}
+
 .cm_answer_button_container{
 	width: auto;
-	margin-left: 5px;
-	margin-top: -15px;
+	height: 60px;
 }
 
 .cm_hidden{
@@ -52,5 +137,4 @@
 .cm_answer_loading{
 	width: 60px;
 	margin-bottom: 0;
-	margin-left: 25px;
 }
