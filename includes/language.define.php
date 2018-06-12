@@ -111,6 +111,8 @@ define('TXT_CM_EDIT_SAVE_BEFORE_NEW_PARTS', __('You need to save the course firs
 // --- Course Pages --- \\
 define('TXT_CM_PAGE_TYPE_NOT_SUPPORTED', __('Content type not supported yet','course-manager'));
 define('TXT_CM_PAGE_SAVE_ANSWERS', __('Save answers','course-manager'));
+define('TXT_CM_PAGE_PREV_PART', __('Previous','course-manager'));
+define('TXT_CM_PAGE_NEXT_PART', __('Next','course-manager'));
 
 
 // --- Admin Store --- \\

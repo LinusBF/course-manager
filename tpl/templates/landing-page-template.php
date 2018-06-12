@@ -48,7 +48,7 @@ get_header(); ?>
 				if(isset($_SESSION['course_user']) && CmUserManager::checkAccess($_SESSION['course_user']['id'],$oCourse->getCourseID())):
 				?>
 					<div class="get_course_wrapper">
-						<a class="w3-btn w3-teal bold" href="<?php echo reset($aUri) . "courses/" . CmPageBuilder::getCourseFirstPageName($oCourse->getCourseID()); ?>">
+						<a class="w3-btn cm_btn bold" href="<?php echo reset($aUri) . "courses/" . CmPageBuilder::getCourseFirstPageName($oCourse->getCourseID()); ?>">
 							<?php echo $oCourse->getCourseParts()[0]->getCoursePartName() ?>
 						</a>
 					</div>
@@ -62,7 +62,7 @@ get_header(); ?>
 				$sCurrency = $oCourseManager->getOptions()['currency'];
 				?>
 				<div class="get_course_wrapper">
-					<a class="w3-btn w3-teal buy_course_btn" href="#signupModal" data-toggle="modal">
+					<a class="w3-btn cm_btn buy_course_btn" href="#signupModal" data-toggle="modal">
 						<?php
 						if($oCourse->getCoursePrice() > 0) {
 							echo TXT_CM_STORE_BUY . " " . $iPrice . $sCurrency;
@@ -97,7 +97,7 @@ get_header(); ?>
 										<input type="hidden" name="course_id" value="<?php echo $oCourse->getCourseID() ?>">
 									<?php if($oCourse->getCoursePrice() <= 0): ?>
 										<input type="hidden" name="cm_action" value="get_course">
-										<button type="submit" class="w3-btn w3-teal btn-block">Get Course</button>
+										<button type="submit" class="w3-btn cm_btn btn-block">Get Course</button>
 									<?php else: ?>
 										<script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
 										        data-key="<?php echo $oCM->getOptions()['stripe']['publishable_key']; ?>"

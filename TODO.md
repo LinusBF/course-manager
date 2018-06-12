@@ -15,3 +15,6 @@
 * ~~Swift theme not removing course pages from menu~~
     * No longer a problem with custom post types
 * Update DB calls from SQL to WPDB calls
+* Investigate arrowkey bug at checkout
+* Look for better way to logout
+* GDPR check-up, inc 3rd party stuff

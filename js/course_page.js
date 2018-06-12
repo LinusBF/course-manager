@@ -61,7 +61,7 @@ jQuery(document).ready(function($) {
 
 	function toggleLoad(indexes, onOff) {
 		let part = $("#cm_CP_" + indexes['c_part'] + "_P_" + indexes['part']);
-		let parent = part.parents('.cm_part_divider');
+		let parent = part.parents('.cm_part_content');
 		let load_cont = parent.children(".cm_answer_button_container");
 
 		if(onOff){
