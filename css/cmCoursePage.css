@@ -39,11 +39,13 @@
 }
 
 .cm_parts_wrap_inner{
-	max-width: 100%;
+	width: 100%;
 }
 
 .cm_parts_wrap_inner > section {
 	margin-bottom: 50px;
+	margin-right: 0;
+	margin-left: 0;
 }
 
 .cm_nav_bar {
