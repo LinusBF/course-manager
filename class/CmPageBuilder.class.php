@@ -122,6 +122,9 @@ class CmPageBuilder
 						</div>";
 		$sPageContent .= $this->_getCourseNavBar($sCourseName, $aCourseParts, $aSurroundingPartsIds);
 		$sPageContent .= "</section>";
+
+		$sPageContent .= $this->_getCourseNavBarMobile($sCourseName, $aCourseParts, $aSurroundingPartsIds);
+
 		$sPageContent .= "</div>";
 
 		$aPostData = $this->_getPostDataArray($sPageTitle, $sPageContent, $iCourseId, $iCpId, $sPageName, $blCourseStatus, $iPostID);
@@ -171,7 +174,7 @@ class CmPageBuilder
 				$sVideoId = $sContent;
 			}
 			//Return iFrame element
-			return $sPostHeader."<iframe width='560' height='315' src='https://www.youtube.com/embed/$sVideoId?rel=0' frameborder='0' allowfullscreen></iframe>".$sPostFooter;
+			return $sPostHeader."<iframe class='cm_yt_video' src='https://www.youtube.com/embed/$sVideoId?rel=0' frameborder='0' allowfullscreen></iframe>".$sPostFooter;
 
 		} elseif ($sType == "question"){
 			if (!is_array($sContent)){
@@ -191,7 +194,7 @@ class CmPageBuilder
 
 			$sHtmlString .= "</ul>";
 			$sHtmlString .= "<div class='cm_answer_button_container'>
-								<a class='w3-btn cm_btn cm_answer_questions' href='#'>".TXT_CM_PAGE_SAVE_ANSWERS."</a><img class='cm_answer_loading cm_hidden' src='".CM_URLPATH."gfx/cm_loading.gif"."'>
+								<a class='sf-button sf-button-rounded standard green default cm_answer_questions' href='#'>".TXT_CM_PAGE_SAVE_ANSWERS."</a><img class='cm_answer_loading cm_hidden' src='".CM_URLPATH."gfx/cm_loading.gif"."'>
 							</div>"; //TODO - Expand save button
 
 			return $sPostHeader.$sHtmlString.$sPostFooter;
@@ -199,7 +202,7 @@ class CmPageBuilder
 		} elseif ($sType == "download"){
 			$sFileTypeClass = "cm_dl_".substr($sContent, strrpos($sContent, ".") + 1);
 
-			return $sPostHeader."<a id='$sPartAttrId' class='cm_page_dl $sFileTypeClass' target='_blank' href='$sContent'>$sTitle</a>".$sPostFooter;
+			return $sPostHeader."<a id='$sPartAttrId' class='cm_page_dl sf-button sf-button-rounded standard blue default $sFileTypeClass' target='_blank' href='$sContent'>$sTitle</a>".$sPostFooter;
 
 		}
 
@@ -229,28 +232,31 @@ class CmPageBuilder
 		if( isset($aSurIds['prev']) || isset($aSurIds['next'])) {
 			$sNavContent .= "<div class='cm_course_links col-sm-12'>";
 
-			if ( isset( $aSurIds['prev'] ) ) {
-				$sNavContent .= "<a id='cm_prev_part_link' class='cm_part_nav_btn sf-button sf-button-rounded accent btn btn-secondary' 
-									href='" . $aLinkInfo[$aSurIds['prev']]['link'] . "'>"
-				               . TXT_CM_PAGE_PREV_PART . "</a>";
-			}
+			$disableOnFirst= (isset( $aSurIds['prev'] ) ? '' : 'cm_disabled');
+			$disableOnLast = (isset( $aSurIds['next'] ) ? '' : 'cm_disabled');
 
-			if ( isset( $aSurIds['next'] ) ) {
-				$sNavContent .= "<a id='cm_next_part_link' class='cm_part_nav_btn sf-button sf-button-rounded accent btn btn-secondary' 
-									href='" . $aLinkInfo[$aSurIds['next']]['link'] . "'>"
-				               . TXT_CM_PAGE_NEXT_PART . "</a>";
-			}
+			$sNavContent .= "<a id='cm_prev_part_link' class='cm_part_nav_btn sf-button sf-button-rounded accent btn btn-secondary $disableOnFirst' 
+									href='" . (isset( $aSurIds['prev']) ? $aLinkInfo[$aSurIds['prev']]['link'] : '') . "'>"
+			                . TXT_CM_PAGE_PREV_PART . "</a>";
+
+			$sNavContent .= "<a id='cm_next_part_link' class='cm_part_nav_btn sf-button sf-button-rounded accent btn btn-secondary $disableOnLast' 
+									href='" . (isset( $aSurIds['next']) ? $aLinkInfo[$aSurIds['next']]['link'] : '') . "'>"
+			                . TXT_CM_PAGE_NEXT_PART . "</a>";
 
 			$sNavContent .= "</div>";
 		}
 
 		$sNavContent .= "</section>";
-		$sNavContent .= "<section class='cm_nav_parts row'>";
+		$sNavContent .= "<section class='cm_nav_parts cm_scrollbar row'>";
 
 		foreach ($aLinkInfo as $aLink){
-			$sNavContent .= "<div class='cm_nav_part col-sm-12'>";
-			$sIsCurrent = ((!isset($aSurIds['prev']) && $aLink['index'] === 0) || $aLink['index'] === $aSurIds['prev'] + 1 ? " cm_current" : "");
-			$sLinkElement = "<a id='$sIsCurrent' class='cm_nav_part_link' href='".$aLink['link']."'>".$aLink['title']."</a>";
+			$sIsCurrent = (
+			(!isset($aSurIds['prev']) && $aLink['index'] === 0)
+			||
+			(isset($aSurIds['prev']) && $aLink['index'] === $aSurIds['prev'] + 1 )
+				? "cm_current" : "");
+			$sNavContent .= "<div id='$sIsCurrent' class='cm_nav_part col-sm-12'>";
+			$sLinkElement = "<a class='cm_nav_part_link' href='".$aLink['link']."'>".$aLink['title']."</a>";
 			$sNavContent .= $sLinkElement;
 			$sNavContent .= "</div>";
 		}
@@ -259,6 +265,59 @@ class CmPageBuilder
 
 		$sNavContent .= "</div>
 					</div>";
+
+		return $sNavContent;
+	}
+
+
+	/**
+	 * @param string $sCourseTitle
+	 * @param CmCoursePart[] $aCourseParts
+	 * @param array $aSurIds - Surrounding coursePart ids
+	 *
+	 * @return string
+	 */
+	protected function _getCourseNavBarMobile($sCourseTitle, $aCourseParts, $aSurIds){
+		$sNavContent = "<div class='cm_mobile_nav' style='z-index: 99;'>";
+
+		$aLinkInfo = $this->getCoursePartLinks($sCourseTitle, $aCourseParts);
+
+		$disableOnFirst= (isset( $aSurIds['prev'] ) ? '' : 'cm_disabled');
+		$disableOnLast = (isset( $aSurIds['next'] ) ? '' : 'cm_disabled');
+
+		$sPrevLink = "<a id='cm_prev_part_link_mobile' class='cm_part_nav_btn_mobile sf-button sf-button-rounded accent btn btn-secondary $disableOnFirst' 
+								href='" . (isset( $aSurIds['prev']) ? $aLinkInfo[$aSurIds['prev']]['link'] : '') . "'>"
+		                . TXT_CM_PAGE_PREV_PART . "</a>";
+
+		$sNextLink = "<a id='cm_next_part_link_mobile' class='cm_part_nav_btn_mobile sf-button sf-button-rounded accent btn btn-secondary $disableOnLast' 
+								href='" . (isset( $aSurIds['next']) ? $aLinkInfo[$aSurIds['next']]['link'] : '') . "'>"
+		                . TXT_CM_PAGE_NEXT_PART . "</a>";
+
+		$sNavContent .= "<div id='cm_mobile_nav_prev' class='cm_mobile_short_nav'>";
+		$sNavContent .= $sPrevLink;
+		$sNavContent .= "</div>";
+
+		$sNavContent .= "<div class='cm_nav_parts_mobile cm_small_scrollbar'>";
+
+		foreach ($aLinkInfo as $aLink){
+			$sIsCurrent = (
+				(!isset($aSurIds['prev']) && $aLink['index'] === 0)
+				||
+				(isset($aSurIds['prev']) && $aLink['index'] === $aSurIds['prev'] + 1 )
+				? "cm_current_mobile" : "");
+			$sNavContent .= "<div id='$sIsCurrent' class='cm_nav_part_mobile'>";
+			$sLinkElement = "<a class='cm_nav_part_link_mobile' href='".$aLink['link']."'>".$aLink['title']."</a>";
+			$sNavContent .= $sLinkElement;
+			$sNavContent .= "</div>";
+		}
+
+		$sNavContent .= "</div>";
+
+		$sNavContent .= "<div id='cm_mobile_nav_next' class='cm_mobile_short_nav'>";
+		$sNavContent .= $sNextLink;
+		$sNavContent .= "</div>";
+
+		$sNavContent .= "</div>";
 
 		return $sNavContent;
 	}
