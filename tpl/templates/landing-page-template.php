@@ -15,6 +15,15 @@ function landing_page_header(){
 		  <script type='application/javascript' src='".CM_URLPATH."js/landing_page.js'></script>";
 }
 
+$oCM = new CourseManager();
+
+$iPost_id = get_the_ID();
+$oCourse = CmCourse::getCourseByLandingPage($iPost_id);
+
+if(is_bool($oCourse)){
+	wp_redirect(CmCourseStoreHandler::getStoreURL()."?course_404=true");
+}
+
 get_header(); ?>
 
 	<div class="wrap">
@@ -36,10 +45,6 @@ get_header(); ?>
 				?>
 
 				<?php
-				$oCM = new CourseManager();
-
-				$iPost_id = get_the_ID();
-				$oCourse = CmCourse::getCourseByLandingPage($iPost_id);
 
 				$sSlug = basename(get_permalink());
 				$aUri = explode($sSlug, $_SERVER["REQUEST_URI"]);
