@@ -67,7 +67,7 @@ define('TXT_CM_ACTIVATE_FAILURE', __('Course could not be activated. Have you ge
 define('TXT_CM_ADMIN_SETTINGS_NOT_SET', __('Not Set','course-manager'));
 define('TXT_CM_CHIMP_TABLE_LISTS_TITLE', __('Name','course-manager'));
 define('TXT_CM_CHIMP_TABLE_LISTS_DESC', __('Select a list to connect your costumers to','course-manager'));
-define('TXT_CM_CHIMP_TABLE_GROUPS_DESC', __('Select a group that the customers that want offers are put in','course-manager'));
+define('TXT_CM_CHIMP_TABLE_GROUPS_DESC', __('Select a MailChimp group that the customers that want offers are put in','course-manager'));
 define('TXT_CM_CHIMP_TABLE_TEMPLATE_DESC', __('Select a template that the purchase email will use','course-manager'));
 define('TXT_CM_CHIMP_INCORRECT_KEY', __('The current API key does not work','course-manager'));
 
