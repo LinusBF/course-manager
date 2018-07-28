@@ -78,8 +78,9 @@ define('TXT_CM_CHIMP_INCORRECT_KEY', __('The current API key does not work','cou
 // --- Create/Edit Course --- \\
 define('TXT_CM_EDIT_TITLE', __('You\'re editing ','course-manager'));
 define('TXT_CM_CREATE_TITLE', __('You\'re creating a new course','course-manager'));
-define('TXT_CM_EDIT_COURSENAME', __('Course name','course-manager'));
-define('TXT_CM_EDIT_COURSEDESC', __('Course description','course-manager'));
+define('TXT_CM_EDIT_COURSENAME', __('Course name (52 characters)','course-manager'));
+define('TXT_CM_EDIT_COURSEDESC', __('Course description<br>(265 characters)','course-manager'));
+define('TXT_CM_EDIT_COURSESTOREDESC', __('Course description<br>(140 characters)','course-manager'));
 define('TXT_CM_EDIT_COURSEPRICE', __('Course price (kr)','course-manager'));
 define('TXT_CM_EDIT_COURSESPAN', __('Course span (days)','course-manager'));
 define('TXT_CM_EDIT_SAVE', __('Save Course','course-manager'));

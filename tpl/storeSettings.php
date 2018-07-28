@@ -62,21 +62,21 @@ function genStoreSettingsForm($iCourseId){
 				</tr>
 				<tr>
 					<th scope='row'>
-						<label class="cm_table_label" for='cm_course_desc'><?php echo TXT_CM_EDIT_COURSEDESC; ?></label>
+						<label class="cm_table_label" for='cm_course_desc'><?php echo TXT_CM_EDIT_COURSESTOREDESC; ?></label>
 					</th>
 					<td>
 						<div class="textarea-wrap">
-							<textarea name="store_description"><?php echo $aOptions['store_description']; ?></textarea>
+							<textarea id="cm_course_desc" name="store_description"><?php echo $aOptions['store_description']; ?></textarea>
 						</div>
 					</td>
 				</tr>
 				<tr>
 					<th scope='row'>
-						<label class="cm_table_label" for='cm_course_desc'><?php echo TXT_CM_STORE_COURSE_DISCOUNT; ?></label>
+						<label class="cm_table_label" for='cm_course_discount'><?php echo TXT_CM_STORE_COURSE_DISCOUNT; ?></label>
 					</th>
 					<td>
 						<div>
-							<input type="number" min="0" max="100" name="current_discount" value="<?php echo $aOptions['current_discount']; ?>">%
+							<input id="cm_course_discount" type="number" min="0" max="100" name="current_discount" value="<?php echo $aOptions['current_discount']; ?>">%
 						</div>
 					</td>
 				</tr>
