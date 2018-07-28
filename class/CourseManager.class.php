@@ -407,7 +407,7 @@ class CourseManager
         	dbDelta(
         		"CREATE TABLE ".$sCmCourseTableName." (
         			ID int NOT NULL auto_increment,
-					name VARCHAR(100) NOT NULL UNIQUE,
+					name VARCHAR(150) NOT NULL UNIQUE,
 					description TEXT,
 					price int NOT NULL,
 					active BOOLEAN NOT NULL DEFAULT FALSE,
@@ -431,7 +431,7 @@ class CourseManager
         		"CREATE TABLE ".$sCmCoursePartTableName." (
         			ID int NOT NULL auto_increment,
                     courseID int NOT NULL,
-                    name VARCHAR(100) NOT NULL,
+                    name VARCHAR(250) NOT NULL,
                     courseIndex int NOT NULL,
                     PRIMARY KEY (ID),
                     FOREIGN KEY (courseID) REFERENCES ".$sCmCourseTableName."(ID) ON DELETE CASCADE
@@ -452,7 +452,7 @@ class CourseManager
         		"CREATE TABLE ".$sCmPartTableName." (
         			ID int NOT NULL auto_increment,
                     coursePartID int NOT NULL,
-                    title VARCHAR(100),
+                    title VARCHAR(250),
                     content LONGTEXT,
                     type VARCHAR(65),
                     partIndex int NOT NULL,
