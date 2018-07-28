@@ -125,6 +125,7 @@ define('TXT_CM_STORE_PAGE_TITLE', __('Store', 'course-manager'));
 define('TXT_CM_STORE_PAGE_NAME', __('course-store', 'course-manager'));
 define('TXT_CM_STORE_ACTIVATED', __('You have activated the store, check your menus to make sure that it has been added where you like.', 'course-manager'));
 define('TXT_CM_STORE_DEACTIVATED', __('You have deactivated the store.', 'course-manager'));
+define('TXT_CM_STORE_CHANGED_COURSES_IN_STORE', __('Courses in the store have been updated!', 'course-manager'));
 define('TXT_CM_STORE_SAVE_CHANGES', __('Save Changes', 'course-manager'));
 define('TXT_CM_STORE_SAVE_SUCCESS', __('The store options for the course have successfully been saved','course-manager'));
 define('TXT_CM_STORE_SAVE_FAILURE', __('Something went wrong. Your updates/creation have not been saved','course-manager'));
