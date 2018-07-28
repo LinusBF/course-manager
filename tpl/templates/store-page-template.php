@@ -119,23 +119,36 @@ get_header(); ?>
 										?>">
 									</div>
 									<div class="small-flip-container" ontouchstart="this.classList.toggle('hover');">
-										<p class="course_name"><?php echo $oCourse->getCourseName(); ?></p>
+										<p class="course_name"><?php
+											$sTitleToPrint = $oCourse->getCourseName();
+											$blMultiLineTitle = false;
+											if(strlen($sTitleToPrint) > 26){
+												$blMultiLineTitle = true;
+											}
+											echo $sTitleToPrint; ?></p>
 										<div class="small-flipper">
 											<div class="course_text small-front">
-												<p class="course_description"><?php echo $aCourseOptions['store_description']; ?></p>
+												<p class="course_description"><?php
+													$sDescToPrint = $aCourseOptions['store_description'];
+													if(strlen($sDescToPrint) > 140){
+														$sDescWidth = ($blMultiLineTitle ? 61 : 137);
+														$sDescToPrint = mb_strimwidth($sDescToPrint, 0, $sDescWidth, "...");
+													}
+													echo $sDescToPrint;
+												?></p>
 											</div>
 											<div class="course_text cm_center small-back">
 												<?php if(isset($_SESSION['course_user']) && CmUserManager::checkAccess($_SESSION['course_user']['id'],$oCourse->getCourseID())): ?>
-													<a class="w3-btn w3-teal buy_course_btn" href="<?php
+													<a class="sf-button sf-button-rounded standard buy_course_btn" href="<?php
 													echo CmCourseStoreHandler::getLandingPageURL($oCourse->getCourseID());
 													?>">
 														<?php echo TXT_CM_STORE_GO_TO_COURSE; ?>
 													</a>
 												<?php else:?>
-													<a class="w3-btn w3-teal cm_flip_link"
+													<a class="sf-button sf-button-rounded standard cm_flip_link buy_course_btn"
 													   href="#<?php echo $oCourse->getCourseURLName();?>"><?php
 														if($oCourse->getCoursePrice() > 0) {
-															echo $iPrice . $sCurrency . "<br>" . TXT_CM_STORE_MORE_INFO;
+															echo TXT_CM_STORE_MORE_INFO;
 														} else{
 															echo TXT_CM_STORE_FREE;
 														}
@@ -151,15 +164,20 @@ get_header(); ?>
 									<div class="course_back_content">
 										<div class="course_text">
 											<p class="course_name"><?php echo $oCourse->getCourseName(); ?></p>
-											<p class="course_description"><?php echo $oCourse->getCourseDescription(); ?></p>
-											<br>
+											<p class="course_description"><?php
+												$sCourseDescToPrint = $oCourse->getCourseDescription();
+												if(strlen($sCourseDescToPrint) > 265){
+													$sCourseDescToPrint = mb_strimwidth($sCourseDescToPrint, 0, 262, "...");
+												}
+												echo $sCourseDescToPrint;
+												?></p>
 											<div class="cm_center">
-												<a class="w3-btn w3-teal buy_course_btn" href="<?php
+												<a class="sf-button sf-button-rounded standard buy_course_btn" href="<?php
 															echo CmCourseStoreHandler::getLandingPageURL($oCourse->getCourseID());
 														?>">
 													<?php
 													if($oCourse->getCoursePrice() > 0) {
-														echo TXT_CM_STORE_LEARN_MORE . " " . $iPrice . $sCurrency;
+														echo TXT_CM_STORE_LEARN_MORE . " (" . $iPrice . $sCurrency . ")";
 													} else{
 														echo TXT_CM_STORE_FREE_LEARN_MORE;
 													}
