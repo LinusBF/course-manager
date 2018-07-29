@@ -80,7 +80,7 @@
 
 .cm_nav_title > p {
 	font-weight: bold;
-	font-size: 16pt;
+	font-size: 12pt;
 }
 
 .cm_course_links {
@@ -142,6 +142,9 @@
 }
 
 .cm_nav_part_link {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
 	text-align: left;
 	padding: 14px 20px;
 	width: 100%;
