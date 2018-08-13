@@ -1,10 +1,25 @@
 #user_account_container{
-
 	margin: auto;
 	padding: 10px 50px;
 	justify-content: space-between;
 	display: flex;
 	flex-wrap: wrap;
+	flex-direction: column;
+	width: 80%;
+}
+
+.cm_course {
+	display: flex;
+	flex-flow: column wrap;
+	max-width: 100%;
+	margin-bottom: 45px;
+}
+
+.course-title {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	padding: 0 10px;
 }
 
 .cm_answers{
@@ -13,4 +28,15 @@
 
 .cm_answer_wrapper{
 	margin-bottom: 25px;
+}
+
+.cm_course_part {
+	max-width: 400px;
+	padding: 10px;
+	overflow: hidden;
+	margin-bottom: 15px;
+}
+
+.cm_part {
+	background-color: #FFFFFF;
 }
