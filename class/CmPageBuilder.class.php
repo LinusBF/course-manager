@@ -202,7 +202,7 @@ class CmPageBuilder
 		} elseif ($sType == "download"){
 			$sFileTypeClass = "cm_dl_".substr($sContent, strrpos($sContent, ".") + 1);
 
-			return $sPostHeader."<a id='$sPartAttrId' class='cm_page_dl sf-button sf-button-rounded standard blue default $sFileTypeClass' target='_blank' href='$sContent'>$sTitle</a>".$sPostFooter;
+			return $sPostHeader."<a id='$sPartAttrId' class='cm_page_dl sf-button sf-button-rounded standard blue default $sFileTypeClass' target='_blank' href='$sContent' download>$sTitle</a>".$sPostFooter;
 
 		}
 
