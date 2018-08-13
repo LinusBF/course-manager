@@ -12,6 +12,12 @@
 	display: flex;
 }
 
+#auth_container>a {
+	color: #FF6600;
+	font-weight: bold;
+	letter-spacing: 1px;
+}
+
 #cm_token_input{
 	width: 15%;
 	margin-right: 20px;
@@ -91,7 +97,6 @@
 .buy_course_btn{
 	font-weight: bold;
 	background-color: #FF6600;
-
 }
 
 .small-flip-container .buy_course_btn{
