@@ -30,13 +30,13 @@ if(isset($_POST['cm_action']) && $_POST['cm_action'] === "get_course" && isset($
 //Check for cookie
 CmUserManager::updateSessionFromCookie();
 
-add_action('wp_head', 'store_header');
+add_action('wp_head', function(){echo "<link rel=\"stylesheet\" href=\"https://www.w3schools.com/lib/w3.css\">";});
+add_action('wp_head', 'store_header', 9999);
 
 function store_header(){
 	echo "<link rel='stylesheet' href='".CM_URLPATH."css/cm_general.css'>
 		  <link rel='stylesheet' href='".CM_URLPATH."css/cm_store.css'>
 		  <link rel='stylesheet' href='".CM_URLPATH."css/flip_animation.css'>
-		  <link rel=\"stylesheet\" href=\"https://www.w3schools.com/lib/w3.css\">
 		  <script type='application/javascript' src='".CM_URLPATH."js/store_page.js'></script>";
 }
 

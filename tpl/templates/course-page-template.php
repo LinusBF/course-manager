@@ -24,17 +24,13 @@ if(!CmUserManager::checkAccess($_SESSION['course_user']['id'], $iCourseId)){
 }
 
 
-add_action('wp_head', 'w3_page_header');
+add_action('wp_head', function(){echo "<link rel=\"stylesheet\" href=\"https://www.w3schools.com/lib/w3.css\">";});
 add_action('wp_head', 'course_page_header', 9999);
 
 function course_page_header(){
 	echo "<link rel='stylesheet' href='".CM_URLPATH."css/cm_general.css'>
 		  <link rel='stylesheet' href='".CM_URLPATH."css/cmCoursePage.css'>
 		  <link rel='stylesheet' href='".CM_URLPATH."css/cmCoursePageMobile.css'>";
-}
-
-function w3_page_header(){
-	echo "<link rel='stylesheet' href='https://www.w3schools.com/lib/w3.css'>";
 }
 
 ?>
