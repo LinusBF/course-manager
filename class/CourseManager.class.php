@@ -786,7 +786,7 @@ class CourseManager
         
         wp_enqueue_style(
             'CourseManagerGeneral', 
-            CM_URLPATH . "css/cmGeneral.css",
+            CM_URLPATH . "css/cm_general.css",
             array() ,
             '1.0',
             'screen'

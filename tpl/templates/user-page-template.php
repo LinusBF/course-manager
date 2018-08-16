@@ -16,7 +16,8 @@ if ( ! isset( $_SESSION['course_user'] ) ) {
 add_action( 'wp_head', 'store_header' );
 
 function store_header() {
-	echo "<link rel='stylesheet' href='" . CM_URLPATH . "css/cm_user_page.css'>
+	echo "<link rel='stylesheet' href='".CM_URLPATH."css/cm_general.css'>
+		  <link rel='stylesheet' href='" . CM_URLPATH . "css/cm_user_page.css'>
 		  <link rel=\"stylesheet\" href=\"https://www.w3schools.com/lib/w3.css\">
 		  <script type='application/javascript' src='" . CM_URLPATH . "js/user_page.js'></script>";
 }
