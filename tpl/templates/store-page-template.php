@@ -57,26 +57,44 @@ get_header(); ?>
 						<?php
 						if (isset($_GET['my_courses'])):
 						?>
-							<a href="<?php echo CmCourseStoreHandler::getStoreURL(); ?>">
-								<?php echo TXT_CM_STORE_GO_TO_STORE; ?>
+							<a class="underline pull-right switch_token" href="<?php echo CmCourseStoreHandler::getStoreURL()."?new_token=true"; ?>">
+								<?php echo TXT_CM_STORE_SWITCH_TOKEN; ?>
 							</a>
-							<a href="<?php echo CmUserManager::getUserPageURL(); ?>">
+							<a class="underline" href="<?php echo CmUserManager::getUserPageURL(); ?>">
 								<?php echo TXT_CM_STORE_GO_TO_ANSWERS; ?>
 							</a>
-							<a class="pull-right switch_token" href="<?php echo CmCourseStoreHandler::getStoreURL()."?new_token=true"; ?>">
-								<?php echo TXT_CM_STORE_SWITCH_TOKEN; ?>
+							<a class="underline" href="<?php echo CmCourseStoreHandler::getStoreURL(); ?>">
+								<?php echo TXT_CM_STORE_GO_TO_STORE; ?>
 							</a>
 						<?php
 						 elseif (isset($_SESSION['course_user'])):
 						?>
-							<a href="?my_courses=true">
+							<a class="underline" href="?my_courses=true">
 								<?php echo TXT_CM_STORE_GO_TO_YOUR_COURSES; ?>
 							</a>
 						<?php else: ?>
-							<input id="cm_token_input" type="text">
-							 <button id="token_btn" class="w3-btn w3-teal">
+							 <a class="sf-button standard cm_main_btn cm_small pull-right"  href="#useToken" data-toggle="modal">
 								 <?php echo TXT_CM_STORE_ENTER_TOKEN;?>
-							 </button>
+							 </a>
+							<div class="modal fade" id="useToken" role="dialog">
+								<div class="modal-dialog modal-sm">
+
+									<!-- Modal content-->
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title"><?php echo TXT_CM_STORE_TOKEN_TITLE ?></h4>
+										</div>
+										<div class="modal-body">
+											<input id="cm_token_input" type="text">
+											<button id="token_btn" type="submit" class="sf-button standard cm_main_btn cm_small pull-right">
+												<?php echo TXT_CM_STORE_ENTER_TOKEN ?>
+											</button>
+										</div>
+									</div>
+
+								</div>
+							</div>
 					    <?php endif; ?>
 					</div>
 					<?php

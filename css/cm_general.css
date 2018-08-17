@@ -1,0 +1,35 @@
+a:hover {
+	color: #ff7300;
+}
+
+a.underline:hover {
+	text-decoration-line: underline;
+}
+
+button.cm_main_btn, a.cm_main_btn {
+	background-color: #ff7300 !important;
+	color: #fff !important;
+}
+
+button.cm_main_btn:hover, a.cm_main_btn:hover {
+	background-color: #f17300 !important;
+}
+
+button.cm_small, a.cm_small {
+	padding: 9px 18px;
+}
+
+.modal {
+	-webkit-transform: translate(0, 0);
+}
+
+.modal-header {
+	background-color: #e9e6dd;
+}
+
+.modal-content {
+}
+
+.modal-open {
+	padding-right: 0 !important;
+}

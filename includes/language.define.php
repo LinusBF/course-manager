@@ -143,6 +143,7 @@ define('TXT_CM_STORE_SELECT_LADNING_PAGE', __('Choose a landing page','course-ma
 define('TXT_CM_STORE_TABLE_PAGE_TITLE', __('Page Title','course-manager'));
 define('TXT_CM_STORE_TABLE_CHOICE', __('Choice','course-manager'));
 define('TXT_CM_STORE_ENTER_TOKEN', __('Use token','course-manager'));
+define('TXT_CM_STORE_TOKEN_TITLE', __('Enter your token','course-manager'));
 define('TXT_CM_STORE_GO_TO_YOUR_COURSES', __('Go to your courses','course-manager'));
 define('TXT_CM_STORE_GO_TO_STORE', __('Go to the store','course-manager'));
 define('TXT_CM_STORE_GO_TO_ANSWERS', __('Your answers','course-manager'));
