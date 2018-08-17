@@ -42,7 +42,7 @@
 	background-color: #FFFFFF;
 }
 
-.course_container:nth-of-type(3){
+.course_container:nth-of-type(3n + 3){
 	margin-right: 0;
 }
 

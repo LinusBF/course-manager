@@ -36,6 +36,7 @@ add_action('wp_head', 'store_header', 9999);
 function store_header(){
 	echo "<link rel='stylesheet' href='".CM_URLPATH."css/cm_general.css'>
 		  <link rel='stylesheet' href='".CM_URLPATH."css/cm_store.css'>
+		  <link rel='stylesheet' href='".CM_URLPATH."css/cm_store_mobile.css'>
 		  <link rel='stylesheet' href='".CM_URLPATH."css/flip_animation.css'>
 		  <script type='application/javascript' src='".CM_URLPATH."js/store_page.js'></script>";
 }
