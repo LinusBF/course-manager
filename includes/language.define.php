@@ -154,6 +154,7 @@ define('TXT_CM_STORE_CHECKOUT_BUTTON_TEXT', __('Pay with card','course-manager')
 define('TXT_CM_STORE_CHECKOUT_SUCCESS', __('Thank you for your purchase, click on the course to start it!','course-manager'));
 define('TXT_CM_STORE_CHECKOUT_CARD_DECLINED', __('Your card was declined, please try with another one or contact support.','course-manager'));
 define('TXT_CM_STORE_NO_COURSES', __('There are currently no courses available :(','course-manager'));
+define('TXT_CM_STORE_EXPIRED_COURSE', __('Ended','course-manager'));
 
 
 // --- Landing Pages --- \\

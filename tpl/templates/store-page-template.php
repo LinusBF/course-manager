@@ -97,6 +97,7 @@ get_header(); ?>
 							</div>
 					    <?php endif; ?>
 					</div>
+					<div class="courses">
 					<?php
 						$oStore = new CmStore();
 						$oStoreHandler = new CmCourseStoreHandler();
@@ -122,13 +123,14 @@ get_header(); ?>
 							$iPrice    = $oCourse->getCoursePrice() * ( 1 - ( $aCourseOptions['current_discount'] / 100 ) );
 							$iPrice    = floor( $iPrice );
 							$sCurrency = $oCourseManager->getOptions()['currency'];
+							if($blMyCourses){
+								$blHasAccess = CmUserManager::checkAccess($_SESSION['course_user']['id'], $oCourse->getCourseID());
+							}
 							//TODO - Handle expired courses. Maybe continue loop if user don't have access???
 					?>
-						<div id="<?php echo $oCourse->getCourseURLName();?>" class="course_container flip-container w3-card-2"<?php
-						if (($iKey + 1) % 4 == 0){
-							echo " id='row_last_course'";
-						}
-						?>>
+						<div id="<?php echo $oCourse->getCourseURLName();?>"
+							 class="course_container flip-container w3-card-2 <?php echo (($blMyCourses && !$blHasAccess) ? 'cm_expired' : '') ?>"
+							 data-before-content="<?php echo TXT_CM_STORE_EXPIRED_COURSE ?>">
 							<div class="flipper">
 								<div class="course_container_front front">
 									<div class="course_image_container">
@@ -211,6 +213,7 @@ get_header(); ?>
 					<?php
 						endforeach;
 					?>
+					</div>
 				</div>
 			</main><!-- #main -->
 		</div><!-- #primary -->
