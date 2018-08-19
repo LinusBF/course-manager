@@ -43,6 +43,11 @@ function course_page_header(){
 	<body <?php body_class(); ?>>
 		<div class="wrap">
 			<div id="primary" class="content-area">
+				<div class="cm_back_to_store">
+					<a class="underline" href="<?php echo CmCourseStoreHandler::getStoreURL(); ?>">
+						<?php echo TXT_CM_PAGE_BACK_TO_STORE; ?>
+					</a>
+				</div>
 				<main id="main" class="site-main" role="main">
 					<?php
 
@@ -61,7 +66,6 @@ function course_page_header(){
 				</main><!-- #main -->
 			</div><!-- #primary -->
 		</div><!-- .wrap -->
-		<?php get_footer(); ?>
 	</body>
 </html>
 <?php

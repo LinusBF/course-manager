@@ -114,6 +114,7 @@ define('TXT_CM_PAGE_TYPE_NOT_SUPPORTED', __('Content type not supported yet','co
 define('TXT_CM_PAGE_SAVE_ANSWERS', __('Save answers','course-manager'));
 define('TXT_CM_PAGE_PREV_PART', __('Previous','course-manager'));
 define('TXT_CM_PAGE_NEXT_PART', __('Next','course-manager'));
+define('TXT_CM_PAGE_BACK_TO_STORE', __('Back to store','course-manager'));
 
 
 // --- Admin Store --- \\
