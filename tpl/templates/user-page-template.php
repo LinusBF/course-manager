@@ -37,11 +37,11 @@ get_header(); ?>
 						<h2 class="course-title"><?php echo $aCourseAnswers['course']->getCourseName(); ?></h2>
 						<div class="cm_course">
 							<?php foreach ( $aCourseAnswers['answers'] as $aCpAnswer ): ?>
-								<div class="cm_course_part">
+								<div class="cm_course_part w3-card-2">
 									<?php foreach ( $aCpAnswer['answers'] as $aPAnswer ): ?>
 										<?php if ( $aPAnswer['answers'] !== false ): ?>
 											<div class="cm_part">
-												<div class="cm_answers w3-card-2">
+												<div class="cm_answers">
 													<header class="w3-container">
 														<h3><?php echo $aPAnswer['part']->getTitle() ?></h3>
 													</header>
@@ -61,7 +61,7 @@ get_header(); ?>
 											</div>
 										<?php else: ?>
 											<div class="cm_part">
-												<div class="cm_answers w3-card-2">
+												<div class="cm_answers">
 													<header class="w3-container">
 														<h3><?php echo $aPAnswer['part']->getTitle() ?></h3>
 													</header>
