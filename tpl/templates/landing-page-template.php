@@ -7,12 +7,22 @@
 //Check for cookie
 CmUserManager::updateSessionFromCookie();
 
-add_action('wp_head', 'landing_page_header');
+add_action('wp_head', function(){echo "<link rel=\"stylesheet\" href=\"https://www.w3schools.com/lib/w3.css\">";});
+add_action('wp_head', 'landing_page_header', 9999);
 
 function landing_page_header(){
-	echo "<link rel='stylesheet' href='".CM_URLPATH."css/cm_landing_page.css'>
-		  <link rel=\"stylesheet\" href=\"https://www.w3schools.com/lib/w3.css\">
+	echo "<link rel='stylesheet' href='".CM_URLPATH."css/cm_general.css'>
+		  <link rel='stylesheet' href='".CM_URLPATH."css/cm_landing_page.css'>
 		  <script type='application/javascript' src='".CM_URLPATH."js/landing_page.js'></script>";
+}
+
+$oCM = new CourseManager();
+
+$iPost_id = get_the_ID();
+$oCourse = CmCourse::getCourseByLandingPage($iPost_id);
+
+if(is_bool($oCourse)){
+	wp_redirect(CmCourseStoreHandler::getStoreURL()."?course_404=true");
 }
 
 get_header(); ?>
@@ -36,10 +46,6 @@ get_header(); ?>
 				?>
 
 				<?php
-				$oCM = new CourseManager();
-
-				$iPost_id = get_the_ID();
-				$oCourse = CmCourse::getCourseByLandingPage($iPost_id);
 
 				$sSlug = basename(get_permalink());
 				$aUri = explode($sSlug, $_SERVER["REQUEST_URI"]);
@@ -47,8 +53,8 @@ get_header(); ?>
 				//If the user has access to the course, show link to the first CoursePart
 				if(isset($_SESSION['course_user']) && CmUserManager::checkAccess($_SESSION['course_user']['id'],$oCourse->getCourseID())):
 				?>
-					<div class="get_course_wrapper">
-						<a class="w3-btn cm_btn bold" href="<?php echo reset($aUri) . "courses/" . CmPageBuilder::getCourseFirstPageName($oCourse->getCourseID()); ?>">
+					<div class="get_course_wrapper sf-promo-bar">
+						<a class="sf-button standard turquoise" href="<?php echo reset($aUri) . "courses/" . CmPageBuilder::getCourseFirstPageName($oCourse->getCourseID()); ?>">
 							<?php echo $oCourse->getCourseParts()[0]->getCoursePartName() ?>
 						</a>
 					</div>
@@ -61,8 +67,8 @@ get_header(); ?>
 				$iPrice = floor( $iPrice );
 				$sCurrency = $oCourseManager->getOptions()['currency'];
 				?>
-				<div class="get_course_wrapper">
-					<a class="w3-btn cm_btn buy_course_btn" href="#signupModal" data-toggle="modal">
+				<div class="get_course_wrapper sf-promo-bar">
+					<a class="sf-button standard turquoise" href="#signupModal" data-toggle="modal">
 						<?php
 						if($oCourse->getCoursePrice() > 0) {
 							echo TXT_CM_STORE_BUY . " " . $iPrice . $sCurrency;
@@ -91,13 +97,14 @@ get_header(); ?>
 												   <?php echo (isset($_SESSION['course_user']) ? 'value="'.$_SESSION['course_user']['email'].'"' : "") ?>>
 										</div>
 									<?php endif; ?>
-										<div class="checkbox">
-											<label class="pull-right"><input type="checkbox" name="subscribe"><?php echo TXT_CM_LANDING_PAGE_SEND_PROMOTIONS; ?></label>
+										<div class="checkbox pull-right">
+											<input id="subscribe" type="checkbox" name="subscribe">
+											<label for="subscribe"><?php echo TXT_CM_LANDING_PAGE_SEND_PROMOTIONS; ?></label>
 										</div>
 										<input type="hidden" name="course_id" value="<?php echo $oCourse->getCourseID() ?>">
 									<?php if($oCourse->getCoursePrice() <= 0): ?>
 										<input type="hidden" name="cm_action" value="get_course">
-										<button type="submit" class="w3-btn cm_btn btn-block">Get Course</button>
+										<button type="submit" class="sf-button standard turquoise">Get Course</button>
 									<?php else: ?>
 										<script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
 										        data-key="<?php echo $oCM->getOptions()['stripe']['publishable_key']; ?>"
@@ -114,10 +121,10 @@ get_header(); ?>
 								</form>
 							</div>
 							<div class="modal-footer">
-								<button type="submit" class="w3-button w3-white w3-border w3-round w3-border-red pull-left w3-padding-small w3-hover-red" data-dismiss="modal">
+								<button type="submit" class="sf-button standard lightgrey pull-left" data-dismiss="modal">
 									<span class="glyphicon glyphicon-remove"></span> Cancel</button>
-								<p>Already have a <a href="#">Course Token?</a></p>
-								<p>Lost your <a href="#">Course Token?</a></p>
+								<p>Already have a <a class="underline" href="#">Course Token?</a></p>
+								<p>Lost your <a class="underline" href="#">Course Token?</a></p>
 							</div>
 						</div>
 

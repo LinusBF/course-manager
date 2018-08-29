@@ -30,12 +30,14 @@ if(isset($_POST['cm_action']) && $_POST['cm_action'] === "get_course" && isset($
 //Check for cookie
 CmUserManager::updateSessionFromCookie();
 
-add_action('wp_head', 'store_header');
+add_action('wp_head', function(){echo "<link rel=\"stylesheet\" href=\"https://www.w3schools.com/lib/w3.css\">";});
+add_action('wp_head', 'store_header', 9999);
 
 function store_header(){
-	echo "<link rel='stylesheet' href='".CM_URLPATH."css/cm_store.css'>
+	echo "<link rel='stylesheet' href='".CM_URLPATH."css/cm_general.css'>
+		  <link rel='stylesheet' href='".CM_URLPATH."css/cm_store.css'>
+		  <link rel='stylesheet' href='".CM_URLPATH."css/cm_store_mobile.css'>
 		  <link rel='stylesheet' href='".CM_URLPATH."css/flip_animation.css'>
-		  <link rel=\"stylesheet\" href=\"https://www.w3schools.com/lib/w3.css\">
 		  <script type='application/javascript' src='".CM_URLPATH."js/store_page.js'></script>";
 }
 
@@ -56,28 +58,47 @@ get_header(); ?>
 						<?php
 						if (isset($_GET['my_courses'])):
 						?>
-							<a href="<?php echo CmCourseStoreHandler::getStoreURL(); ?>">
-								<?php echo TXT_CM_STORE_GO_TO_STORE; ?>
+							<a class="underline pull-right switch_token" href="<?php echo CmCourseStoreHandler::getStoreURL()."?new_token=true"; ?>">
+								<?php echo TXT_CM_STORE_SWITCH_TOKEN; ?>
 							</a>
-							<a href="<?php echo CmUserManager::getUserPageURL(); ?>">
+							<a class="underline" href="<?php echo CmUserManager::getUserPageURL(); ?>">
 								<?php echo TXT_CM_STORE_GO_TO_ANSWERS; ?>
 							</a>
-							<a class="pull-right switch_token" href="<?php echo CmCourseStoreHandler::getStoreURL()."?new_token=true"; ?>">
-								<?php echo TXT_CM_STORE_SWITCH_TOKEN; ?>
+							<a class="underline" href="<?php echo CmCourseStoreHandler::getStoreURL(); ?>">
+								<?php echo TXT_CM_STORE_GO_TO_STORE; ?>
 							</a>
 						<?php
 						 elseif (isset($_SESSION['course_user'])):
 						?>
-							<a href="?my_courses=true">
+							<a class="underline" href="?my_courses=true">
 								<?php echo TXT_CM_STORE_GO_TO_YOUR_COURSES; ?>
 							</a>
 						<?php else: ?>
-							<input id="cm_token_input" type="text">
-							 <button id="token_btn" class="w3-btn w3-teal">
+							 <a class="sf-button standard cm_main_btn cm_small pull-right"  href="#useToken" data-toggle="modal">
 								 <?php echo TXT_CM_STORE_ENTER_TOKEN;?>
-							 </button>
+							 </a>
+							<div class="modal fade" id="useToken" role="dialog">
+								<div class="modal-dialog modal-sm">
+
+									<!-- Modal content-->
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal">&times;</button>
+											<h4 class="modal-title"><?php echo TXT_CM_STORE_TOKEN_TITLE ?></h4>
+										</div>
+										<div class="modal-body">
+											<input id="cm_token_input" type="text">
+											<button id="token_btn" type="submit" class="sf-button standard cm_main_btn cm_small pull-right">
+												<?php echo TXT_CM_STORE_ENTER_TOKEN ?>
+											</button>
+										</div>
+									</div>
+
+								</div>
+							</div>
 					    <?php endif; ?>
 					</div>
+					<div class="courses">
 					<?php
 						$oStore = new CmStore();
 						$oStoreHandler = new CmCourseStoreHandler();
@@ -103,13 +124,14 @@ get_header(); ?>
 							$iPrice    = $oCourse->getCoursePrice() * ( 1 - ( $aCourseOptions['current_discount'] / 100 ) );
 							$iPrice    = floor( $iPrice );
 							$sCurrency = $oCourseManager->getOptions()['currency'];
+							if($blMyCourses){
+								$blHasAccess = CmUserManager::checkAccess($_SESSION['course_user']['id'], $oCourse->getCourseID());
+							}
 							//TODO - Handle expired courses. Maybe continue loop if user don't have access???
 					?>
-						<div id="<?php echo $oCourse->getCourseURLName();?>" class="course_container flip-container w3-card-2"<?php
-						if (($iKey + 1) % 4 == 0){
-							echo " id='row_last_course'";
-						}
-						?>>
+						<div id="<?php echo $oCourse->getCourseURLName();?>"
+							 class="course_container flip-container w3-card-2 <?php echo (($blMyCourses && !$blHasAccess) ? 'cm_expired' : '') ?>"
+							 data-before-content="<?php echo TXT_CM_STORE_EXPIRED_COURSE ?>">
 							<div class="flipper">
 								<div class="course_container_front front">
 									<div class="course_image_container">
@@ -119,23 +141,36 @@ get_header(); ?>
 										?>">
 									</div>
 									<div class="small-flip-container" ontouchstart="this.classList.toggle('hover');">
-										<p class="course_name"><?php echo $oCourse->getCourseName(); ?></p>
+										<p class="course_name"><?php
+											$sTitleToPrint = $oCourse->getCourseName();
+											$blMultiLineTitle = false;
+											if(strlen($sTitleToPrint) > 26){
+												$blMultiLineTitle = true;
+											}
+											echo $sTitleToPrint; ?></p>
 										<div class="small-flipper">
 											<div class="course_text small-front">
-												<p class="course_description"><?php echo $aCourseOptions['store_description']; ?></p>
+												<p class="course_description"><?php
+													$sDescToPrint = $aCourseOptions['store_description'];
+													if(strlen($sDescToPrint) > 140){
+														$sDescWidth = ($blMultiLineTitle ? 61 : 137);
+														$sDescToPrint = mb_strimwidth($sDescToPrint, 0, $sDescWidth, "...");
+													}
+													echo $sDescToPrint;
+												?></p>
 											</div>
 											<div class="course_text cm_center small-back">
 												<?php if(isset($_SESSION['course_user']) && CmUserManager::checkAccess($_SESSION['course_user']['id'],$oCourse->getCourseID())): ?>
-													<a class="w3-btn w3-teal buy_course_btn" href="<?php
+													<a class="sf-button sf-button-rounded standard buy_course_btn" href="<?php
 													echo CmCourseStoreHandler::getLandingPageURL($oCourse->getCourseID());
 													?>">
 														<?php echo TXT_CM_STORE_GO_TO_COURSE; ?>
 													</a>
 												<?php else:?>
-													<a class="w3-btn w3-teal cm_flip_link"
+													<a class="sf-button sf-button-rounded standard cm_flip_link buy_course_btn"
 													   href="#<?php echo $oCourse->getCourseURLName();?>"><?php
 														if($oCourse->getCoursePrice() > 0) {
-															echo $iPrice . $sCurrency . "<br>" . TXT_CM_STORE_MORE_INFO;
+															echo TXT_CM_STORE_MORE_INFO;
 														} else{
 															echo TXT_CM_STORE_FREE;
 														}
@@ -151,15 +186,20 @@ get_header(); ?>
 									<div class="course_back_content">
 										<div class="course_text">
 											<p class="course_name"><?php echo $oCourse->getCourseName(); ?></p>
-											<p class="course_description"><?php echo $oCourse->getCourseDescription(); ?></p>
-											<br>
+											<p class="course_description"><?php
+												$sCourseDescToPrint = $oCourse->getCourseDescription();
+												if(strlen($sCourseDescToPrint) > 265){
+													$sCourseDescToPrint = mb_strimwidth($sCourseDescToPrint, 0, 262, "...");
+												}
+												echo $sCourseDescToPrint;
+												?></p>
 											<div class="cm_center">
-												<a class="w3-btn w3-teal buy_course_btn" href="<?php
+												<a class="sf-button sf-button-rounded standard buy_course_btn" href="<?php
 															echo CmCourseStoreHandler::getLandingPageURL($oCourse->getCourseID());
 														?>">
 													<?php
 													if($oCourse->getCoursePrice() > 0) {
-														echo TXT_CM_STORE_LEARN_MORE . " " . $iPrice . $sCurrency;
+														echo TXT_CM_STORE_LEARN_MORE . " (" . $iPrice . $sCurrency . ")";
 													} else{
 														echo TXT_CM_STORE_FREE_LEARN_MORE;
 													}
@@ -174,6 +214,7 @@ get_header(); ?>
 					<?php
 						endforeach;
 					?>
+					</div>
 				</div>
 			</main><!-- #main -->
 		</div><!-- #primary -->

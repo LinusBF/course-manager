@@ -122,4 +122,8 @@ jQuery(document).ready(function($) {
 
 		load_answers(indexes);
 	});
+
+	$('.cm_disabled').on('click', function (e) {
+		e.preventDefault();
+	})
 });

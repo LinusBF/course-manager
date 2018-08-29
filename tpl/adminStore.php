@@ -38,6 +38,8 @@ if (isset($_GET['action']) && $_GET['action'] == "store_courses"){
 
 			$iIndex++;
 		}
+		$blStateChange = true;
+		$sStateChangeMessage = TXT_CM_STORE_CHANGED_COURSES_IN_STORE;
 	}
 	else{
 		die("Stop messing with it...");
@@ -52,10 +54,6 @@ $aAllActiveCourses = CmCourse::getAllActiveCourses();
 ?>
 <h1><?php echo TXT_CM_MENU_STORE; ?></h1>
 
-<?php if ($blStateChange): ?>
-	<div class="updated notice is-dismissible"><?php echo $sStateChangeMessage; ?></div>
-<?php endif; ?>
-
 
 <?php
 $sButtonText = ($oStore->isStoreActive() ? TXT_CM_STORE_DEACTIVATE_STORE : TXT_CM_STORE_ACTIVATE_STORE);
@@ -67,6 +65,10 @@ echo sprintf('<a class="button button-primary alignright" href="?page=%s&action=
 ?>
 
 <h2><?php echo TXT_CM_STORE_IN_STORE_TITLE; ?></h2>
+
+<?php if ($blStateChange): ?>
+	<div class="updated notice is-dismissible"><?php echo $sStateChangeMessage; ?></div>
+<?php endif; ?>
 
 <?php if(count($aAllActiveCourses)): ?>
 <?php
@@ -93,7 +95,7 @@ echo sprintf('<a class="button button-primary alignright" href="?page=%s&action=
 		</tbody>
 	</table>
 	<div class='submit'>
-		<input type='submit' name='submit' id='cm_submit' class='button button-primary' value='<?php echo TXT_CM_EDIT_SAVE?>'>
+		<input type='submit' name='submit' id='cm_submit' class='button button-primary' value='<?php echo TXT_CM_STORE_SAVE_CHANGES?>'>
 	</div>
 </form>
 <?php else: ?>

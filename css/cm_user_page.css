@@ -1,10 +1,25 @@
 #user_account_container{
-
 	margin: auto;
 	padding: 10px 50px;
 	justify-content: space-between;
 	display: flex;
 	flex-wrap: wrap;
+	flex-direction: column;
+	width: 80%;
+}
+
+.cm_course {
+	display: flex;
+	flex-flow: column wrap;
+	max-width: 100%;
+	margin-bottom: 45px;
+}
+
+.course-title {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	padding: 0 10px;
 }
 
 .cm_answers{
@@ -13,4 +28,31 @@
 
 .cm_answer_wrapper{
 	margin-bottom: 25px;
+}
+
+.cm_course_part {
+	max-width: 400px;
+	padding: 10px;
+	overflow: hidden;
+	margin-bottom: 15px;
+	background-color: #FFFFFF;
+}
+
+.cm_part {
+	position: relative;
+}
+
+.cm_part::after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	height: 1px;
+	width: 100%;
+	background: -moz-linear-gradient(right, rgba(168,168,168,0) 0%, rgba(168,168,168,0.6) 50%, rgba(168,168,168,0) 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(right, rgba(168,168,168,0) 0%,rgba(168,168,168,0.6) 50%,rgba(168,168,168,0) 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to right, rgba(168,168,168,0) 0%, rgba(168,168,168,0.6) 50%, rgba(168,168,168,0) 100%);  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
+.cm_part:last-of-type::after {
+	height: 0;
 }

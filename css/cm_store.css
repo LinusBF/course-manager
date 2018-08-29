@@ -9,23 +9,57 @@
 	padding-bottom: 5px;
 	border-bottom: 1px #eaeaea solid;
 	justify-content: space-between;
+	flex-direction: row-reverse;
 	display: flex;
 }
 
+#auth_container>a {
+	color: #FF6600;
+	font-weight: bold;
+	letter-spacing: 1px;
+}
+
 #cm_token_input{
-	width: 15%;
-	margin-right: 20px;
+	width: 35%;
 	height: 30px;
 	padding-left: 5px;
 	display: inline-block;
+}
+
+.courses {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
 }
 
 .course_container{
 	width: 250px;
 	height: 350px;
 	float: left;
-	margin-right: 50px;
-	margin-bottom: 15px;
+	margin-right: calc(50% - 375px); /* Three columns and a width of 250px */
+	margin-bottom: 25px;
+	background-color: #FFFFFF;
+}
+
+.course_container:nth-of-type(3n + 3){
+	margin-right: 0;
+}
+
+.cm_expired::before {
+	content: attr(data-before-content);
+	padding-top: 275px;
+	text-align: center;
+	font-size: 28pt;
+	font-weight: bold;
+	color: rgb(110, 0, 0);
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 3;
+	background: rgba(235, 235, 235, 0.75);
 }
 
 .course_container_front{
@@ -48,22 +82,27 @@
 
 .course_image_container{
 	width: 100%;
-	height: 205px;
+	height: 200px;
 	margin-left: auto;
 	margin-right: auto;
 	border-bottom: 1px solid rgba(178, 178, 178, 0.28);
 }
 
 .course_image{
-	width: 250px;
-	height: auto;
+	width: 100%;
+	height: 100%;
 	max-height: 200px;
+	object-fit: cover;
 }
 
 .course_text{
 	position: relative;
 	padding: 0 10px;
 	height: 100%;
+}
+
+.course_text>p {
+	margin: 5px 0;
 }
 
 .course_description{
@@ -74,11 +113,21 @@
 .course_name{
 	font-weight: bold;
 	font-size: 14pt;
-	padding: 5px 0 0 10px;
+	padding: 0 10px;
+	margin: 0;
 }
 
-.cm_flip_link{
-	margin-top: 10px;
+.small-flip-container {
+	padding-top: 10px;
+}
+
+.buy_course_btn{
+	font-weight: bold;
+	background-color: #FF6600;
+}
+
+.small-flip-container .buy_course_btn{
+	margin-top: 20px;
 }
 
 .course_back_content{
@@ -86,6 +135,12 @@
 	height: 100%;
 	position: relative;
 	padding: 10px;
+}
+
+.course_back_content>.course_text {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
 
 .close_course {
@@ -101,5 +156,5 @@
 }
 
 .close_course:hover {
-	color: #009688;
+	color: #ff6600;
 }
