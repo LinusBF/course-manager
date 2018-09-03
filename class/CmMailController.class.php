@@ -180,7 +180,7 @@ class CmMailController{
 	 * @return bool
 	 */
 	public static function mailChimpActive(){
-		return (self::_isApiKeySet() && self::_isListSet() && self::checkApiKey() && self::_isTemplateSet());
+		return (self::_isApiKeySet() && self::_isListSet() && self::checkApiKey());
 	}
 
 

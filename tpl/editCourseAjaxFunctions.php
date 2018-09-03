@@ -51,7 +51,7 @@ function cm_change_part_type(){
 		if(intval($_POST['cm_part_old_content']) == 1){
 			$originalPart = CmPart::getPartByID($_POST['cm_part_ID']);
 			if($originalPart !== false){
-				$originalContent = $originalPart->getContent();
+				$originalContent = $originalPart->getRawContent();
 				$newPart->setContent($originalContent);
 			} else{
 				if($_POST['cm_part_type'] == "question"){

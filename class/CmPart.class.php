@@ -95,7 +95,7 @@ class CmPart
      */
     public function getTitle()
     {
-    	return stripslashes($this->_sPartTitle);
+    	return stripslashes(htmlspecialchars($this->_sPartTitle, ENT_QUOTES, 'UTF-8'));
     }
 
 
@@ -118,6 +118,17 @@ class CmPart
      * @return string
      */
     public function getContent()
+    {
+    	return stripslashes(htmlspecialchars($this->_sContent, ENT_QUOTES, 'UTF-8'));
+    }
+
+
+    /**
+     * Returns the content of the CmPart.
+     *
+     * @return string
+     */
+    public function getRawContent()
     {
     	return stripslashes($this->_sContent);
     }
@@ -380,7 +391,7 @@ class CmPart
 
 		$iCPID = $this->getCoursePartID();
 		$sTitle = $this->getTitle();
-		$sContent = $this->getContent();
+		$sContent = $this->getRawContent();
 		$sType = $this->getType();
 		$iPIndex = $this->getIndex();
 
@@ -506,7 +517,7 @@ class CmPart
 				'default_editor' => 'quicktags',
 				'textarea_name' => $sNamePrefix."_content_simple"
 			);
-			wp_editor($this->getContent(), $sEditorId, $aEditorSettings);
+			wp_editor($this->getRawContent(), $sEditorId, $aEditorSettings);
 		} elseif ($this->getType() == "video"){
 			?>
 				<label class="cm_part_content_label"
@@ -514,7 +525,7 @@ class CmPart
 					<?php echo TXT_CM_EDIT_PART_CONTENT_VIDEO.": "; ?>
 				</label>
 				<input id="cm_part_content_video" class="cm_part_content_input" name="<?php echo $sNamePrefix."_content_simple"; ?>"
-					   type="text" value="<?php echo $this->getContent(); ?>" />
+					   type="text" value="<?php echo $this->getRawContent(); ?>" />
 			<?php
 		} elseif ($this->getType() == "image"){
 			?>
@@ -523,10 +534,10 @@ class CmPart
 				<?php echo TXT_CM_EDIT_PART_CONTENT_IMAGE.": "; ?>
 			</label>
 			<div class='image-preview-wrapper cm_part_content_input'>
-				<img id='image-preview' src='<?php echo wp_get_attachment_url( $this->getContent() ); ?>' height='100'>
+				<img id='image-preview' src='<?php echo wp_get_attachment_url( $this->getRawContent() ); ?>' height='100'>
 			</div>
 			<input id="upload_image_button" type="button" class="cm_part_content_input button" value="<?php echo TXT_CM_STORE_ADD_IMAGE; ?>" />
-			<input type='hidden' name='<?php echo $sNamePrefix."_content_simple"; ?>' id='image_attachment_id' value='<?php echo $this->getContent(); ?>'>
+			<input type='hidden' name='<?php echo $sNamePrefix."_content_simple"; ?>' id='image_attachment_id' value='<?php echo $this->getRawContent(); ?>'>
 
 			<?php
 		} elseif ($this->getType() == "download"){
@@ -536,7 +547,7 @@ class CmPart
 				<?php echo TXT_CM_EDIT_PART_CONTENT_DOWNLOAD.": "; ?>
 			</label>
 			<input id="cm_part_content_download" class="cm_part_content_input" name="<?php echo $sNamePrefix."_content_simple"; ?>"
-				   type="text" value="<?php echo $this->getContent(); ?>" />
+				   type="text" value="<?php echo $this->getRawContent(); ?>" />
 			<?php
 		} elseif ($this->getType() == "question"){
 			?>
@@ -546,7 +557,7 @@ class CmPart
 			<ul class="cm_part_content_questions">
 			<?php
 
-			$aQuestions = CmPart::parse_quest($this->getContent());
+			$aQuestions = CmPart::parse_quest($this->getRawContent());
 
 			foreach($aQuestions as $iKey => $sQue){
 
@@ -589,7 +600,7 @@ class CmPart
 			<input type="hidden" name="<?php echo $sNamePrefix."_del"; ?>" value="0">
 			<!-- END OF HIDDEN INPUT -->
 			<div class="cm_part_header">
-				<label class='cm_part_name'><?php echo $this->getTitle() ?></label>
+				<p class='cm_part_name'><?php echo $this->getTitle() ?></p>
 				<img class='cm_part_del' src="<?php echo CM_URLPATH."gfx/cm_delete.png"; ?>"
 					 onmouseover="this.src='<?php echo CM_URLPATH."gfx/cm_delete_hover.png"; ?>'"
 					 onmouseout="this.src='<?php echo CM_URLPATH."gfx/cm_delete.png"; ?>'" />
@@ -651,7 +662,7 @@ class CmPart
 		$aJSONPart = array(
 			"ID"          => $this->getPartID(),
 			"title"        => $this->getTitle(),
-			"content" => $this->getContent(),
+			"content" => $this->getRawContent(),
 			"type"       => $this->getType(),
 			"index"        => $this->getIndex(),
 		);

@@ -239,7 +239,7 @@ class CmCoursePart
     public function getCoursePartName()
     {
 
-    	return htmlspecialchars($this->_sCoursePartName, ENT_QUOTES, 'UTF-8');
+    	return stripslashes(htmlspecialchars($this->_sCoursePartName, ENT_QUOTES, 'UTF-8'));
     }
 
 
