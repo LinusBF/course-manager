@@ -125,18 +125,6 @@ function getCourseForm($iCourseID = null)
 		</div>
 	</form>
 	<?php
-	//echo CM_URLPATH.'tpl/editCourse.php';
-	/* DEBUGGING
-	$oDebugCourse = CmCourse::getCourseByID(1, true);
-	var_dump($oDebugCourse);
-	*/
-	?>
-	<pre>
-	<?php
-	//var_dump($oCourse);
-	?>
-	</pre>
-	<?php
 }
 
 
@@ -261,14 +249,6 @@ function saveCourseChanges(){
 	}
 
 	if($result = $oNewCourse->save(true)){
-		?>
-		<pre>
-		<?php
-		var_dump($debug);
-		?>
-		</pre>
-		<?php
-
 		return true;
 	} else{
 		return false;
