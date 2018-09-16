@@ -66,7 +66,7 @@ function genStoreSettingsForm($iCourseId){
 					</th>
 					<td>
 						<div class="textarea-wrap">
-							<textarea id="cm_course_desc" name="store_description"><?php echo $aOptions['store_description']; ?></textarea>
+							<textarea id="cm_course_desc" name="store_description"><?php echo stripslashes($aOptions['store_description']); ?></textarea>
 						</div>
 					</td>
 				</tr>

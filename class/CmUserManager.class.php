@@ -607,7 +607,7 @@ class CmUserManager {
 	public static function answerQuestions($iUserId, $iPartId, $aAnswers){
 		$oPart = CmPart::getPartByID($iPartId);
 		if($oPart->getType() !== "question") {return false;}
-		$sQs = $oPart->getContent();
+		$sQs = $oPart->getRawContent();
 		$sAs = CmPart::parse_quest($aAnswers);
 
 		global $wpdb;

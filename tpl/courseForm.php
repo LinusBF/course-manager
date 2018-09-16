@@ -63,8 +63,7 @@ function getCourseForm($iCourseID = null)
 					</th>
 					<td>
 						<div class="textarea-wrap">
-							<textarea name='cm_course_description' id='cm_edit_course_desc' class='cm_text_area'><?php echo $sCourseDesc;?>
-							</textarea>
+							<textarea name='cm_course_description' id='cm_edit_course_desc' class='cm_text_area'><?php echo $sCourseDesc;?></textarea>
 						</div>
 					</td>
 				</tr>
@@ -126,11 +125,6 @@ function getCourseForm($iCourseID = null)
 		</div>
 	</form>
 	<?php
-	//echo CM_URLPATH.'tpl/editCourse.php';
-	/* DEBUGGING
-	$oDebugCourse = CmCourse::getCourseByID(1, true);
-	var_dump($oDebugCourse);
-	*/
 }
 
 
@@ -168,6 +162,7 @@ function saveCourseChanges(){
 	/**Go through every CoursePart and it's respective Parts and save to $oNewCourse*/
 	$iCPIndex = 0;
 	$aNewCParts = [];
+	$debug = [];
 
 	/** Looping through every CoursePart */
 	while(isset($_POST['cm_CP_'.$iCPIndex.'_ID'])){
@@ -192,6 +187,7 @@ function saveCourseChanges(){
 				$oNewCoursePart->setCourseID($iCId);
 			}
 		}
+		array_push($debug, $_POST[$sCPNamePrefix."_name"]);
 
 		$oNewCoursePart->setCoursePartName($_POST[$sCPNamePrefix."_name"]);
 		$oNewCoursePart->setCourseIndex(((int) $_POST[$sCPNamePrefix."_index"] - 1));
@@ -226,6 +222,8 @@ function saveCourseChanges(){
 					$oNewPart = CmPart::create();
 				}
 			}
+
+			array_push($debug, $_POST[$sPNamePrefix."_name"]);
 
 			$oNewPart->setCoursePartID($iCPId);
 			$oNewPart->setTitle($_POST[$sPNamePrefix."_name"]);

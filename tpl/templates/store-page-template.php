@@ -151,7 +151,7 @@ get_header(); ?>
 										<div class="small-flipper">
 											<div class="course_text small-front">
 												<p class="course_description"><?php
-													$sDescToPrint = $aCourseOptions['store_description'];
+													$sDescToPrint = stripslashes(htmlspecialchars($aCourseOptions['store_description'], ENT_QUOTES, 'UTF-8'));
 													if(strlen($sDescToPrint) > 140){
 														$sDescWidth = ($blMultiLineTitle ? 61 : 137);
 														$sDescToPrint = mb_strimwidth($sDescToPrint, 0, $sDescWidth, "...");

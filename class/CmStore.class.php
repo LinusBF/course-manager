@@ -108,9 +108,7 @@ class CmStore {
 
 				$aPostData = $this->_getStorePageArray( true, $this->_getStorePageId(), $this->_getStorePageData() );
 
-				wp_insert_post( $aPostData );
-
-				return true;
+				return wp_insert_post($aPostData) > 0;
 			}
 			else{
 				return false;
@@ -123,9 +121,7 @@ class CmStore {
 
 				$aPostData = $this->_getStorePageArray(true, $this->_getStorePageId(), $this->_getStorePageData());
 
-				wp_insert_post($aPostData);
-
-				return true;
+				return wp_insert_post($aPostData) > 0;
 
 			} else{
 				return false;

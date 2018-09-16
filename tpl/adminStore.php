@@ -14,8 +14,11 @@ if (isset($_GET['action']) && $_GET['action'] == "store_state"){
 			$sStateChangeMessage = TXT_CM_STORE_DEACTIVATED;
 		}
 		else{
-			$oStore->activateStore();
-			$sStateChangeMessage = TXT_CM_STORE_ACTIVATED;
+			if($oStore->activateStore()) {
+				$sStateChangeMessage = TXT_CM_STORE_ACTIVATED;
+			} else {
+				$sStateChangeMessage = TXT_CM_STORE_COULD_NOT_ACTIVATE;
+			}
 		}
 	}
 	else{

@@ -135,7 +135,7 @@ class CmCourse
 	 */
 	public function getCourseDescription()
 	{
-		return htmlspecialchars($this->_sCourseDescription, ENT_QUOTES, 'UTF-8');
+		return stripslashes(htmlspecialchars($this->_sCourseDescription, ENT_QUOTES, 'UTF-8'));
 	}
 
 
@@ -265,7 +265,7 @@ class CmCourse
      */
     public function getCourseName()
     {
-    	return htmlspecialchars($this->_sCourseName, ENT_QUOTES, 'UTF-8');
+    	return stripslashes(htmlspecialchars($this->_sCourseName, ENT_QUOTES, 'UTF-8'));
     }
 
     /**
@@ -275,7 +275,7 @@ class CmCourse
      */
     public function getCourseURLName()
     {
-    	return sanitize_title(htmlspecialchars($this->_sCourseName, ENT_QUOTES, 'UTF-8'));
+    	return sanitize_title(stripslashes($this->_sCourseName));
     }
 
 
@@ -526,9 +526,10 @@ class CmCourse
 
 				}
 
+				/* NOT CURRENTLY USED
 		    	if (isset($this->_aCourseTags)) {
 		    		$this->_saveTagRelToDb();
-		    	}
+		    	}*/
 
 				if(isset($iInsertId)){
 					return array('result' => true, 'insertId' => $iInsertId);
@@ -722,6 +723,7 @@ class CmCourse
 	    		$instance->setCourseParts($aCParts);
 	    	}
 
+	    	/* NOT CURRENTLY USED
 	    	$sSQLTags = "SELECT name FROM ".$instance->_getDbTableNameTags()." 
 	    	JOIN ".$instance->_getDbTableNameTagRel()." 
 	    	ON ID = tagID WHERE courseID = %d";
@@ -729,6 +731,7 @@ class CmCourse
 	    	$aTags = $wpdb->get_col($wpdb->prepare($sSQLTags,$iID));
 
 	    	$instance->_aCourseTags = $aTags;
+	    	*/
 
 	    	return $instance;
 	    }
