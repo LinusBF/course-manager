@@ -47,13 +47,17 @@ get_header(); ?>
 		<div id="primary" class="content-area">
 			<main id="main" class="site-main" role="main">
 				<div class="container" id="store_container">
-					<h4>
 					<?php
-						if(isset($aPurchaseRequest)){
-							echo ($aPurchaseRequest['status_code'] === 1 ? TXT_CM_STORE_THANK_YOU : TXT_CM_STORE_BUY_FAILED);
-						}
+						if(isset($aPurchaseRequest)):
+							?>
+							<h4>
+							<?php
+								echo ($aPurchaseRequest['status_code'] === 1 ? TXT_CM_STORE_THANK_YOU : TXT_CM_STORE_BUY_FAILED);
+							?>
+							</h4>
+							<?php
+						endif;
 					?>
-					</h4>
 					<div id="auth_container">
 						<?php
 						if (isset($_GET['my_courses'])):
