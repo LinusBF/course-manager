@@ -10,9 +10,10 @@
 
 .cm_course {
 	display: flex;
-	flex-flow: column wrap;
+	flex-flow: row wrap;
 	max-width: 100%;
 	margin-bottom: 45px;
+	justify-content: space-between;
 }
 
 .course-title {

@@ -1,0 +1,39 @@
+@media (max-width: 1200px) {
+	#user_account_container{
+		padding: 10px 15px;
+		width: 90%;
+	}
+}
+
+@media (max-width: 993px) {
+	#user_account_container {
+		padding: 0;
+		width: 100%;
+	}
+
+	.course-title {
+		white-space: normal;
+	}
+
+	.cm_course {
+		display: flex;
+		flex-flow: row;
+		max-width: 100%;
+		margin-bottom: 45px;
+		justify-content: space-between;
+		overflow-x: scroll;
+		overflow-y: hidden;
+		position: relative;
+		padding: 10px 15px 5px;
+		background-color: #dbd7cc;
+	}
+
+	.cm_course_part {
+		min-width: 250px;
+		margin-right: 25px;
+	}
+}
+
+@media (max-width: 650px) {
+
+}
