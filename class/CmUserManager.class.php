@@ -594,7 +594,7 @@ class CmUserManager {
 		}
 
 		$aQs = CmPart::parse_quest(stripslashes($sQnA->questions));
-		$aAs = CmPart::parse_quest(stripslashes(htmlspecialchars($sQnA->answers)));
+		$aAs = CmPart::parse_quest(stripslashes(htmlspecialchars($sQnA->answers, ENT_NOQUOTES)));
 
 		$aQnA = array(
 			"Q" => $aQs,
@@ -607,8 +607,9 @@ class CmUserManager {
 	public static function answerQuestions($iUserId, $iPartId, $aAnswers){
 		$oPart = CmPart::getPartByID($iPartId);
 		if($oPart->getType() !== "question") {return false;}
+		$filteredAnswers = array_map(function($var) {return html_entity_decode($var);}, $aAnswers);
 		$sQs = $oPart->getRawContent();
-		$sAs = CmPart::parse_quest($aAnswers);
+		$sAs = CmPart::parse_quest($filteredAnswers);
 
 		global $wpdb;
 
