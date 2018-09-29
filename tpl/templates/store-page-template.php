@@ -50,7 +50,7 @@ get_header(); ?>
 					<h4>
 					<?php
 						if(isset($aPurchaseRequest)){
-							($aPurchaseRequest['status_code'] === 1 ? _e("Thank you for your purchase") : _e("Purchase failed"));
+							echo ($aPurchaseRequest['status_code'] === 1 ? TXT_CM_STORE_THANK_YOU : TXT_CM_STORE_BUY_FAILED);
 						}
 					?>
 					</h4>
@@ -70,13 +70,13 @@ get_header(); ?>
 						<?php
 						 elseif (isset($_SESSION['course_user'])):
 						?>
-							<a class="underline" href="?my_courses=true">
+						    <a class="underline" href="?my_courses=true">
 								<?php echo TXT_CM_STORE_GO_TO_YOUR_COURSES; ?>
 							</a>
 						<?php else: ?>
-							 <a class="sf-button standard cm_main_btn cm_small pull-right"  href="#useToken" data-toggle="modal">
-								 <?php echo TXT_CM_STORE_ENTER_TOKEN;?>
-							 </a>
+							<a class="sf-button standard cm_main_btn cm_small pull-right"  href="#useToken" data-toggle="modal">
+								<?php echo TXT_CM_STORE_ENTER_TOKEN;?>
+							</a>
 							<div class="modal fade" id="useToken" role="dialog">
 								<div class="modal-dialog modal-sm">
 

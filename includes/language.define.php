@@ -33,6 +33,8 @@ define('TXT_CM_ACTIVATE', __('Activate','course-manager'));
 define('TXT_CM_DEACTIVATE', __('Deactivate','course-manager'));
 define('TXT_CM_CHOOSE', __('Choose','course-manager'));
 define('TXT_CM_ID', __('ID','course-manager'));
+define('TXT_CM_CONTACT', __('contact','course-manager'));
+define('TXT_CM_COURSE_TOKEN', __('Course Token','course-manager'));
 
 
 // --- Errors --- \\
@@ -65,6 +67,27 @@ define('TXT_CM_ACTIVATE_FAILURE', __('Course could not be activated. Have you ge
 
 // --- Settings Menu --- \\
 define('TXT_CM_ADMIN_SETTINGS_NOT_SET', __('Not Set','course-manager'));
+define('TXT_CM_SETTINGS_STRIPE_SETTINGS', __('Stripe Settings','course-manager'));
+define('TXT_CM_SETTINGS_STRIPE_DESCRIPTION', __('Enter your public and secret stripe keys to enable payment.','course-manager'));
+define('TXT_CM_SETTINGS_STRIPE_PUBLIC', __('Public key','course-manager'));
+define('TXT_CM_SETTINGS_STRIPE_SECRET', __('Secret key','course-manager'));
+define('TXT_CM_SETTINGS_STRIPE_BUTTON', __('Update keys','course-manager'));
+define('TXT_CM_SETTINGS_MAILCHIMP_SETTINGS', __('MailChimp Settings','course-manager'));
+define('TXT_CM_SETTINGS_MAILCHIMP_DESCRIPTION', __('Enter your API key to enable email lists with MailChimp.','course-manager'));
+define('TXT_CM_SETTINGS_MAILCHIMP_KEY', __('API key','course-manager'));
+define('TXT_CM_SETTINGS_MAILCHIMP_KEY_BUTTON', __('Update key','course-manager'));
+define('TXT_CM_SETTINGS_MAILCHIMP_LISTS', __('Lists','course-manager'));
+define('TXT_CM_SETTINGS_MAILCHIMP_LIST_BUTTON', __('Select list','course-manager'));
+define('TXT_CM_SETTINGS_MANDRILL_SETTINGS', __('Mandrill Settings','course-manager'));
+define('TXT_CM_SETTINGS_MANDRILL_DESCRIPTION', __('Enter your API key to enable sending emails with Mandrill.','course-manager'));
+define('TXT_CM_SETTINGS_MANDRILL_KEY', __('API key','course-manager'));
+define('TXT_CM_SETTINGS_MANDRILL_KEY_BUTTON', __('Update key','course-manager'));
+define('TXT_CM_SETTINGS_MANDRILL_TEMPLATE', __('Email Template','course-manager'));
+define('TXT_CM_SETTINGS_MANDRILL_TEMPLATE_BUTTON', __('Select template','course-manager'));
+define('TXT_CM_SETTINGS_EXPORT_TITLE', __('Export Settings','course-manager'));
+define('TXT_CM_SETTINGS_EXPORT_DESCRIPTION', __('Export the plugin settings for this site as a .json file. This allows you to easily import the configuration into another site.','course-manager'));
+define('TXT_CM_SETTINGS_IMPORT_TITLE', __('Import Settings','course-manager'));
+define('TXT_CM_SETTINGS_IMPORT_DESCRIPTION', __('Import the plugin settings from a .json file. This file can be obtained by exporting the settings on another site using the form above.','course-manager'));
 define('TXT_CM_CHIMP_TABLE_LISTS_TITLE', __('Name','course-manager'));
 define('TXT_CM_CHIMP_TABLE_LISTS_DESC', __('Select a list to connect your costumers to','course-manager'));
 define('TXT_CM_CHIMP_TABLE_GROUPS_DESC', __('Select a MailChimp group that the customers that want offers are put in','course-manager'));
@@ -157,12 +180,16 @@ define('TXT_CM_STORE_CHECKOUT_SUCCESS', __('Thank you for your purchase, click o
 define('TXT_CM_STORE_CHECKOUT_CARD_DECLINED', __('Your card was declined, please try with another one or contact support.','course-manager'));
 define('TXT_CM_STORE_NO_COURSES', __('There are currently no courses available :(','course-manager'));
 define('TXT_CM_STORE_EXPIRED_COURSE', __('Ended','course-manager'));
+define('TXT_CM_STORE_THANK_YOU', __('Thank you for your purchase!','course-manager'));
+define('TXT_CM_STORE_BUY_FAILED', __('Purchase failed, please try again or contact support','course-manager'));
 
 
 // --- Landing Pages --- \\
 define('TXT_CM_LANDING_PAGE_MODAL_HEADER', __('Get Course','course-manager'));
 define('TXT_CM_LANDING_PAGE_EMAIL', __('Enter email','course-manager'));
 define('TXT_CM_LANDING_PAGE_SEND_PROMOTIONS', __('Send me offers for other courses','course-manager'));
+define('TXT_CM_LANDING_PAGE_LOST_TOKEN', __('Lost your Course Token?','course-manager'));
+define('TXT_CM_LANDING_PAGE_HAVE_TOKEN', __('Already have a Course Token?','course-manager'));
 
 
 // --- User Page --- \\

@@ -10,14 +10,14 @@
 	<!-- STRIPE -->
 	<div class="metabox-holder">
 		<div class="postbox">
-			<h2 class="cm_setting_title"><span><?php _e( 'Stripe Settings' ); ?></span></h2>
+			<h2 class="cm_setting_title"><span><?php echo TXT_CM_SETTINGS_STRIPE_SETTINGS; ?></span></h2>
 			<div class="inside">
-				<p><?php _e( 'Enter your public and secret stripe keys to enable payment.' ); ?></p>
+				<p><?php echo TXT_CM_SETTINGS_STRIPE_DESCRIPTION; ?></p>
 				<form method="post">
 					<p><input type="hidden" name="cm_action" value="stripe_settings" /></p>
 					<table class="form-table">
 						<tr>
-							<th scope="row"><label for="stripe_public"><?php _e('Public key') ?></label></th>
+							<th scope="row"><label for="stripe_public"><?php echo TXT_CM_SETTINGS_STRIPE_PUBLIC; ?></label></th>
 							<td>
 								<input name="cm_stripe_public" type="text" id="stripe_public"
 								       value="<?php echo ($aSettings['stripe']['publishable_key'] !== -1 ? $aSettings['stripe']['publishable_key'] : TXT_CM_ADMIN_SETTINGS_NOT_SET) ?>"
@@ -25,7 +25,7 @@
 							</td>
 						</tr>
 						<tr>
-							<th scope="row"><label for="stripe_secret"><?php _e('Secret key') ?></label></th>
+							<th scope="row"><label for="stripe_secret"><?php echo TXT_CM_SETTINGS_STRIPE_SECRET; ?></label></th>
 							<td>
 								<input name="cm_stripe_secret" type="text" id="stripe_secret"
 								       value="<?php echo ($aSettings['stripe']['secret_key'] !== -1 ? $aSettings['stripe']['secret_key'] : TXT_CM_ADMIN_SETTINGS_NOT_SET) ?>"
@@ -35,7 +35,7 @@
 					</table>
 					<p>
 						<?php wp_nonce_field( 'cm_stripe_nonce', 'cm_stripe_nonce' ); ?>
-						<?php submit_button( __( 'Update keys' ), 'secondary', 'submit', false ); ?>
+						<?php submit_button( TXT_CM_SETTINGS_STRIPE_BUTTON, 'secondary', 'submit', false ); ?>
 					</p>
 				</form>
 			</div><!-- .inside -->
@@ -45,14 +45,14 @@
 	<!-- MAILCHIMP -->
 	<div class="metabox-holder">
 		<div class="postbox">
-			<h2 class="cm_setting_title"><span><?php _e( 'MailChimp Settings' ); ?></span></h2>
+			<h2 class="cm_setting_title"><span><?php echo TXT_CM_SETTINGS_MAILCHIMP_SETTINGS; ?></span></h2>
 			<div class="inside">
-				<p><?php _e( 'Enter your API key to enable email lists with MailChimp.' ); ?></p>
+				<p><?php echo TXT_CM_SETTINGS_MAILCHIMP_DESCRIPTION; ?></p>
 				<form method="post">
 					<p><input type="hidden" name="cm_action" value="mailchimp_settings" /></p>
 					<table class="form-table">
 						<tr>
-							<th scope="row"><label for="cm_mail_chimp_key"><?php _e('API key') ?></label></th>
+							<th scope="row"><label for="cm_mail_chimp_key"><?php echo TXT_CM_SETTINGS_MAILCHIMP_KEY; ?></label></th>
 							<td>
 								<input name="cm_mail_chimp_key" type="text" id="mailchimp_key"
 								       value="<?php echo ($aSettings['mail_chimp']['api_key'] !== -1 ? $aSettings['mail_chimp']['api_key'] : TXT_CM_ADMIN_SETTINGS_NOT_SET) ?>"
@@ -67,13 +67,13 @@
 					<?php endif;?>
 					<p>
 						<?php wp_nonce_field( 'cm_mailchimp_nonce', 'cm_mailchimp_nonce' ); ?>
-						<?php submit_button( __( 'Update key' ), 'secondary', 'submit', false ); ?>
+						<?php submit_button( TXT_CM_SETTINGS_MAILCHIMP_KEY_BUTTON, 'secondary', 'submit', false ); ?>
 					</p>
 				</form>
 			</div><!-- .inside -->
 			<?php if($aSettings['mail_chimp']['api_key'] !== -1 && CmMailController::checkApiKey()): ?>
 			<div id="cm_mc_lists" class="cm_mc_list inside">
-				<h3><span><?php _e('Lists') ?></span></h3>
+				<h3><span><?php echo TXT_CM_SETTINGS_MAILCHIMP_LISTS; ?></span></h3>
 				<form method="post">
 					<p><input type="hidden" name="cm_action" value="mailchimp_list_settings" /></p>
 					<?php
@@ -82,7 +82,7 @@
 					?>
 					<p>
 						<?php wp_nonce_field( 'cm_mailchimp_list_nonce', 'cm_mailchimp_list_nonce' ); ?>
-						<?php submit_button( __( 'Select list' ), 'secondary', 'submit', false ); ?>
+						<?php submit_button( TXT_CM_SETTINGS_MAILCHIMP_LIST_BUTTON, 'secondary', 'submit', false ); ?>
 					</p>
 				</form>
 			</div><!-- .inside -->
@@ -93,14 +93,14 @@
 	<!-- MANDRILL -->
 	<div class="metabox-holder">
 		<div class="postbox">
-			<h2 class="cm_setting_title"><span><?php _e( 'Mandrill Settings' ); ?></span></h2>
+			<h2 class="cm_setting_title"><span><?php echo TXT_CM_SETTINGS_MANDRILL_SETTINGS; ?></span></h2>
 			<div class="inside">
-				<p><?php _e( 'Enter your API key to enable sending emails with Mandrill.' ); ?></p>
+				<p><?php echo TXT_CM_SETTINGS_MANDRILL_DESCRIPTION; ?></p>
 				<form method="post">
 					<p><input type="hidden" name="cm_action" value="mandrill_settings" /></p>
 					<table class="form-table">
 						<tr>
-							<th scope="row"><label for="cm_mandrill_key"><?php _e('API key') ?></label></th>
+							<th scope="row"><label for="cm_mandrill_key"><?php echo TXT_CM_SETTINGS_MANDRILL_KEY; ?></label></th>
 							<td>
 								<input name="cm_mandrill_key" type="text" id="mandrill_key"
 								       value="<?php echo ($aSettings['mandrill']['api_key'] !== -1 ? $aSettings['mandrill']['api_key'] : TXT_CM_ADMIN_SETTINGS_NOT_SET) ?>"
@@ -115,13 +115,13 @@
 					--><?php /*endif;*/?>
 					<p>
 						<?php wp_nonce_field( 'cm_mandrill_nonce', 'cm_mandrill_nonce' ); ?>
-						<?php submit_button( __( 'Update key' ), 'secondary', 'submit', false ); ?>
+						<?php submit_button( TXT_CM_SETTINGS_MANDRILL_KEY_BUTTON, 'secondary', 'submit', false ); ?>
 					</p>
 				</form>
 			</div><!-- .inside -->
 			<?php if($aSettings['mandrill']['api_key'] !== -1): ?>
 				<div id="cm_md_templates" class="cm_md_list inside">
-					<h3><span><?php _e('Email Template') ?></span></h3>
+					<h3><span><?php echo TXT_CM_SETTINGS_MANDRILL_TEMPLATE; ?></span></h3>
 					<form method="post">
 						<p><input type="hidden" name="cm_action" value="mandrill_template_settings" /></p>
 						<?php
@@ -130,7 +130,7 @@
 						?>
 						<p>
 							<?php wp_nonce_field( 'cm_mandrill_template_nonce', 'cm_mandrill_template_nonce' ); ?>
-							<?php submit_button( __( 'Select template' ), 'secondary', 'submit', false ); ?>
+							<?php submit_button( TXT_CM_SETTINGS_MANDRILL_TEMPLATE_BUTTON, 'secondary', 'submit', false ); ?>
 						</p>
 					</form>
 				</div><!-- .inside -->
@@ -141,9 +141,9 @@
 	<!-- EXPORT/IMPORT -->
 	<div class="metabox-holder">
 		<div class="postbox">
-			<h2 class="cm_setting_title"><span><?php _e( 'Export Settings' ); ?></span></h2>
+			<h2 class="cm_setting_title"><span><?php echo TXT_CM_SETTINGS_EXPORT_TITLE; ?></span></h2>
 			<div class="inside">
-				<p><?php _e( 'Export the plugin settings for this site as a .json file. This allows you to easily import the configuration into another site.' ); ?></p>
+				<p><?php echo TXT_CM_SETTINGS_EXPORT_DESCRIPTION; ?></p>
 				<form method="post">
 					<p><input type="hidden" name="cm_action" value="export_settings" /></p>
 					<p>
@@ -155,9 +155,9 @@
 		</div><!-- .postbox -->
 
 		<div class="postbox">
-			<h2 class="cm_setting_title"><span><?php _e( 'Import Settings' ); ?></span></h2>
+			<h2 class="cm_setting_title"><span><?php echo TXT_CM_SETTINGS_IMPORT_TITLE; ?></span></h2>
 			<div class="inside">
-				<p><?php _e( 'Import the plugin settings from a .json file. This file can be obtained by exporting the settings on another site using the form above.' ); ?></p>
+				<p><?php echo TXT_CM_SETTINGS_IMPORT_DESCRIPTION; ?></p>
 				<form method="post" enctype="multipart/form-data">
 					<p>
 						<input type="file" name="import_file"/>
