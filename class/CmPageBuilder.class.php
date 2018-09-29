@@ -143,6 +143,7 @@ class CmPageBuilder
 	{
 		$sType = $oPart->getType();
 		$sContent = $oPart->getContent();
+		$sRawContent = $oPart->getRawContent();
 		$sTitle = $oPart->getTitle();
 		$iIndex = $oPart->getIndex();
 		$iCPIndex = $oPart->getCoursePartIndex();
@@ -160,7 +161,7 @@ class CmPageBuilder
 		$sPostFooter .= "</div>";
 
 		if ($sType == "text"){
-			return $sPostHeader."<div id='$sPartAttrId' class='cm_page_text'>$sContent</div>".$sPostFooter;
+			return $sPostHeader."<div id='$sPartAttrId' class='cm_page_text'>$sRawContent</div>".$sPostFooter;
 
 		} elseif ($sType == "image"){
 			return $sPostHeader."<img id='$sPartAttrId' class='cm_page_image' src='".wp_get_attachment_url($sContent)."' />".$sPostFooter;

@@ -122,9 +122,15 @@ get_header(); ?>
 							</div>
 							<div class="modal-footer">
 								<button type="submit" class="sf-button standard lightgrey pull-left" data-dismiss="modal">
-									<span class="glyphicon glyphicon-remove"></span> Cancel</button>
-								<p>Already have a <a class="underline" href="#">Course Token?</a></p>
-								<p>Lost your <a class="underline" href="#">Course Token?</a></p>
+									<span class="glyphicon glyphicon-remove"></span> <?php echo TXT_CM_CANCEL; ?></button>
+								<div class="pull-right">
+									<a class="underline" href="<?php echo CmCourseStoreHandler::getStoreURL()."?modal_open=true"; ?>">
+										<p><?php echo TXT_CM_LANDING_PAGE_HAVE_TOKEN; ?></p>
+									</a>
+									<a class="underline" href="/<?php echo TXT_CM_CONTACT; ?>">
+										<p><?php echo TXT_CM_LANDING_PAGE_LOST_TOKEN; ?></p>
+									</a>
+								</div>
 							</div>
 						</div>
 

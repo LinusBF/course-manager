@@ -19,6 +19,7 @@ add_action( 'wp_head', 'store_header', 9999);
 function store_header() {
 	echo "<link rel='stylesheet' href='".CM_URLPATH."css/cm_general.css'>
 		  <link rel='stylesheet' href='" . CM_URLPATH . "css/cm_user_page.css'>
+		  <link rel='stylesheet' href='" . CM_URLPATH . "css/cm_user_page_mobile.css'>
 		  <script type='application/javascript' src='" . CM_URLPATH . "js/user_page.js'></script>";
 }
 
@@ -31,6 +32,8 @@ get_header(); ?>
 					<?php
 					$aCourses = CmUserManager::getAllPartsAndAnswers( $_SESSION['course_user']['id'] );
 					$aUri     = explode( "course-account", $_SERVER["REQUEST_URI"] );
+					?>
+					<?php
 
 					foreach ( $aCourses as $aCourseAnswers ):
 						?>
@@ -48,7 +51,7 @@ get_header(); ?>
 													<?php foreach ( $aPAnswer['answers']['A'] as $iAKey => $sAnswer ): ?>
 														<div class="cm_answer_wrapper">
 															<h4 class="w3-text-gray"><?php echo $aPAnswer['answers']['Q'][ $iAKey ]; ?></h4>
-															<p><?php echo $sAnswer; ?></p>
+															<p><?php echo htmlspecialchars($sAnswer, ENT_NOQUOTES); ?></p>
 														</div>
 													<?php endforeach; ?>
 													<footer class="w3-container w3-right-align">

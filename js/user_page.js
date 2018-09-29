@@ -1,6 +1,7 @@
 /**
  * Created by Linus on 2018-02-06.
  */
+/* NOT IN USE ANYMORE DUE TO MOBILE INCOMPATIBILITY
 jQuery(document).ready(function($) {
 	const COL_COUNT = 3;
 	const containers = $('.cm_course');
@@ -20,3 +21,4 @@ jQuery(document).ready(function($) {
 		container.css('height', highest + 'px');
 	});
 });
+*/

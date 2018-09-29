@@ -21,6 +21,7 @@
 
 	#auth_container {
 		justify-content: center;
+		flex-direction: column-reverse;
 	}
 
 	#auth_container .cm_main_btn {
@@ -28,19 +29,14 @@
 	}
 
 	#auth_container a {
+		margin-top: 5px;
 		text-align: center;
 		width: available;
 		width: -moz-available;
 	}
 
-	#auth_container a:first-of-type {
-		text-align: right;
-		margin-left: 5px;
-	}
-
 	#auth_container a:last-of-type {
-		text-align: left;
-		margin-right: 5px;
+		margin-top: 0;
 	}
 
 	.course_container {
