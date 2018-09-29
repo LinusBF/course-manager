@@ -4,7 +4,7 @@ Plugin Name: Course Manager
 Plugin URI:
 Description: Make and update course pages easily
 Author: Linus Bein Fahlander
-Version: 1.0
+Version: 1.1
 Author URI:
 */
 
@@ -19,7 +19,7 @@ require_once 'includes/language.define.php';
 require_once('third-party/stripe-php-5.8.0/init.php');
 
 //Setup Stripe settings
-\Stripe\Stripe::setAppInfo("Wordpress CourseManager", "0.9");
+\Stripe\Stripe::setAppInfo("Wordpress CourseManager", "1.1");
 
 
 //Check requirements
