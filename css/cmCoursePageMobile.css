@@ -20,6 +20,7 @@
 	justify-content: space-between;
 	flex-direction: row;
 	max-width: 450px;
+	min-width: 100px;
 	overflow-x: scroll;
 	overflow-y: hidden;
 	padding: 10px 15px;
@@ -33,7 +34,7 @@
 	margin: 5px;
 	height: 35px;
 	width: 150px;
-	min-width: 125px;
+	min-width: 100px;
 	display: flex;
 	transition: background-color 0.5s;
 }
@@ -152,8 +153,8 @@
 	}
 
 	.cm_nav_part_mobile {
-		width: 100px;
-		min-width: 85px;
+		max-width: calc(100% - 10px);
+		min-width: unset;
 	}
 }
 
@@ -176,6 +177,12 @@
 	.cm_yt_video{
 		height: 140px;
 		width: 250px;
+	}
+}
+
+@media (max-width: 350px) {
+	.cm_part_nav_btn_mobile{
+		padding: 4px 10px !important;
 	}
 }
 
