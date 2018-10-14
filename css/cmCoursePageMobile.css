@@ -33,6 +33,7 @@
 	text-align: center;
 	margin: 5px;
 	height: 35px;
+	min-height: 35px;
 	width: 150px;
 	min-width: 100px;
 	display: flex;

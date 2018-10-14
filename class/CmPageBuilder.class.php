@@ -175,7 +175,7 @@ class CmPageBuilder
 				$sVideoId = $sContent;
 			}
 			//Return iFrame element
-			return $sPostHeader."<iframe class='cm_yt_video' src='https://www.youtube.com/embed/$sVideoId?rel=0' frameborder='0' allowfullscreen></iframe>".$sPostFooter;
+			return $sPostHeader."<iframe class='cm_yt_video' src='https://www.youtube.com/embed/$sVideoId?rel=0&wmode=transparent' wmode='opaque' frameborder='0' allowfullscreen></iframe>".$sPostFooter;
 
 		} elseif ($sType == "question"){
 			if (!is_array($sContent)){
@@ -279,7 +279,7 @@ class CmPageBuilder
 	 * @return string
 	 */
 	protected function _getCourseNavBarMobile($sCourseTitle, $aCourseParts, $aSurIds){
-		$sNavContent = "<div class='cm_mobile_nav' style='z-index: 99;'>";
+		$sNavContent = "<div class='cm_mobile_nav' style='z-index: 999;'>";
 
 		$aLinkInfo = $this->getCoursePartLinks($sCourseTitle, $aCourseParts);
 

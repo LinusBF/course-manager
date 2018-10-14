@@ -13,6 +13,7 @@ add_action('wp_head', 'landing_page_header', 9999);
 function landing_page_header(){
 	echo "<link rel='stylesheet' href='".CM_URLPATH."css/cm_general.css'>
 		  <link rel='stylesheet' href='".CM_URLPATH."css/cm_landing_page.css'>
+		  <link rel='stylesheet' href='".CM_URLPATH."css/cm_landing_page_mobile.css'>
 		  <script type='application/javascript' src='".CM_URLPATH."js/landing_page.js'></script>";
 }
 
