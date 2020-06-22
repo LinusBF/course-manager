@@ -3,13 +3,58 @@
 		"type": "courses",
 		"item": [
 			{
+				"ID": 2,
+				"type": "Course",
+				"name": "Backup Test",
+				"description": "Just testing backups",
+				"price": 150,
+				"span": 30,
+				"parts": [
+					{
+						"ID": 4,
+						"name": "Ny kursdel",
+						"index": 0,
+						"parts": [
+							{
+								"ID": 8,
+								"title": "Ny del",
+								"content": "<h2>Ny del innehåll</h2>",
+								"type": "text",
+								"index": 0
+							},
+							{
+								"ID": 9,
+								"title": "Backup test",
+								"content": "7",
+								"type": "image",
+								"index": 1
+							}
+						]
+					},
+					{
+						"ID": 5,
+						"name": "Second course part",
+						"index": 1,
+						"parts": [
+							{
+								"ID": 10,
+								"title": "Q test",
+								"content": "{Se att jag försöker},{oooo eyy jaja ere},",
+								"type": "question",
+								"index": 0
+							}
+						]
+					}
+				]
+			},
+			{
 				"ID": 1,
 				"type": "Course",
-				"name" : "Test Course",
+				"name": "Validation Test",
 				"description": "Just another Course",
-				"price": 150,
-				"span": 15,
-				"course_parts": [
+				"price": 50,
+				"span": 10,
+				"parts": [
 					{
 						"ID": 1,
 						"name": "Week 1",
@@ -17,140 +62,249 @@
 						"parts": [
 							{
 								"ID": 1,
-								"title": "Look at this picture",
-								"content": 4,
-								"type": "image",
-								"index": 0,
+								"title": "Testar pluginet efter två år :S",
+								"content": "<h2>Ny del innehåll</h2>",
+								"type": "text",
+								"index": 0
 							},
 							{
 								"ID": 2,
-								"title": "Week 1 - What we are doing",
-								"content": "<h2>Once upon a time....</h2>",
-								"type": "text",
-								"index": 1,
+								"title": "Bild Test",
+								"content": "6",
+								"type": "image",
+								"index": 1
 							},
-						],
-					},
-				],
-			},
-			{
-				"ID": 2,
-				"type": "Course",
-				"name" : "Another Course",
-				"description": "This describes the course ",
-				"price": 75,
-				"span": 10,
-				"course_parts": [
-					{
-						"ID": 2,
-						"name": "Part 1",
-						"index": 0,
-						"parts": [
 							{
 								"ID": 3,
-								"title": "First part text",
-								"content": "<h2>Intro to the course</h2>\r\nThis is a captivating intro to the course",
-								"type": "text",
-								"index": 0,
-							},
-							{
-								"ID": 4,
-								"title": "This is a nice image",
-								"content": 9,
-								"type": "image",
-								"index": 1,
-							},
-						],
+								"title": "Video Test",
+								"content": "UWjTvcpqJpo",
+								"type": "video",
+								"index": 2
+							}
+						]
 					},
 					{
-						"ID": 3,
-						"name": "Part 2",
+						"ID": 2,
+						"name": "Week 2",
 						"index": 1,
 						"parts": [
 							{
-								"ID": 5,
-								"title": "Intro to part 2",
-								"content": "<h2>Welcome back</h2>\r\nWelcome back to the second part of the course!",
+								"ID": 4,
+								"title": "Funkar allt fortfarande?",
+								"content": "<h2>Ny del innehåll</h2>\r\ntest test",
 								"type": "text",
-								"index": 0,
+								"index": 0
 							},
 							{
-								"ID": 6,
-								"title": "Cont.",
-								"content": "<h2>New goal</h2>\r\nThis will describe the new goal of the course in this part",
-								"type": "text",
-								"index": 1,
-							},
-						],
+								"ID": 5,
+								"title": "Question test",
+								"content": "{Q 1},{Q 2},",
+								"type": "question",
+								"index": 1
+							}
+						]
 					},
+					{
+						"ID": 3,
+						"name": "Week 3",
+						"index": 2,
+						"parts": [
+							{
+								"ID": 6,
+								"title": "Tack för att du del",
+								"content": "Tack för att ni deltog!!!",
+								"type": "text",
+								"index": 0
+							},
+							{
+								"ID": 7,
+								"title": "Download test",
+								"content": "https://linusbf.com/storage/godu_edited.png",
+								"type": "download",
+								"index": 1
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	{
+		"type": "users",
+		"item": [
+			{
+				"ID": "1",
+				"token": "a65669add4937230",
+				"email": "testing@linusbf.com",
+				"entitlements": [
+					{
+						"course_id": "1",
+						"purchase_date": "2020-06-08"
+					},
+					{
+						"course_id": "1",
+						"purchase_date": "2020-06-22"
+					}
 				],
+				"answers": [
+					{
+						"cm_part_id": "5",
+						"questions": "{Q 1},{Q 2},",
+						"answers": "{Testar att svara på Q1},{Testar att svara på Q2},",
+						"answered_at": "2020-06-22 14:56:33"
+					},
+					{
+						"cm_part_id": "5",
+						"questions": "{Q 1},{Q 2},",
+						"answers": "{Testar att svara på Q1},{<script>alert(\\'Hacked!\\');</script>},",
+						"answered_at": "2020-06-22 16:11:19"
+					},
+					{
+						"cm_part_id": "5",
+						"questions": "{Q 1},{Q 2},",
+						"answers": "{Testar att svara på Q1},{<script>alert(\\'Hacked!\\');</script>},",
+						"answered_at": "2020-06-22 16:12:46"
+					},
+					{
+						"cm_part_id": "5",
+						"questions": "{Q 1},{Q 2},",
+						"answers": "{Testar att svara på Q1},{<script>alert(\\'Hacked!\\');</script>},",
+						"answered_at": "2020-06-22 16:12:52"
+					},
+					{
+						"cm_part_id": "5",
+						"questions": "{Q 1},{Q 2},",
+						"answers": "{Testar att svara på Q1},{<script>alert(\\'Hacked!\\');</script>s},",
+						"answered_at": "2020-06-22 16:12:56"
+					}
+				]
 			},
-		],
+			{
+				"ID": "2",
+				"token": "8165ef497daa233b",
+				"email": "backuptest@linusbf.com",
+				"entitlements": [
+					{
+						"course_id": "2",
+						"purchase_date": "2020-06-22"
+					},
+					{
+						"course_id": "1",
+						"purchase_date": "2020-06-22"
+					}
+				],
+				"answers": [
+					{
+						"cm_part_id": "10",
+						"questions": "{Se att jag försöker},{oooo eyy jaja ere},",
+						"answers": "{eyyyy},{tesing testing},",
+						"answered_at": "2020-06-22 18:22:18"
+					},
+					{
+						"cm_part_id": "5",
+						"questions": "{Q 1},{Q 2},",
+						"answers": "{magic johnson},{Maybe wanna check my blood presure},",
+						"answered_at": "2020-06-22 18:23:21"
+					}
+				]
+			}
+		]
 	},
 	{
 		"type": "store",
 		"item": [
 			{
-				"ID": 1,
-				"course_id": 1,
+				"meta_id": "1",
+				"course_id": "1",
 				"meta_key": "store_image",
-				"meta_value": 4,
+				"meta_value": "7"
 			},
 			{
-				"ID": 2,
-				"course_id": 1,
+				"meta_id": "2",
+				"course_id": "1",
 				"meta_key": "store_description",
-				"meta_value": "Awesome course",
+				"meta_value": "Beskrivningen"
 			},
 			{
-				"ID": 3,
-				"course_id": 1,
+				"meta_id": "3",
+				"course_id": "1",
 				"meta_key": "current_discount",
-				"meta_value": 20,
+				"meta_value": "10"
 			},
 			{
-				"ID": 4,
-				"course_id": 1,
+				"meta_id": "4",
+				"course_id": "1",
 				"meta_key": "settings_modified",
-				"meta_value": 1,
+				"meta_value": "1"
 			},
 			{
-				"ID": 5,
-				"course_id": 2,
+				"meta_id": "5",
+				"course_id": "1",
+				"meta_key": "landing_page",
+				"meta_value": "11"
+			},
+			{
+				"meta_id": "6",
+				"course_id": "1",
+				"meta_key": "mc_group_category",
+				"meta_value": "a:3:{s:11:\"category_id\";s:10:\"db8230d228\";s:8:\"buyer_id\";N;s:13:\"newsletter_id\";s:10:\"4804a38fcb\";}"
+			},
+			{
+				"meta_id": "7",
+				"course_id": "2",
 				"meta_key": "store_image",
-				"meta_value": 9,
+				"meta_value": "6"
 			},
 			{
-				"ID": 6,
-				"course_id": 2,
+				"meta_id": "8",
+				"course_id": "2",
 				"meta_key": "store_description",
-				"meta_value": "This is a short description",
+				"meta_value": "Jag har varit i the dungeon"
 			},
 			{
-				"ID": 7,
-				"course_id": 2,
+				"meta_id": "9",
+				"course_id": "2",
 				"meta_key": "current_discount",
-				"meta_value": 20,
+				"meta_value": "0"
 			},
 			{
-				"ID": 8,
-				"course_id": 2,
+				"meta_id": "10",
+				"course_id": "2",
 				"meta_key": "settings_modified",
-				"meta_value": 1,
+				"meta_value": "1"
 			},
-		],
+			{
+				"meta_id": "11",
+				"course_id": "2",
+				"meta_key": "landing_page",
+				"meta_value": "17"
+			},
+			{
+				"meta_id": "12",
+				"course_id": "2",
+				"meta_key": "mc_group_category",
+				"meta_value": "a:3:{s:11:\"category_id\";s:10:\"db8230d228\";s:8:\"buyer_id\";s:10:\"6d494b89b1\";s:13:\"newsletter_id\";s:10:\"4804a38fcb\";}"
+			}
+		]
 	},
 	{
 		"type": "options",
-		"item": [
-			{
-				"type": "admin_options",
-				"item": "a:4:{s:16:\"edit_access_role\";s:13:\"administrator\";s:12:\"store_active\";s:4:\"true\";s:16:\"courses_in_store\";a:2:{i:0;i:1;i:1;i:2;}s:8:\"currency\";s:2:\"kr\";}"
-			},
-		],
+		"item": {
+			"edit_access_role": "administrator",
+			"store_active": true,
+			"courses_in_store": [
+				1,
+				2
+			],
+			"currency": "sek"
+		}
 	},
 	{
 		"type": "db_version",
-		"item": 1.0,
+		"item": "1.0"
 	},
+	{
+		"type": "cm_version",
+		"item": "1.0"
+	}
 ]
