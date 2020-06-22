@@ -115,12 +115,6 @@ class CmPaymentHandler {
 					return $aRequestResponse;
 				}
 
-				if ( isset( $_POST['subscribe'] ) && $_POST['subscribe'] === "on" ) {
-					CmUserManager::subscribeUserToCourse($CmUserId, $_POST['course_id'], true);
-				} else{
-					CmUserManager::subscribeUserToCourse($CmUserId, $_POST['course_id']);
-				}
-
 				try {
 					$charge = CmPaymentHandler::chargeCustomer( $customer->id, $_POST['course_id'] );
 				} catch ( \Stripe\Error\Card $e ) {
@@ -130,6 +124,12 @@ class CmPaymentHandler {
 				}
 
 				if ( isset($charge) && $charge->status === "succeeded" && CmUserManager::acquireCourse( $CmUserId, $_POST['course_id'] ) ) {
+					if ( isset( $_POST['subscribe'] ) && $_POST['subscribe'] === "on" ) {
+						CmUserManager::subscribeUserToCourse($CmUserId, $_POST['course_id'], true);
+					} else{
+						CmUserManager::subscribeUserToCourse($CmUserId, $_POST['course_id']);
+					}
+
 					$aRequestResponse['purchase_status'] = true;
 					$aRequestResponse['status_message'] = "Purchase successful!";
 					$aRequestResponse['status_code'] = 1;

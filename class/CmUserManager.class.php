@@ -232,6 +232,81 @@ class CmUserManager {
 		return $aPostData;
 	}
 
+	protected static function _importUserAnswer($iUserId, $iPartId, $sQuestions, $sAnswers, $timestamp) {
+		global $wpdb;
+
+		$sSQL = "INSERT INTO ".DB_CM_USER_ANSWERS."(cm_part_id, user_id, questions, answers, answered_at) VALUES(%d, %d, %s, %s, %s)";
+		$query = $wpdb->prepare($sSQL, $iPartId, $iUserId, $sQuestions, $sAnswers, $timestamp);
+		return $wpdb->query($query);
+	}
+
+	public static function getUserEntitlements($iUserId) {
+		global $wpdb;
+
+		$sSQL = "SELECT * FROM ".DB_CM_USER_ENTITLEMENTS." WHERE user_id = %d";
+		$aEntitlements = $wpdb->get_results($wpdb->prepare($sSQL, $iUserId));
+		return ($aEntitlements !== null ? $aEntitlements : array());
+	}
+
+	public static function getUserAnswers($iUserId) {
+		global $wpdb;
+
+		$sSQL = "SELECT * FROM ".DB_CM_USER_ANSWERS." WHERE user_id = %d";
+		$aResults = $wpdb->get_results($wpdb->prepare($sSQL, $iUserId));
+		return ($aResults !== null ? $aResults : array());
+	}
+
+	public static function exportUsersToJSON() {
+		$aObjectToExport = array();
+		$aUsers = self::_getAllUsers();
+		foreach($aUsers as $oUser) {
+			$aEntitlements = self::getUserEntitlements($oUser->ID);
+			$aAnswers = self::getUserAnswers($oUser->ID);
+			$aUserToExport = array(
+				'ID' => $oUser->ID,
+				'token' => $oUser->user_token,
+				'email' => $oUser->email,
+				'entitlements' => array(),
+				'answers' => array(),
+			);
+
+			foreach ($aAnswers as $answer) {
+				array_push($aUserToExport['answers'], array(
+					'cm_part_id' => $answer->cm_part_id,
+					'questions' => $answer->questions,
+					'answers' => $answer->answers,
+					'answered_at' => $answer->answered_at,
+				));
+			}
+
+			foreach ($aEntitlements as $entitlement) {
+				array_push($aUserToExport['entitlements'], array(
+					'course_id' => $entitlement->course_id,
+					'purchase_date' => $entitlement->purchase_date,
+				));
+			}
+			array_push($aObjectToExport, $aUserToExport);
+		}
+		return json_encode($aObjectToExport);
+	}
+
+	public static function importFromJSON($aImportedUsers, $aCourseIdMap, $aCPIdMap, $aPartIdMap) {
+		$blImportCheck = true;
+		foreach ($aImportedUsers as $aUserData) {
+			$iUserId = self::registerUser($aUserData->email, array(), $aUserData->token);
+			foreach ($aUserData->entitlements as $entitlement) {
+				if(self::acquireCourse($iUserId, intval($aCourseIdMap[strval($entitlement->course_id)]), $entitlement->purchase_date) === false) {
+					$blImportCheck = false;
+				}
+			}
+			foreach ($aUserData->answers as $answer) {
+				if(self::_importUserAnswer($iUserId, intval($aPartIdMap[strval($answer->cm_part_id)]), $answer->questions, $answer->answers, $answer->answered_at) === false) {
+					$blImportCheck = false;
+				}
+			}
+		}
+		return $blImportCheck;
+	}
 
 	public static function getUserPageURL(){
 		$store = get_posts(array('name' => TXT_CM_USER_PAGE_NAME, 'post_type' => 'page'))[0];
@@ -242,10 +317,11 @@ class CmUserManager {
 	/**
 	 * @param string $sEmail - The users email
 	 * @param array $aUserMeta - An array containing user meta data
+	 * @param string $sUserToken - If re-registering an old user, its old token
 	 *
-	 * @return bool
+	 * @return int
 	 */
-	public static function registerUser($sEmail, $aUserMeta = array()){
+	public static function registerUser($sEmail, $aUserMeta = array(), $sUserToken = ''){
 
 		$aUsers = self::_getAllUsers();
 
@@ -261,7 +337,7 @@ class CmUserManager {
 			!in_array( $defaultMetaKey, array_keys($aUserMeta) ) ? $aUserMeta[$defaultMetaKey] = null : null;
 		}
 		//Generate unique user token
-		$sToken = substr(md5(microtime().$sEmail), 0, 16);
+		$sToken = strlen($sUserToken) > 0 ? $sUserToken : substr(md5(microtime().$sEmail), 0, 16);
 
 
 		//Add the user to the DB and update the meta information for that user
@@ -424,16 +500,18 @@ class CmUserManager {
 	}
 
 
-	public static function acquireCourse($iUserId, $iCourseId){
+	public static function acquireCourse($iUserId, $iCourseId, $sImportDate = ''){
 		if(CmUserManager::checkAccess($iUserId, $iCourseId)){
 			return false;
 		}
 
 		global $wpdb;
 
-		$sSQL = "INSERT INTO ".DB_CM_USER_ENTITLEMENTS." (user_id, course_id, purchase_date) VALUES(%d, %d, CURRENT_DATE())";
+		$sDate = strlen($sImportDate) > 0 ? "STR_TO_DATE(%s,'%Y-%M-%D')" : "CURRENT_DATE()";
 
-		$sQuery = $wpdb->prepare($sSQL, $iUserId, $iCourseId);
+		$sSQL = "INSERT INTO ".DB_CM_USER_ENTITLEMENTS." (user_id, course_id, purchase_date) VALUES(%d, %d, "."$sDate".")";
+
+		$sQuery = strlen($sImportDate) > 0 ? $wpdb->prepare($sSQL, $iUserId, $iCourseId, $sImportDate) : $wpdb->prepare($sSQL, $iUserId, $iCourseId);
 
 		return $wpdb->query($sQuery);
 	}

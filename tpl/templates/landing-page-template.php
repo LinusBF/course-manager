@@ -26,6 +26,12 @@ if(is_bool($oCourse)){
 	wp_redirect(CmCourseStoreHandler::getStoreURL()."?course_404=true");
 }
 
+if(isset($_SESSION['course_user']) && CmUserManager::checkAccess($_SESSION['course_user']['id'],$oCourse->getCourseID())){
+	$sSlug = basename(get_permalink());
+	$aUri = explode($sSlug, $_SERVER["REQUEST_URI"]);
+  wp_redirect(reset($aUri) . "courses/" . CmPageBuilder::getCourseFirstPageName($oCourse->getCourseID()));
+}
+
 get_header(); ?>
 
 	<div class="wrap">

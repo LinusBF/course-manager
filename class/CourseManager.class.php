@@ -575,10 +575,17 @@ class CourseManager
 	    foreach ($aCourses as $oCourse){
 	    	array_push($aCourseData['item'], json_decode($oCourse->exportToJSON()));
 	    }
+
+	    $aOptions = $this->getOptions();
+	    unset($aOptions['stripe']);
+	    unset($aOptions['mail_chimp']);
+	    unset($aOptions['mandrill']);
 	    array_push($aPluginData, $aCourseData);
+	    array_push($aPluginData, array("type" => "users", "item" => json_decode(CmUserManager::exportUsersToJSON())));
 	    array_push($aPluginData, array("type" => "store", "item" => json_decode($oStore->exportToJSON())));
-	    array_push($aPluginData, array("type" => "options", "item" => $this->getOptions()));
+	    array_push($aPluginData, array("type" => "options", "item" => $aOptions));
 	    array_push($aPluginData, array("type" => "db_version", "item" => $this->_sCmDBVersion));
+	    array_push($aPluginData, array("type" => "cm_version", "item" => $this->_sCmVersion));
 
 	    return json_encode($aPluginData);
     }
@@ -614,11 +621,14 @@ class CourseManager
 		$aPluginData = json_decode($sImportData);
 	    $blImportCheck = true;
 
-	    if ($aPluginData[0]->type != "courses" && $aPluginData[1]->type!= "store"
-	        && $aPluginData[2]->type != "options" && $aPluginData[3]->type != "db_version"){
+	    if ($aPluginData[0]->type != "courses" || $aPluginData[1]->type != "users" || $aPluginData[2]->type!= "store"
+	        || $aPluginData[3]->type != "options" || $aPluginData[4]->type != "db_version" || $aPluginData[4]->type != "cm_version"){
 	    	return false;
 	    }
 
+	    $aCourseIdMapping = array();
+	    $aCoursePartIdMapping = array();
+	    $aPartIdMapping = array();
 	    foreach ($aPluginData[0]->item as $aCourseData){
 	    	if ($aCourseData->item != "Course")
 	    		continue;
@@ -630,18 +640,23 @@ class CourseManager
 		    $oCourse->setCourseSpan($aCourseData->span);
 		    $oCourse->setCourseStatus(false);
 
-		    $iInsertID = $oCourse->save();
+		    $iNewCourseId = $oCourse->save();
+		    $aCourseIdMapping[strval($aCourseData->ID)] = strval($iNewCourseId);
 
 		    $aCourseParts = array();
 
 		    foreach ($aCourseData->parts as $aCoursePartData){
 			    $aParts = array();
 
-				$oCoursePart = CmCoursePart::createWParams($aCoursePartData->index, $iInsertID, $aCoursePartData->name);
-			    $iCPIndex = $oCoursePart->save();
+				$oCoursePart = CmCoursePart::createWParams($aCoursePartData->index, $iNewCourseId, $aCoursePartData->name);
+			    $iNewCPId = $oCoursePart->save();
+			    $aCoursePartIdMapping[strval($aCoursePartData->ID)] = strval($iNewCPId);
 
 			    foreach ($aCoursePartData->parts as $aPartData){
-			    	$oPart = CmPart::createWParams($aPartData->title, $aPartData->content, $aPartData->index, $aPartData->type, $iCPIndex);
+			    	$oPart = CmPart::createWParams($aPartData->title, $aPartData->content, $aPartData->index, $aPartData->type, $iNewCPId);
+			    	$iNewPartId = $oPart->save();
+
+				    $aPartIdMapping[strval($aPartData->ID)] = strval($iNewPartId);
 
 			    	array_push($aParts, $oPart);
 			    }
@@ -658,11 +673,11 @@ class CourseManager
 		    }
 	    }
 
-	    foreach ($aPluginData[1]->item as $aStore_meta){
-	    	//TODO - Have to store the relations between the old Course IDs and the created ones.
-	    }
+		if(!CmUserManager::importFromJSON($aPluginData[1]->item, $aCourseIdMapping, $aCoursePartIdMapping, $aPartIdMapping)){
+			$blImportCheck = false;
+		}
 
-	    $oOldOptions = $aPluginData[2]->item;
+	    $oOldOptions = $aPluginData[3]->item;
 	    CourseManager::setOption('edit_access_role',$oOldOptions->edit_access_role,true);
 	    CourseManager::setOption('currency',$oOldOptions->currency,true);
 
