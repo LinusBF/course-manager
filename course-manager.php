@@ -19,7 +19,7 @@ require_once 'includes/language.define.php';
 require_once('third-party/stripe-php-5.8.0/init.php');
 
 //Setup Stripe settings
-\Stripe\Stripe::setAppInfo("Wordpress CourseManager", "1.1");
+\Stripe\Stripe::setAppInfo("Wordpress CourseManager", "1.2");
 
 
 //Check requirements
