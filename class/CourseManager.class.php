@@ -618,79 +618,100 @@ class CourseManager
 	 * @return bool True if successfully imported, false if something went wrong (probably wrong JSON structure)
 	 */
     public function import($sImportData){
-		$aPluginData = json_decode($sImportData);
-	    $blImportCheck = true;
+      $aPluginData = json_decode($sImportData);
+      $blImportCheck = true;
 
-	    if ($aPluginData[0]->type != "courses" || $aPluginData[1]->type != "users" || $aPluginData[2]->type!= "store"
-	        || $aPluginData[3]->type != "options" || $aPluginData[4]->type != "db_version" || $aPluginData[4]->type != "cm_version"){
-	    	return false;
-	    }
+      if ($aPluginData[0]->type != "courses" || $aPluginData[1]->type != "users" || $aPluginData[2]->type!= "store"
+          || $aPluginData[3]->type != "options" || $aPluginData[4]->type != "db_version" || $aPluginData[5]->type != "cm_version"){
+        return false;
+      }
 
-	    $aCourseIdMapping = array();
-	    $aCoursePartIdMapping = array();
-	    $aPartIdMapping = array();
-	    foreach ($aPluginData[0]->item as $aCourseData){
-	    	if ($aCourseData->item != "Course")
-	    		continue;
+      $aCourseIdMapping = array();
+      $aCoursePartIdMapping = array();
+      $aPartIdMapping = array();
+      foreach ($aPluginData[0]->item as $aCourseData){
+        if ($aCourseData->type != "Course")
+          continue;
 
-		    $oCourse = CmCourse::create();
-		    $oCourse->setCourseName($aCourseData->name);
-		    $oCourse->setCourseDescription($aCourseData->description);
-		    $oCourse->setCoursePrice($aCourseData->price);
-		    $oCourse->setCourseSpan($aCourseData->span);
-		    $oCourse->setCourseStatus(false);
+        $oCourse = CmCourse::create();
+        $oCourse->setCourseName($aCourseData->name);
+        $oCourse->setCourseDescription($aCourseData->description);
+        $oCourse->setCoursePrice($aCourseData->price);
+        $oCourse->setCourseSpan($aCourseData->span);
+        $oCourse->setCourseStatus(false);
 
-		    $iNewCourseId = $oCourse->save();
-		    $aCourseIdMapping[strval($aCourseData->ID)] = strval($iNewCourseId);
+        $iNewCourseId = $oCourse->save();
+        if($iNewCourseId === false){
+          $blImportCheck = false;
+          break;
+        }
+        $aCourseIdMapping[strval($aCourseData->ID)] = strval($iNewCourseId);
 
-		    $aCourseParts = array();
+        $aCourseParts = array();
 
-		    foreach ($aCourseData->parts as $aCoursePartData){
-			    $aParts = array();
+        foreach ($aCourseData->parts as $aCoursePartData){
+          $aParts = array();
 
-				$oCoursePart = CmCoursePart::createWParams($aCoursePartData->index, $iNewCourseId, $aCoursePartData->name);
-			    $iNewCPId = $oCoursePart->save();
-			    $aCoursePartIdMapping[strval($aCoursePartData->ID)] = strval($iNewCPId);
+          $oCoursePart = CmCoursePart::createWParams($aCoursePartData->index, $iNewCourseId, $aCoursePartData->name);
+          $iNewCPId = $oCoursePart->save();
+          if($iNewCPId === false){
+              $blImportCheck = false;
+              break;
+          }
+          $aCoursePartIdMapping[strval($aCoursePartData->ID)] = strval($iNewCPId);
 
-			    foreach ($aCoursePartData->parts as $aPartData){
-			    	$oPart = CmPart::createWParams($aPartData->title, $aPartData->content, $aPartData->index, $aPartData->type, $iNewCPId);
-			    	$iNewPartId = $oPart->save();
+          foreach ($aCoursePartData->parts as $aPartData){
+            $oPart = CmPart::createWParams($aPartData->title, $aPartData->content, $aPartData->index, $aPartData->type, $iNewCPId);
+            $iNewPartId = $oPart->save();
+            if($iNewPartId === false){
+                $blImportCheck = false;
+                break;
+            }
 
-				    $aPartIdMapping[strval($aPartData->ID)] = strval($iNewPartId);
+            $aPartIdMapping[strval($aPartData->ID)] = strval($iNewPartId);
+            array_push($aParts, $oPart);
+          }
+          if(!$blImportCheck){
+              break;
+          }
 
-			    	array_push($aParts, $oPart);
-			    }
+          $oCoursePart->setParts($aParts);
+          array_push($aCourseParts, $oCoursePart);
+        }
 
-			    $oCoursePart->setParts($aParts);
+        if(!$blImportCheck){
+          break;
+        }
 
-			    array_push($aCourseParts, $oCoursePart);
-		    }
+        $oCourse->setCourseParts($aCourseParts);
 
-		    $oCourse->setCourseParts($aCourseParts);
+        if(!$oCourse->save(true)){
+          $blImportCheck = false;
+        }
+      }
 
-		    if(!$oCourse->save(true)){
-			    $blImportCheck = false;
-		    }
-	    }
+      if($blImportCheck && !CmUserManager::importFromJSON($aPluginData[1]->item, $aCourseIdMapping, $aCoursePartIdMapping, $aPartIdMapping)){
+        $blImportCheck = false;
+      }
 
-		if(!CmUserManager::importFromJSON($aPluginData[1]->item, $aCourseIdMapping, $aCoursePartIdMapping, $aPartIdMapping)){
-			$blImportCheck = false;
-		}
+      $oOldOptions = $aPluginData[3]->item;
+      CourseManager::setOption('edit_access_role',$oOldOptions->edit_access_role,true);
+      CourseManager::setOption('currency',$oOldOptions->currency,true);
 
-	    $oOldOptions = $aPluginData[3]->item;
-	    CourseManager::setOption('edit_access_role',$oOldOptions->edit_access_role,true);
-	    CourseManager::setOption('currency',$oOldOptions->currency,true);
-
-	    return $blImportCheck;
+      return $blImportCheck;
     }
 
     public function import_upload(){
 	    if( empty( $_POST['cm_action'] ) || 'import_settings' != $_POST['cm_action'] )
 		    return;
-	    if( ! wp_verify_nonce( $_POST['cm_import_nonce'], 'cm_import_nonce' ) )
+	    if( ! wp_verify_nonce( $_POST['cm_import_nonce'], 'cm_import_nonce' ) ) {
+		    wp_die( __( 'Nonce failure' ) );
 		    return;
-	    if( ! current_user_can( 'manage_options' ) )
+	    }
+	    if( ! current_user_can( 'manage_options' ) ) {
+		    wp_die( __( 'User cannot manage options' ) );
 		    return;
+	    }
 	    $extension = end( explode( '.', $_FILES['import_file']['name'] ) );
 	    if( $extension != 'json' ) {
 		    wp_die( __( 'Please upload a valid .json file' ) );

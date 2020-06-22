@@ -368,11 +368,15 @@ class CmPart
 
 		if ($blVarSet) {
 			$blSaveCheck = $this->_saveToDB();
-			if(!$blSaveCheck){
+			if(!$blSaveCheck['result']){
 				return false;
 			}
 
-			return true;
+      if(isset($blSaveCheck['insertId'])){
+          $this->_iPartID = $blSaveCheck['insertId'];
+      }
+
+      return (isset($blSaveCheck['insertId']) ? $blSaveCheck['insertId'] : $blSaveCheck['result']);
 
 		} else{
 			return false;
@@ -383,7 +387,7 @@ class CmPart
 	/**
 	 * Saves the course to the database.
 	 *
-	 * @return boolean | TRUE if successfully saved to DB - FALSE if something went wrong
+	 * @return array
 	 */
 	protected function _saveToDB()
 	{
@@ -417,11 +421,21 @@ class CmPart
 
 
 
-		if ($wpdb->query($sQuery) !== false) {
-			return true;
-		} else{
-			return false;
-		}
+    if ($wpdb->query($sQuery) !== false) {
+        if(!isset($this->_iPartID)){
+            $iInsertId = $wpdb->insert_id;
+        } else{
+            return array('result' => true);
+        }
+
+        if(isset($iInsertId)){
+            return array('result' => true, 'insertId' => $iInsertId);
+        } else{
+            return array('result' => true);
+        }
+    } else{
+        return array('result' => false);
+    }
 	}
 
 

@@ -447,6 +447,10 @@ class CmCourse
     			return false;
     		}
 
+    		if(isset($blSaveCheck['insertId'])){
+    		  $this->_iCourseID = $blSaveCheck['insertId'];
+        }
+
     		if ($blCheckRecursive) {
     			if (count($this->getCourseParts()) > 0) {
 

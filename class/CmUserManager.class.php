@@ -507,7 +507,7 @@ class CmUserManager {
 
 		global $wpdb;
 
-		$sDate = strlen($sImportDate) > 0 ? "STR_TO_DATE(%s,'%Y-%M-%D')" : "CURRENT_DATE()";
+		$sDate = strlen($sImportDate) > 0 ? "%s" : "CURRENT_DATE()";
 
 		$sSQL = "INSERT INTO ".DB_CM_USER_ENTITLEMENTS." (user_id, course_id, purchase_date) VALUES(%d, %d, "."$sDate".")";
 

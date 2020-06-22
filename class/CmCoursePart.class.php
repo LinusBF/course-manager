@@ -323,6 +323,10 @@ class CmCoursePart
     			return false;
     		}
 
+        if(isset($blSaveCheck['insertId'])){
+            $this->_iCoursePartID = $blSaveCheck['insertId'];
+        }
+
     		if ($blCheckRecursive) {
     			$aSavedParts = array();
 
