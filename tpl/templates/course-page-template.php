@@ -11,7 +11,7 @@
 CmUserManager::updateSessionFromCookie();
 
 //Check if user is set
-if(!isset($_SESSION['course_user'])){
+if(!isset($_SESSION['course_user']) && !is_admin()){
 	wp_redirect(CmCourseStoreHandler::getStoreURL()."?no_session=true");
 }
 
@@ -19,7 +19,7 @@ $iPost_id = get_the_ID();
 $iCourseId = CmCourse::getCourseByPageID($iPost_id, true);
 
 //Check if user is entitled to course
-if(!CmUserManager::checkAccess($_SESSION['course_user']['id'], $iCourseId)){
+if(!is_admin() && !CmUserManager::checkAccess($_SESSION['course_user']['id'], $iCourseId)){
 	wp_redirect(CmCourseStoreHandler::getStoreURL()."?no_access=true");
 }
 

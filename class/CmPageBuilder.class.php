@@ -167,15 +167,15 @@ class CmPageBuilder
 			return $sPostHeader."<img id='$sPartAttrId' class='cm_page_image' src='".wp_get_attachment_url($sContent)."' />".$sPostFooter;
 
 		} elseif ($sType == "video"){
-			//Handle youtube link
+			//Handle vimeo link
 
-			if(strpos($sContent, "v=") !== false){
-				$sVideoId = explode("v=", $sContent)[1];
+			if(strpos($sContent, "vimeo.com/") !== false){
+				$sVideoId = explode("vimeo.com/", $sContent)[1];
 			}else{
 				$sVideoId = $sContent;
 			}
 			//Return iFrame element
-			return $sPostHeader."<iframe class='cm_yt_video' src='https://www.youtube.com/embed/$sVideoId?rel=0&wmode=transparent' wmode='opaque' frameborder='0' allowfullscreen></iframe>".$sPostFooter;
+			return $sPostHeader."<iframe class='cm_yt_video' itemprop='video' src='https://player.vimeo.com/video/$sVideoId?title=0&byline=0&portrait=0&rel=0&autoplay=1' wmode='opaque' frameborder='0' allowfullscreen></iframe>".$sPostFooter;
 
 		} elseif ($sType == "question"){
 			if (!is_array($sContent)){

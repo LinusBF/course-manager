@@ -203,7 +203,7 @@ get_header(); ?>
 														?>">
 													<?php
 													if($oCourse->getCoursePrice() > 0) {
-														echo TXT_CM_STORE_LEARN_MORE . " (" . $iPrice . $sCurrency . ")";
+														echo TXT_CM_STORE_MORE_INFO;
 													} else{
 														echo TXT_CM_STORE_FREE_LEARN_MORE;
 													}
