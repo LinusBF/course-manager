@@ -32,6 +32,14 @@
 								       class="regular-text" />
 							</td>
 						</tr>
+						<tr>
+							<th scope="row"><label for="stripe_webhook"><?php echo TXT_CM_SETTINGS_STRIPE_WEBHOOK; ?></label></th>
+							<td>
+								<input name="cm_stripe_webhook" type="text" id="stripe_webhook"
+                       value="<?php echo ($aSettings['stripe']['webhook_secret'] !== -1 ? $aSettings['stripe']['webhook_secret'] : TXT_CM_ADMIN_SETTINGS_NOT_SET) ?>"
+                       class="regular-text" />
+							</td>
+						</tr>
 					</table>
 					<p>
 						<?php wp_nonce_field( 'cm_stripe_nonce', 'cm_stripe_nonce' ); ?>

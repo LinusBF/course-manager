@@ -32,7 +32,7 @@
 class CourseManager
 {
 
-	protected $_sCmVersion = "1.2";
+	protected $_sCmVersion = "1.3";
     protected $_sCmDBVersion = "1.0";
     protected $_blActive = false;
     protected $_sAdminOptionsName = "cmAdminOptions";
@@ -108,7 +108,8 @@ class CourseManager
 	            'currency' => 'sek',
 	            'stripe' => array(
 		            "secret_key"      => -1,
-		            "publishable_key" => -1
+		            "publishable_key" => -1,
+                    "webhook_secret" => -1
 	            ),
                 'mail_chimp' => array(
 	                "api_key"      => -1,
@@ -293,7 +294,8 @@ class CourseManager
 
 		$stripe_settings = array(
 			"secret_key"      => $_POST['cm_stripe_secret'],
-			"publishable_key" => $_POST['cm_stripe_public']
+			"publishable_key" => $_POST['cm_stripe_public'],
+			"webhook_secret" => $_POST['cm_stripe_webhook'],
 		);
 
 		$this->setOption('stripe', $stripe_settings, true);

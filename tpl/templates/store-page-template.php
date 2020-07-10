@@ -23,6 +23,12 @@ if(isset($_POST['stripeToken']) && isset($_POST['stripeEmail']) && isset($_GET['
 	}
 }
 
+if(isset($_GET['stripe_session_id'])) {
+  $oUser = CmPaymentHandler::getUserFromStripSessionId($_GET['stripe_session_id']);
+  CmUserManager::setCookie($oUser['user_token']);
+  CmUserManager::resetUserSession();
+}
+
 if(isset($_POST['cm_action']) && $_POST['cm_action'] === "get_course" && isset($_GET['my_courses'])){
 	$aPurchaseRequest = CmUserManager::getFreeCourse();
 }

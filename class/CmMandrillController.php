@@ -134,4 +134,54 @@ class CmMandrillController {
 
 		return $mResult;
 	}
+
+	public function sendRefundWarningToOwner($sEmailOfCustomer, $sCourseName) {
+        $oCM = new CourseManager();
+        $aOptions = $oCM->getOptions()['mandrill'];
+        $sUserEmail = get_bloginfo('admin_email');
+        $sFromEmail = $aOptions['from_email']."@".$aOptions['domain'];
+        $message = array(
+            'subject' => 'Potential refund case in course manager',
+            'from_email' => $sFromEmail,
+            'from_name' => $aOptions['from_name'],
+            'to' => array(
+                array(
+                    'email' => $sUserEmail,
+                    'type' => 'to'
+                )
+            ),
+            'headers' => array('Reply-To' => $sFromEmail),
+            'tags' => array('refund_warning'),
+            'text' => 'The user '.$sEmailOfCustomer.' might have double purchased the course '.$sCourseName.', please check in Stripe and refund the customer if that is the case'
+        );
+        $async = false;
+        $mResult = $this->oMandrill->messages->send($message, $async);
+
+        return $mResult;
+    }
+
+	public function sendPurchaseWarningToOwner($sEmailOfCustomer, $sCourseName) {
+        $oCM = new CourseManager();
+        $aOptions = $oCM->getOptions()['mandrill'];
+        $sUserEmail = get_bloginfo('admin_email');
+        $sFromEmail = $aOptions['from_email']."@".$aOptions['domain'];
+        $message = array(
+            'subject' => 'Course Manager failed to give user access to course',
+            'from_email' => $sFromEmail,
+            'from_name' => $aOptions['from_name'],
+            'to' => array(
+                array(
+                    'email' => $sUserEmail,
+                    'type' => 'to'
+                )
+            ),
+            'headers' => array('Reply-To' => $sFromEmail),
+            'tags' => array('refund_warning'),
+            'text' => 'The user '.$sEmailOfCustomer.' tried to purchase '.$sCourseName.'. The purchase went through stripe but the plugin failed to give access to the course. Please give access manually.'
+        );
+        $async = false;
+        $mResult = $this->oMandrill->messages->send($message, $async);
+
+        return $mResult;
+    }
 }

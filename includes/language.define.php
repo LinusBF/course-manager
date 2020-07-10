@@ -71,6 +71,7 @@ define('TXT_CM_SETTINGS_STRIPE_SETTINGS', __('Stripe Settings','course-manager')
 define('TXT_CM_SETTINGS_STRIPE_DESCRIPTION', __('Enter your public and secret stripe keys to enable payment.','course-manager'));
 define('TXT_CM_SETTINGS_STRIPE_PUBLIC', __('Public key','course-manager'));
 define('TXT_CM_SETTINGS_STRIPE_SECRET', __('Secret key','course-manager'));
+define('TXT_CM_SETTINGS_STRIPE_WEBHOOK', __('Webhook secret','course-manager'));
 define('TXT_CM_SETTINGS_STRIPE_BUTTON', __('Update keys','course-manager'));
 define('TXT_CM_SETTINGS_MAILCHIMP_SETTINGS', __('MailChimp Settings','course-manager'));
 define('TXT_CM_SETTINGS_MAILCHIMP_DESCRIPTION', __('Enter your API key to enable email lists with MailChimp.','course-manager'));
@@ -174,6 +175,7 @@ define('TXT_CM_STORE_GO_TO_STORE', __('Go to the store','course-manager'));
 define('TXT_CM_STORE_GO_TO_ANSWERS', __('Your answers','course-manager'));
 define('TXT_CM_STORE_GO_TO_COURSE', __('Go to course','course-manager'));
 define('TXT_CM_STORE_SWITCH_TOKEN', __('Use another token?','course-manager'));
+define('TXT_CM_STORE_PAYMENT_SYSTEM_DOWN', __('Our payment system is currently down, please try again later','course-manager'));
 define('TXT_CM_STORE_CHECKOUT_DESCRIPTION', __('Buy course','course-manager'));
 define('TXT_CM_STORE_CHECKOUT_BUTTON_TEXT', __('Pay with card','course-manager'));
 define('TXT_CM_STORE_CHECKOUT_SUCCESS', __('Thank you for your purchase, click on the course to start it!','course-manager'));

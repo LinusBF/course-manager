@@ -14,7 +14,7 @@ function landing_page_header(){
 	echo "<link rel='stylesheet' href='".CM_URLPATH."css/cm_general.css'>
 		  <link rel='stylesheet' href='".CM_URLPATH."css/cm_landing_page.css'>
 		  <link rel='stylesheet' href='".CM_URLPATH."css/cm_landing_page_mobile.css'>
-		  <script type='application/javascript' src='".CM_URLPATH."js/landing_page.js'></script>";
+		  <script src='https://js.stripe.com/v3/'></script>";
 }
 
 $oCM = new CourseManager();
@@ -50,24 +50,6 @@ get_header(); ?>
 					<?php
 				endwhile; //resetting the page loop
 
-				?>
-
-				<?php
-
-				$sSlug = basename(get_permalink());
-				$aUri = explode($sSlug, $_SERVER["REQUEST_URI"]);
-
-				//If the user has access to the course, show link to the first CoursePart
-				if(isset($_SESSION['course_user']) && CmUserManager::checkAccess($_SESSION['course_user']['id'],$oCourse->getCourseID())):
-				?>
-					<div class="get_course_wrapper sf-promo-bar">
-						<a class="sf-button standard turquoise" href="<?php echo reset($aUri) . "courses/" . CmPageBuilder::getCourseFirstPageName($oCourse->getCourseID()); ?>">
-							<?php echo $oCourse->getCourseParts()[0]->getCoursePartName() ?>
-						</a>
-					</div>
-				<?php
-				//If the user does not have access to the course, show link to open checkout modal.
-				else:
 				$aCourseOptions = CmCourseStoreHandler::getStoreOptionsForCourse($oCourse->getCourseID());
 
 				$iPrice = $oCourse->getCoursePrice() * ( 1 - ( $aCourseOptions['current_discount'] / 100 ) );
@@ -95,6 +77,7 @@ get_header(); ?>
 								<h4 class="modal-title"><?php echo $oCourse->getCourseName(); ?></h4>
 							</div>
 							<div class="modal-body">
+                <div id="stripe-error"></div>
 								<form action="<?php echo CmCourseStoreHandler::getStoreURL()."?my_courses=true"; ?>" method="post">
 									<?php if($oCourse->getCoursePrice() <= 0): ?>
 										<div class="form-group">
@@ -112,18 +95,10 @@ get_header(); ?>
 									<?php if($oCourse->getCoursePrice() <= 0): ?>
 										<input type="hidden" name="cm_action" value="get_course">
 										<button type="submit" class="sf-button standard turquoise">Get Course</button>
-									<?php else: ?>
-										<script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-										        data-key="<?php echo $oCM->getOptions()['stripe']['publishable_key']; ?>"
-										        data-description='<?php
-										            echo TXT_CM_STORE_CHECKOUT_DESCRIPTION." \"".$oCourse->getCourseName()."\"";
-										        ?>'
-										        data-amount="<?php echo ($iPrice * 100) ?>"
-										        data-locale="auto"
-										        data-currency="<?php echo $oCM->getOptions()['currency'] ?>"
-										        data-zip-code="true"
-										        data-label="<?php echo TXT_CM_STORE_CHECKOUT_BUTTON_TEXT; ?>"
-												data-email="<?php echo (isset($_SESSION['course_user']) ? $_SESSION['course_user']['email'] : "") ?>"></script>
+									<?php else:?>
+                    <input id="course-id-for-stripe" type="hidden" name="course_id" value="<?php echo $oCourse->getCourseID() ?>">
+                    <input id="stripe-public-key" type="hidden" name="stripe_public_key" value="<?php echo $oCM->getOptions()['stripe']['publishable_key']; ?>">
+                    <button id="stripe-button" class="stripe-button"><?php echo TXT_CM_STORE_CHECKOUT_BUTTON_TEXT; ?></button>
 									<?php endif; ?>
 								</form>
 							</div>
@@ -143,7 +118,6 @@ get_header(); ?>
 
 					</div>
 				</div>
-				<?php endif; ?>
 			</main><!-- #main -->
 		</div><!-- #primary -->
 	</div><!-- .wrap -->

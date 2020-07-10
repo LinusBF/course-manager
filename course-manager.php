@@ -4,7 +4,7 @@ Plugin Name: Course Manager
 Plugin URI:
 Description: Make and update course pages easily
 Author: Linus Bein Fahlander
-Version: 1.2
+Version: 1.3
 Author URI:
 */
 
@@ -16,10 +16,10 @@ define('CM_REALPATH', WP_PLUGIN_DIR.'/'.plugin_basename(dirname(__FILE__)).'/');
 //Defines
 require_once 'includes/database.define.php';
 require_once 'includes/language.define.php';
-require_once('third-party/stripe-php-5.8.0/init.php');
+require_once('third-party/stripe-php-7.40.0/init.php');
 
 //Setup Stripe settings
-\Stripe\Stripe::setAppInfo("Wordpress CourseManager", "1.2");
+\Stripe\Stripe::setAppInfo("Wordpress CourseManager", "1.3");
 
 
 //Check requirements
@@ -174,6 +174,34 @@ if (!function_exists("cm_load_course_page_ajax")){
 }
 
 
+if (!function_exists("cm_load_landing_page_ajax")){
+	function cm_load_landing_page_ajax(){
+		//Course Page
+		wp_enqueue_script(
+			'CourseManagerLandingAjax',
+			CM_URLPATH . 'js/landing_page.js',
+			array('jquery'),
+			'1.0.0'
+		);
+
+		//Get current protocol
+		$protocol = isset( $_SERVER['HTTPS'] ) ? 'https://' : 'http://';
+
+		//Ajax params
+		$params = array(
+			// Get the url to the admin-ajax.php file using admin_url()
+			'ajaxurl' => admin_url( 'admin-ajax.php', $protocol )
+		);
+
+		wp_localize_script(
+			'CourseManagerLandingAjax',
+			'landing_page',
+			$params
+		);
+	}
+}
+
+
 if (isset($oCourseManager)) {
 
 	if(!function_exists("install_cm")){
@@ -224,6 +252,7 @@ if (isset($oCourseManager)) {
 	add_action('admin_init', array($oCourseManager, 'update_mandrill'));
 
 	add_action( 'wp_enqueue_scripts', 'course_page_scripts', 85);
+	add_action( 'wp_enqueue_scripts', 'landing_page_scripts', 85);
 
 	if ( is_admin() ) {
 		add_action('admin_enqueue_scripts', 'create_edit_course_scripts');
@@ -244,6 +273,11 @@ if (isset($oCourseManager)) {
 		add_action( 'wp_ajax_nopriv_cm_get_answers', 'cm_get_answers' );
 		add_action( 'wp_ajax_nopriv_cm_get_part_id', 'cm_get_part_id' );
 
+		//Load Landing Page Ajax
+		require_once CM_REALPATH . 'tpl/landingPageAjax.php';
+		add_action( 'wp_ajax_cm_create_stripe_session', 'cm_create_stripe_session' );
+		add_action( 'wp_ajax_nopriv_cm_create_stripe_session', 'cm_create_stripe_session' );
+
 		//Load Admin AJAX Scripts
 		require_once "tpl/editCourseAjaxFunctions.php";
 		add_action( 'wp_ajax_cm_new_course_part', 'cm_add_new_coursePart' );
@@ -263,6 +297,20 @@ if (isset($oCourseManager)) {
 
 	//Register widget
 	//add_action('widgets_init', 'cmLinks_init'); DEPRECATED FOR NOW
+
+    //Register API endpoints
+    add_action('rest_api_init', function () {
+        register_rest_route('course-manager/v1', '/stripe-hook', array(
+            array(
+                'methods' => 'GET',
+                'callback' => 'handle_stripe_hook_call',
+            ),
+            array(
+                'methods' => 'POST',
+                'callback' => 'handle_stripe_hook_call',
+            )
+        ));
+    });
 
 	//Initiate session
 	add_action('init', 'startSession', 99);
@@ -349,6 +397,15 @@ function course_page_scripts(){
 }
 
 
+function landing_page_scripts(){
+	if(get_the_excerpt() == 'landing_page'){
+        cm_load_landing_page_ajax();
+	} else{
+		return;
+	}
+}
+
+
 function landing_page_template($page_template){
 	if(get_the_excerpt() == 'landing_page'){
 		$page_template = dirname(__FILE__).'/tpl/templates/landing-page-template.php';
@@ -371,6 +428,10 @@ function store_page_scripts(){
 	}else{
 		return;
 	}
+}
+
+function handle_stripe_hook_call(WP_REST_Request $request) {
+    return CmPaymentHandler::handleStripeHook($request);
 }
 
 
