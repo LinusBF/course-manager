@@ -98,7 +98,7 @@ get_header(); ?>
 									<?php else:?>
                     <input id="course-id-for-stripe" type="hidden" name="course_id" value="<?php echo $oCourse->getCourseID() ?>">
                     <input id="stripe-public-key" type="hidden" name="stripe_public_key" value="<?php echo $oCM->getOptions()['stripe']['publishable_key']; ?>">
-                    <button id="stripe-button" class="stripe-button"><?php echo TXT_CM_STORE_CHECKOUT_BUTTON_TEXT; ?></button>
+                    <button id="stripe-button" type="submit" class="sf-button standard turquoise"><?php echo TXT_CM_STORE_CHECKOUT_BUTTON_TEXT; ?></button>
 									<?php endif; ?>
 								</form>
 							</div>
