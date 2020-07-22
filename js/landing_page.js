@@ -7,7 +7,7 @@ jQuery(document).ready(function ($) {
     let data = {
       'action': 'cm_create_stripe_session',
       'cm_course_id': courseId,
-      'cm_subscribe': subscribe,
+      'cm_subscribe': subscribe ? 'true' : 'false',
     };
 
     jQuery.post(landing_page.ajaxurl, data, function (response) {
@@ -26,7 +26,7 @@ jQuery(document).ready(function ($) {
 
     var courseId = $("#course-id-for-stripe").val();
     var stripePubKey = $("#stripe-public-key").val();
-    var subscribe = $("#subscribe").is(':checked');
+    var subscribe = $("#subscribe").is(':checked') === true;
     createNewStripeSession(courseId, subscribe, function (sessionId) {
       var stripe = Stripe(stripePubKey);
       stripe.redirectToCheckout({

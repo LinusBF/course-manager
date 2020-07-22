@@ -8,7 +8,7 @@
 
 function cm_create_stripe_session(){
 	if(isset($_POST['cm_course_id'])) {
-        $aSessionResponse = CmPaymentHandler::createStripeSession($_POST['cm_course_id'], isset($_POST['cm_subscribe']) && $_POST['cm_subscribe']);
+        $aSessionResponse = CmPaymentHandler::createStripeSession($_POST['cm_course_id'], isset($_POST['cm_subscribe']) && $_POST['cm_subscribe'] === "true");
         if($aSessionResponse['status_code'] == 1) {
             echo wp_json_encode(array("status" => "Success", "data" => $aSessionResponse['session']->id));
         } else {
