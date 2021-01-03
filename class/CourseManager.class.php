@@ -32,7 +32,7 @@
 class CourseManager
 {
 
-	protected $_sCmVersion = "1.4";
+	protected $_sCmVersion = "1.5";
     protected $_sCmDBVersion = "1.0";
     protected $_blActive = false;
     protected $_sAdminOptionsName = "cmAdminOptions";
