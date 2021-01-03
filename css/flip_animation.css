@@ -23,7 +23,10 @@
 /* hide back of pane during swap */
 .front, .back {
 	backface-visibility: hidden;
-
+	visibility: visible;
+	-webkit-perspective: 0;
+	-webkit-backface-visibility: hidden;
+	-webkit-transform: translate3d(0,0,0);
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -69,7 +72,10 @@
 /* hide back of pane during swap */
 .small-front, .small-back {
 	backface-visibility: hidden;
-
+	visibility: visible;
+	-webkit-perspective: 0;
+	-webkit-backface-visibility: hidden;
+	-webkit-transform: translate3d(0,0,0);
 	position: absolute;
 	top: 0;
 	left: 0;
