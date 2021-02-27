@@ -250,7 +250,7 @@ class CmPaymentHandler {
             return false;
         }
 
-        if(CmUserManager::acquireCourse($CmUserId, $courseId)) {
+        if(CmUserManager::acquireCourse($CmUserId, $courseId) !== false) {
             CmUserManager::subscribeUserToCourse($CmUserId, $courseId, $subscription);
         } else {
             //Send warning to admin about failed purchase
